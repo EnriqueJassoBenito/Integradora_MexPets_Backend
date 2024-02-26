@@ -1,0 +1,148 @@
+USE mexprotect;
+
+-- Elimina la tabla logs si existe
+DROP TABLE IF EXISTS logs;
+
+-- Crea la tabla logs
+CREATE TABLE logs (
+    id BINARY(16) PRIMARY KEY NOT NULL,
+    action VARCHAR(100) NOT NULL,
+    table_name VARCHAR(100) NOT NULL,
+    old_value TEXT NOT NULL,
+    new_value TEXT NOT NULL,
+    user_name VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP NOT NULL
+);
+
+-- Crea el trigger para insertar en logs después de insertar en users
+DELIMITER //
+CREATE TRIGGER t_insert_user_log AFTER INSERT ON Users
+FOR EACH ROW
+BEGIN
+    DECLARE values_text TEXT;
+    SET values_text = CONCAT(
+        'name: ', NEW.name_user,
+        ', lastname: ', NEW.lastname,
+        ', email: ', NEW.email,
+        ', phone_number: ', NEW.phone_number
+    );
+
+    INSERT INTO logs (id, action, table_name, old_value, new_value, user_name, created_at)
+    VALUES (UNHEX(REPLACE(UUID(), '-', '')), 'INSERT', 'Users', '', values_text, CURRENT_USER(), NOW());
+END //
+DELIMITER ;
+
+-- Ejemplo de inserción en Users (simulación de una inserción)
+INSERT INTO Users
+VALUES (
+    UNHEX(REPLACE(UUID(), '-', '')),
+    'EjemploNombre',
+    'EjemploApellido',
+    'ejemplo@email.com',
+    '123456',
+    1, -- Este valor debe coincidir con un id_rol existente en la tabla Rol
+    1  -- Este valor puede ser 1 o 0 dependiendo del status que desees asignar
+);
+
+-- Consulta de la tabla Users
+SELECT * FROM Users;
+
+-- Consulta de la tabla logs
+SELECT * FROM logs;
+
+---------------------------------------------
+USE mexprotect;
+
+-- Crea el trigger para insertar en logs después de insertar en Animal
+DELIMITER //
+CREATE TRIGGER t_insert_animal_log AFTER INSERT ON Animal
+FOR EACH ROW
+BEGIN
+    DECLARE values_text TEXT;
+    SET values_text = CONCAT(
+        'type_pet: ', NEW.type_pet,
+        ', name_pet: ', NEW.name_pet,
+        ', location: ', NEW.location,
+        ', race: ', NEW.race,
+        ', description: ', NEW.description,
+        ', personality: ', NEW.personality,
+        ', sex: ', NEW.sex,
+        ', size: ', NEW.size,
+        ', weight: ', NEW.weight,
+        ', age: ', NEW.age,
+        ', color: ', NEW.color,
+        ', sociable: ', NEW.sociable,
+        ', sterilized: ', NEW.sterilized,
+        ', image: ', NEW.image,
+        ', status: ', NEW.status
+    );
+
+    INSERT INTO logs (id, action, table_name, old_value, new_value, user_name, created_at)
+    VALUES (UNHEX(REPLACE(UUID(), '-', '')), 'INSERT', 'Animal', '', values_text, CURRENT_USER(), NOW());
+END //
+DELIMITER ;
+
+-- Ejemplo de inserción en Animal (simulación de una inserción)
+INSERT INTO Animal
+VALUES (
+    UNHEX(REPLACE(UUID(), '-', '')),
+    'Dog',
+    'Buddy',
+    'Park',
+    'Labrador',
+    'Friendly dog looking for a home.',
+    'Friendly',
+    'Male',
+    'Medium',
+    20.5,
+    3,
+    'Brown',
+    true,
+    false,
+    'image_url.jpg',
+    true,
+    1  -- Este valor debe coincidir con un id_user existente en la tabla Users
+);
+
+-- Consulta de la tabla Animal
+SELECT * FROM Animal;
+
+-- Consulta de la tabla logs
+SELECT * FROM logs;
+
+------------------------------------------------
+
+DELIMITER //
+CREATE TRIGGER t_insert_Adoption_log AFTER INSERT ON Adoption
+FOR EACH ROW
+BEGIN
+    CALL log_insert_action('Adoption', CONCAT(
+        'id_animal: ', NEW.id_animal,
+        ', id_cliente: ', NEW.id_cliente,
+        ', name: ', NEW.name,
+        ', email: ', NEW.email,
+        ', photo_url: ', NEW.photo_url,
+        ', status: ', NEW.status
+    ));
+END //
+DELIMITER //
+----------------------------------------------------------------
+
+DELIMITER //
+CREATE TRIGGER t_insert_Category_log AFTER INSERT ON Category
+FOR EACH ROW
+BEGIN
+    CALL log_insert_action('Category', CONCAT(
+        'personality: ', NEW.personality,
+        ', size: ', NEW.size,
+        ', race: ', NEW.race,
+        ', weight: ', NEW.weight,
+        ', color: ', NEW.color,
+        ', specie: ', NEW.specie,
+        ', age: ', NEW.age,
+        ', sex: ', NEW.sex,
+        ', sociability: ', NEW.sociability,
+        ', status: ', NEW.status
+    ));
+END //
+DELIMITER //

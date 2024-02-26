@@ -20,11 +20,10 @@ public class RolService {
     private UserService userService;
 
     @Transactional(readOnly = false)
-    public void createRol(){
+    public void createRol() {
         List<Rol> roles = this.rolRepository.findAll();
         if (roles.isEmpty()) {
-
-            //Crear roles
+            // Crear roles
             Rol rolAdmin = new Rol();
             rolAdmin.setStatus(true);
             rolAdmin.setRol("ADMINISTRADOR");
@@ -40,7 +39,12 @@ public class RolService {
             rolCliente.setRol("CLIENTE");
             this.rolRepository.save(rolCliente);
 
-            
+            // Recuperar los roles guardados
+            rolAdmin = this.rolRepository.findByRol("ADMINISTRADOR");
+            rolModerador = this.rolRepository.findByRol("MODERADOR");
+            rolCliente = this.rolRepository.findByRol("CLIENTE");
+
+            // Crear usuario con los roles recuperados
             Users user = new Users();
             user.setNameUser("MichKwon");
             user.setName("Michelle");
@@ -54,4 +58,5 @@ public class RolService {
             this.userService.insert(user);
         }
     }
+
 }

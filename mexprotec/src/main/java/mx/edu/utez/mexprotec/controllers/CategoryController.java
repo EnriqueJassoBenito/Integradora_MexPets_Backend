@@ -48,7 +48,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomResponse<Category>> getOne(@PathVariable("id_category") Long id) {
+    public ResponseEntity<CustomResponse<Category>> getOne(@PathVariable("id") Long id) {
         return new ResponseEntity<>(
                 this.categoryService.getOne(id),
                 HttpStatus.OK
@@ -93,6 +93,14 @@ public class CategoryController {
             @RequestBody CategoryDto dto) {
         return new ResponseEntity<>(
                 this.categoryService.changeStatus(dto.getCategory()),
+                HttpStatus.OK
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CustomResponse<Boolean>> deleteById(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(
+                this.categoryService.deleteById(id),
                 HttpStatus.OK
         );
     }

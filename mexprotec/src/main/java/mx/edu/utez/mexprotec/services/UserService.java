@@ -103,7 +103,7 @@ public class UserService {
 
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Users> update(Users usuario) {
-        Users us = this.usersRepository.findById(usuario.getIdUser()).orElse(null);
+        Users us = this.usersRepository.findById(usuario.getId()).orElse(null);
         if (us != null){
             usuario.setPassword(us.getPassword());
             return new CustomResponse<>(
@@ -140,8 +140,8 @@ public class UserService {
 
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Boolean> updatePassword(Users usuario) {
-        Users temp = this.usersRepository.findByRolAndUserAndActivo(usuario.getIdUser(), usuario.getRol().getIdRol());
-        if (this.usersRepository.existsById(usuario.getIdUser()) && usuario.getStatus() && temp != null) {
+        Users temp = this.usersRepository.findByRolAndUserAndActivo(usuario.getId(), usuario.getRol().getIdRol());
+        if (this.usersRepository.existsById(usuario.getId()) && usuario.getStatus() && temp != null) {
             String contrasena = usuario.getPassword();
             if (contrasena != null && contrasena.length() >= 10 && contieneMayuscula(contrasena) && contieneCaracterEspecial(contrasena)) {
                 usuario.setPassword(

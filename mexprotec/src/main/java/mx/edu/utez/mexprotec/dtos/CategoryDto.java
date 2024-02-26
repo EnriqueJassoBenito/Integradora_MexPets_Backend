@@ -1,7 +1,5 @@
 package mx.edu.utez.mexprotec.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,30 +12,30 @@ import mx.edu.utez.mexprotec.models.category.Category;
 @Getter
 public class CategoryDto {
 
-    private Long idCategory;
+    private Long id;
     private String personality;
     private String size;
     private String race;
-    private String weight;
+    //private String weight;
     private String color;
     private String specie;
-    private int age;
-    private String sex;
-    private String sociability;
+    //private int age;
+    //private String sex;
+    //private String sociability;
     private Boolean status;
 
     public Category getCategory(){
         return new Category(
-                getIdCategory(),
+                getId(),
                 getPersonality(),
                 getSize(),
                 getRace(),
-                getWeight(),
+                //getWeight(),
                 getColor(),
                 getSpecie(),
-                getAge(),
-                getSex(),
-                getSociability(),
+                //getAge(),
+                //getSex(),
+                //getSociability(),
                 getStatus()
         );
     }

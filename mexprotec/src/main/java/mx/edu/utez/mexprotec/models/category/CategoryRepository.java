@@ -14,16 +14,16 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     @Modifying
     @Query(
-            value = "UPDATE category SET status = :status WHERE id_category = :id_category",
+            value = "UPDATE category SET status = :status WHERE id = :id",
             nativeQuery = true
     )
     int updateStatusById(
             @Param("status") Boolean status,
-            @Param("id_category") Long id
+            @Param("id") Long id
     );
 
-    Optional<Category> findByIdCategory(Long aLong);
+    Optional<Category> findById(Long aLong);
     List<Category> findAllByStatus(Boolean status);
-    Category getByIdCategory(Long id);
+    Category getById(Long id);
 
 }

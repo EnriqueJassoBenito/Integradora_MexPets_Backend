@@ -11,15 +11,15 @@ import java.util.List;
 public interface UsersRepository extends JpaRepository<Users, Integer> {
 
     List<Users> findAllByStatus(Boolean status);
-    Users getByIdUser(Integer id);
+    Users getById(Integer id);
 
-    @Query(value = "SELECT * FROM users WHERE status=true AND id_user = :id", nativeQuery = true)
+    @Query(value = "SELECT * FROM users WHERE status=true AND id = :id", nativeQuery = true)
     Users findByIdAndActivo(@Param("id") Integer id);
 
     @Query(value = "SELECT * FROM users WHERE status=true AND email = :email", nativeQuery = true)
     Users findByEmailAndActivo(@Param("email") String email);
 
-    @Query(value = "SELECT * FROM users WHERE status=true AND id_user = :id AND id_rol = :id_rol", nativeQuery = true)
+    @Query(value = "SELECT * FROM users WHERE status=true AND id = :id AND id_rol = :id_rol", nativeQuery = true)
     Users findByRolAndUserAndActivo(@Param("id") Integer id, @Param("id_rol") Integer id_rol);
 
 

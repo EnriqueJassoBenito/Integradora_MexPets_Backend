@@ -18,8 +18,8 @@ public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_user")
-    private Integer idUser;
+    @Column(name = "id")
+    private Integer id;
 
     @Column(name = "name_user", nullable = false)
     private String nameUser;
@@ -50,7 +50,7 @@ public class Users {
     private Rol rol;
 
     @Column(nullable = false, columnDefinition = "boolean default true")
-    @JsonIgnore
+    //@JsonIgnore
     private Boolean status;
 
 }

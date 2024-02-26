@@ -52,7 +52,7 @@ public class CategoryService {
     ///Horario por id
     @Transactional(readOnly = true)
     public CustomResponse<Category> getOne(Long id){
-        Optional<Category> optional = this.categoryRepository.findByIdCategory(id);
+        Optional<Category> optional = this.categoryRepository.findById(id);
         if (optional.isPresent()){
             return new CustomResponse<>(
                     optional.get(),
@@ -84,7 +84,7 @@ public class CategoryService {
     //Actualizar un horario
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Category> update(Category category){
-        if(!this.categoryRepository.existsById(category.getIdCategory()))
+        if(!this.categoryRepository.existsById(category.getId()))
             return new CustomResponse<>(
                     null,
                     true,
@@ -102,7 +102,7 @@ public class CategoryService {
     //Cambiar Status
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Boolean> changeStatus(Category category){
-        if(!this.categoryRepository.existsById(category.getIdCategory())){
+        if(!this.categoryRepository.existsById(category.getId())){
             return new CustomResponse<>(
                     false,
                     true,
@@ -112,11 +112,33 @@ public class CategoryService {
         }
         return new CustomResponse<>(
                 this.categoryRepository.updateStatusById(
-                        category.getStatus(), category.getIdCategory()
+                        category.getStatus(), category.getId()
                 ) == 1,
                 false,
                 200,
                 "¡Se ha cambiado el status correctamente!"
+        );
+    }
+
+    // Eliminar una categoría por ID
+    @Transactional(rollbackFor = {SQLException.class})
+    public CustomResponse<Boolean> deleteById(Long id) {
+        if (!this.categoryRepository.existsById(id)) {
+            return new CustomResponse<>(
+                    false,
+                    true,
+                    400,
+                    "No encontrado"
+            );
+        }
+
+        this.categoryRepository.deleteById(id);
+
+        return new CustomResponse<>(
+                true,
+                false,
+                200,
+                "Categoría eliminada correctamente"
         );
     }
 }

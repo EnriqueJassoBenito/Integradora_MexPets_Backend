@@ -17,8 +17,8 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_category")
-    private Long idCategory;
+    @Column(name = "id")
+    private Long id;
 
     @Column(name = "personality", nullable = false)
     private String personality;
@@ -29,8 +29,8 @@ public class Category {
     @Column(name = "race", nullable = false)
     private String race;
 
-    @Column(name = "weight", nullable = false)
-    private String weight;
+    /*@Column(name = "weight", nullable = false)
+    private String weight;*/
 
     @Column(name = "color", nullable = false)
     private String color;
@@ -38,14 +38,14 @@ public class Category {
     @Column(name = "specie", nullable = false)
     private String specie;
 
-    @Column(name = "age", nullable = false)
+    /*@Column(name = "age", nullable = false)
     private int age;
 
     @Column(name = "sex", nullable = false)
     private String sex;
 
     @Column(name = "sociability", nullable = false)
-    private String sociability;
+    private String sociability;*/
 
     @Column(nullable = false, columnDefinition = "boolean default true")
     private Boolean status;

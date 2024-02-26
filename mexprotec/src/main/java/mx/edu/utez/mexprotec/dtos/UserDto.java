@@ -16,7 +16,7 @@ import mx.edu.utez.mexprotec.models.users.Users;
 @Getter
 public class UserDto {
 
-    private Integer idUser;
+    private Integer id;
     private String nameUser;
     private String name;
     private String lastname;
@@ -34,7 +34,7 @@ public class UserDto {
 
     public Users getUsers(){
         return new Users(
-                getIdUser(),
+                getId(),
                 getNameUser(),
                 getName(),
                 getLastname(),
