@@ -17,8 +17,11 @@ import mx.edu.utez.mexprotec.models.users.Users;
 public class UserDto {
 
     private Integer id;
+    @NotNull
     private String nameUser;
+    @NotNull
     private String name;
+    @NotNull
     private String lastname;
     private String lastnameMatern;
     @NotNull
@@ -26,7 +29,7 @@ public class UserDto {
     private String phoneNumber;
     private String localitation;
     @NotNull
-    @Size(min = 10, message = "La contraseña debe tener al menos 10 caracteres")
+    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     private String password;
     private Rol rol;
     @JsonIgnore
@@ -44,7 +47,7 @@ public class UserDto {
                 getLocalitation(),
                 getPassword(),
                 getRol(),
-                getStatus()
+                true
         );
     }
 }

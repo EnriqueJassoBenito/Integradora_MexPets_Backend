@@ -49,7 +49,7 @@ public class CategoryService {
         );
     }
 
-    ///Horario por id
+    ///Id
     @Transactional(readOnly = true)
     public CustomResponse<Category> getOne(Long id){
         Optional<Category> optional = this.categoryRepository.findById(id);
@@ -70,7 +70,7 @@ public class CategoryService {
         }
     }
 
-    //Insertar un horario
+    //Insertar
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Category> insert(Category category){
         return new CustomResponse<>(
@@ -81,7 +81,7 @@ public class CategoryService {
         );
     }
 
-    //Actualizar un horario
+    //Actualizar
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Category> update(Category category){
         if(!this.categoryRepository.existsById(category.getId()))

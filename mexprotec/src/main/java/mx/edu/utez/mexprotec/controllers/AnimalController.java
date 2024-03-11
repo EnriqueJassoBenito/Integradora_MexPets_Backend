@@ -51,14 +51,13 @@ public class AnimalController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomResponse<Animals>> getOne(@PathVariable("id_animal") Long id) {
+    public ResponseEntity<CustomResponse<Animals>> getOne(@PathVariable("id") Long id) {
         return new ResponseEntity<>(
                 this.animalService.getOne(id),
                 HttpStatus.OK
         );
     }
 
-    //Insertar un horario
     @PostMapping("/")
     public ResponseEntity<CustomResponse<Animals>> insert(
             @RequestBody AnimalDto dto, @Valid BindingResult result) {
@@ -74,7 +73,6 @@ public class AnimalController {
         );
     }
 
-    //Modificar un horario
     @PutMapping("/{id}")
     public ResponseEntity<CustomResponse<Animals>> update(
             @RequestBody AnimalDto dto, @Valid BindingResult result) {
@@ -90,12 +88,20 @@ public class AnimalController {
         );
     }
 
-    //Modificar el status de una categoría
     @PatchMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> enableOrDisable(
             @RequestBody AnimalDto dto) {
         return new ResponseEntity<>(
                 this.animalService.changeStatus(dto.getAdnimals()),
+                HttpStatus.OK
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CustomResponse<Boolean>> delete(
+            @PathVariable("id") Long id) {
+        return new ResponseEntity<>(
+                this.animalService.delete(id),
                 HttpStatus.OK
         );
     }

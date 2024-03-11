@@ -2,8 +2,6 @@ package mx.edu.utez.mexprotec.services;
 
 import mx.edu.utez.mexprotec.models.animals.Animals;
 import mx.edu.utez.mexprotec.models.animals.AnimalsRepository;
-import mx.edu.utez.mexprotec.models.category.Category;
-import mx.edu.utez.mexprotec.models.category.CategoryRepository;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,10 +49,10 @@ public class AnimalService {
         );
     }
 
-    ///Horario por id
+    ///Id
     @Transactional(readOnly = true)
     public CustomResponse<Animals> getOne(Long id){
-        Optional<Animals> optional = this.animalsRepository.findByIdAnimal(id);
+        Optional<Animals> optional = this.animalsRepository.findById(id);
         if (optional.isPresent()){
             return new CustomResponse<>(
                     optional.get(),
@@ -72,7 +70,7 @@ public class AnimalService {
         }
     }
 
-    //Insertar un horario
+    //Insertar
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Animals> insert(Animals animal){
         return new CustomResponse<>(
@@ -83,10 +81,10 @@ public class AnimalService {
         );
     }
 
-    //Actualizar un horario
+    //Actualizar
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Animals> update(Animals animal){
-        if(!this.animalsRepository.existsById(animal.getIdAnimal()))
+        if(!this.animalsRepository.existsById(animal.getId()))
             return new CustomResponse<>(
                     null,
                     true,
@@ -104,7 +102,7 @@ public class AnimalService {
     //Cambiar Status
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Boolean> changeStatus(Animals animals){
-        if(!this.animalsRepository.existsById(animals.getIdAnimal())){
+        if(!this.animalsRepository.existsById(animals.getId())){
             return new CustomResponse<>(
                     false,
                     true,
@@ -114,11 +112,31 @@ public class AnimalService {
         }
         return new CustomResponse<>(
                 this.animalsRepository.updateStatusById(
-                        animals.getStatus(), animals.getIdAnimal()
+                        animals.getStatus(), animals.getId()
                 ) == 1,
                 false,
                 200,
                 "¡Se ha cambiado el status correctamente!"
+        );
+    }
+
+    ///Eliminar
+    @Transactional(rollbackFor =  {SQLException.class})
+    public CustomResponse<Boolean> delete(Long id){
+        if(!this.animalsRepository.existsById(id)){
+            return new CustomResponse<>(
+                    false,
+                    true,
+                    400,
+                    "No encontrado"
+            );
+        }
+        this.animalsRepository.deleteById(id);
+        return new CustomResponse<>(
+                true,
+                false,
+                200,
+                "Eliminado correctamente"
         );
     }
 }

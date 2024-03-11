@@ -14,16 +14,16 @@ public interface AnimalsRepository extends JpaRepository<Animals, Long> {
 
     @Modifying
     @Query(
-            value = "UPDATE animals SET status = :status WHERE id_animal = :id_animal",
+            value = "UPDATE animals SET status = :status WHERE id = :id",
             nativeQuery = true
     )
     int updateStatusById(
             @Param("status") Boolean status,
-            @Param("id_animal") Long id
+            @Param("id") Long id
     );
 
-    Optional<Animals> findByIdAnimal(Long aLong);
+    Optional<Animals> findById(Long aLong);
     List<Animals> findAllByStatus(Boolean status);
-    Animals getByIdAnimal(Long id);
+    Animals getById(Long id);
 
 }

@@ -15,15 +15,15 @@ public interface AdoptionRepository extends JpaRepository<Adoption, Long> {
 
     @Modifying
     @Query(
-            value = "UPDATE adoption SET status = :status WHERE id_adoption = :id_adoption",
+            value = "UPDATE adoption SET status = :status WHERE id = :id",
             nativeQuery = true
     )
     int updateStatusById(
             @Param("status") Boolean status,
-            @Param("id_adoption") Long id
+            @Param("id") Long id
     );
 
-    Optional<Adoption> findByIdAdoption(Long aLong);
+    Optional<Adoption> findById(Long aLong);
     List<Adoption> findAllByStatus(Boolean status);
-    Adoption getByIdAdoption(Long id);
+    Adoption getById(Long id);
 }

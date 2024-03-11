@@ -18,8 +18,8 @@ public class Animals {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_animal")
-    private Long idAnimal;
+    @Column(name = "id")
+    private Long id;
 
     @Column(name = "type_pet", nullable = false)
     private String typePet;
@@ -63,12 +63,12 @@ public class Animals {
     @Column(name = "image")
     private String image;
 
-    @Column(nullable = false, columnDefinition = "boolean default true")
-    @JsonIgnore
+    @Column(columnDefinition = "boolean default true")
+    //@JsonIgnore
     private Boolean status;
 
     @ManyToOne
-    @JoinColumn(name = "id_registrador")
-    private Users registrador;
+    @JoinColumn(name = "id_register")
+    private Users register;
 
 }

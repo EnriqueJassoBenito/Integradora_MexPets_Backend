@@ -51,14 +51,13 @@ public class AdoptionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomResponse<Adoption>> getOne(@PathVariable("id_adoption") Long id) {
+    public ResponseEntity<CustomResponse<Adoption>> getOne(@PathVariable("id") Long id) {
         return new ResponseEntity<>(
                 this.adoptionService.getOne(id),
                 HttpStatus.OK
         );
     }
 
-    //Insertar un horario
     @PostMapping("/")
     public ResponseEntity<CustomResponse<Adoption>> insert(
             @RequestBody AdoptionDto dto, @Valid BindingResult result) {
@@ -74,7 +73,6 @@ public class AdoptionController {
         );
     }
 
-    //Modificar un horario
     @PutMapping("/{id}")
     public ResponseEntity<CustomResponse<Adoption>> update(
             @RequestBody AdoptionDto dto, @Valid BindingResult result) {
@@ -90,12 +88,19 @@ public class AdoptionController {
         );
     }
 
-    //Modificar el status de una categoría
     @PatchMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> enableOrDisable(
             @RequestBody AdoptionDto dto) {
         return new ResponseEntity<>(
                 this.adoptionService.changeStatus(dto.getAdoption()),
+                HttpStatus.OK
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CustomResponse<Boolean>> delete(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(
+                this.adoptionService.delete(id),
                 HttpStatus.OK
         );
     }

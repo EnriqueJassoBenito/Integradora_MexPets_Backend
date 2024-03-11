@@ -22,8 +22,8 @@ public class Rol {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idRol;
 
-    @Column(name = "rol", nullable = false)
-    private String rol;
+    @Column(name = "nrol", nullable = false)
+    private String nrol;
 
     @Column(nullable = false, columnDefinition = "boolean default true")
     //@JsonIgnore

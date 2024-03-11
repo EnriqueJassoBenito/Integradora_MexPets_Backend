@@ -25,7 +25,7 @@ public class AuthUser implements UserDetails {
     }
 
     public static AuthUser build(Users usuario){
-        GrantedAuthority authority = new SimpleGrantedAuthority(usuario.getRol().getRol());
+        GrantedAuthority authority = new SimpleGrantedAuthority(usuario.getRol().getNrol());
         return new AuthUser(usuario.getEmail(), usuario.getPassword(), usuario, List.of(authority));
     }
 

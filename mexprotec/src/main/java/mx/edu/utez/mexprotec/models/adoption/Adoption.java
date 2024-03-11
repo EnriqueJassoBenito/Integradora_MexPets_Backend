@@ -19,15 +19,15 @@ public class Adoption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_adoption")
-    private Long idAdoption;
+    @Column(name = "id")
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_animal")
+    @JoinColumn(name = "id_animals")
     private Animals animal;
 
     @ManyToOne
-    @JoinColumn(name = "id_cliente")
+    @JoinColumn(name = "id_users")
     private Users cliente;
 
     @Column(name = "name", nullable = false)
@@ -39,8 +39,8 @@ public class Adoption {
     @Column(name = "photo_url")
     private String photoUrl;
 
-    @Column(nullable = false, columnDefinition = "boolean default true")
-    @JsonIgnore
+    @Column(columnDefinition = "boolean default true")
+    //@JsonIgnore
     private Boolean status;
 
 }

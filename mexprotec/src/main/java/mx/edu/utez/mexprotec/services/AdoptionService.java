@@ -2,8 +2,6 @@ package mx.edu.utez.mexprotec.services;
 
 import mx.edu.utez.mexprotec.models.adoption.Adoption;
 import mx.edu.utez.mexprotec.models.adoption.AdoptionRepository;
-import mx.edu.utez.mexprotec.models.category.Category;
-import mx.edu.utez.mexprotec.models.category.CategoryRepository;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,10 +49,10 @@ public class AdoptionService {
         );
     }
 
-    ///Horario por id
+    ///id
     @Transactional(readOnly = true)
     public CustomResponse<Adoption> getOne(Long id){
-        Optional<Adoption> optional = this.adoptionRepository.findByIdAdoption(id);
+        Optional<Adoption> optional = this.adoptionRepository.findById(id);
         if (optional.isPresent()){
             return new CustomResponse<>(
                     optional.get(),
@@ -72,7 +70,7 @@ public class AdoptionService {
         }
     }
 
-    //Insertar un horario
+    //Insertar
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Adoption> insert(Adoption adoption){
         return new CustomResponse<>(
@@ -83,10 +81,10 @@ public class AdoptionService {
         );
     }
 
-    //Actualizar un horario
+    //Actualizar
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Adoption> update(Adoption adoption){
-        if(!this.adoptionRepository.existsById(adoption.getIdAdoption()))
+        if(!this.adoptionRepository.existsById(adoption.getId()))
             return new CustomResponse<>(
                     null,
                     true,
@@ -104,7 +102,7 @@ public class AdoptionService {
     //Cambiar Status
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Boolean> changeStatus(Adoption adoption){
-        if(!this.adoptionRepository.existsById(adoption.getIdAdoption())){
+        if(!this.adoptionRepository.existsById(adoption.getId())){
             return new CustomResponse<>(
                     false,
                     true,
@@ -114,11 +112,31 @@ public class AdoptionService {
         }
         return new CustomResponse<>(
                 this.adoptionRepository.updateStatusById(
-                        adoption.getStatus(), adoption.getIdAdoption()
+                        adoption.getStatus(), adoption.getId()
                 ) == 1,
                 false,
                 200,
                 "¡Se ha cambiado el status correctamente!"
+        );
+    }
+
+    //Eliminar
+    @Transactional(rollbackFor =  {SQLException.class})
+    public CustomResponse<Boolean> delete(Long id){
+        if(!this.adoptionRepository.existsById(id)){
+            return new CustomResponse<>(
+                    false,
+                    true,
+                    400,
+                    "No encontrado"
+            );
+        }
+        this.adoptionRepository.deleteById(id);
+        return new CustomResponse<>(
+                true,
+                false,
+                200,
+                "¡Eliminado correctamente!"
         );
     }
 }

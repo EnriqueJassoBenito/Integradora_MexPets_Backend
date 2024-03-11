@@ -19,14 +19,14 @@ import java.util.Set;
 public class RolDto {
 
     private Integer idRol;
-    private String rol;
+    private String nrol;
     private Boolean status;
     private Set<Users> usuario;
 
-    public Rol getRolEntity(){
+    public Rol getRol(){
         return new Rol(
                 getIdRol(),
-                getRol(),
+                getNrol(),
                 getStatus(),
                 getUsuario()
         );

@@ -45,7 +45,7 @@ public class Users {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_rol")
     private Rol rol;
 

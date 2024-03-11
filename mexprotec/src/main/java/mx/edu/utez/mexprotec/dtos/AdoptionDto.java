@@ -18,7 +18,7 @@ import mx.edu.utez.mexprotec.models.users.Users;
 @Getter
 public class AdoptionDto {
 
-    private Long idAdoption;
+    private Long id;
     private Animals animal;
     private Users cliente;
     private String name;
@@ -29,7 +29,7 @@ public class AdoptionDto {
 
     public Adoption getAdoption(){
         return new Adoption(
-                getIdAdoption(),
+                getId(),
                 getAnimal(),
                 getCliente(),
                 getName(),

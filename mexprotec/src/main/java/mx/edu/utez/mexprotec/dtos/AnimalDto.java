@@ -17,7 +17,7 @@ import mx.edu.utez.mexprotec.models.users.Users;
 @Getter
 public class AnimalDto {
 
-    private Long idAnimal;
+    private Long id;
     private String typePet;
     private String namePet;
     private String location;
@@ -32,13 +32,13 @@ public class AnimalDto {
     private Boolean sociable;
     private Boolean sterilized;
     private String image;
-    @JsonIgnore
+    //@JsonIgnore
     private Boolean status;
-    private Users registrador;
+    private Users register;
 
     public Animals getAdnimals(){
         return new Animals(
-                getIdAnimal(),
+                getId(),
                 getTypePet(),
                 getNamePet(),
                 getLocation(),
@@ -54,7 +54,7 @@ public class AnimalDto {
                 getSterilized(),
                 getImage(),
                 getStatus(),
-                getRegistrador()
+                getRegister()
         );
     }
 }

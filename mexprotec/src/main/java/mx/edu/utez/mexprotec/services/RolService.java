@@ -3,6 +3,7 @@ package mx.edu.utez.mexprotec.services;
 import mx.edu.utez.mexprotec.models.rol.Rol;
 import mx.edu.utez.mexprotec.models.rol.RolRepository;
 import mx.edu.utez.mexprotec.models.users.Users;
+import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,43 +21,70 @@ public class RolService {
     private UserService userService;
 
     @Transactional(readOnly = false)
-    public void createRol() {
-        List<Rol> roles = this.rolRepository.findAll();
-        if (roles.isEmpty()) {
-            // Crear roles
-            Rol rolAdmin = new Rol();
-            rolAdmin.setStatus(true);
-            rolAdmin.setRol("ADMINISTRADOR");
-            this.rolRepository.save(rolAdmin);
+    public void createRoles() {
+        try {
+            List<Rol> roles = this.rolRepository.findAll();
+            if (roles.isEmpty()) {
 
-            Rol rolModerador = new Rol();
-            rolModerador.setStatus(true);
-            rolModerador.setRol("MODERADOR");
-            this.rolRepository.save(rolModerador);
+                // Crear roles
+                Rol rolAdmin = new Rol();
+                rolAdmin.setStatus(true);
+                rolAdmin.setNrol("ADMIN");
+                this.rolRepository.save(rolAdmin);
 
-            Rol rolCliente = new Rol();
-            rolCliente.setStatus(true);
-            rolCliente.setRol("CLIENTE");
-            this.rolRepository.save(rolCliente);
+                ///Crea rol MODERADOR
+                Rol rolModerador = new Rol();
+                rolModerador.setStatus(true);
+                rolModerador.setNrol("MODE");
+                this.rolRepository.save(rolModerador);
 
-            // Recuperar los roles guardados
-            rolAdmin = this.rolRepository.findByRol("ADMINISTRADOR");
-            rolModerador = this.rolRepository.findByRol("MODERADOR");
-            rolCliente = this.rolRepository.findByRol("CLIENTE");
+                ///Crea rol CLIENTE
+                Rol rolCliente = new Rol();
+                rolCliente.setStatus(true);
+                rolCliente.setNrol("CLIENTE");
+                this.rolRepository.save(rolCliente);
 
-            // Crear usuario con los roles recuperados
-            Users user = new Users();
-            user.setNameUser("MichKwon");
-            user.setName("Michelle");
-            user.setLastname("Estrada");
-            user.setLastnameMatern("Hernández");
-            user.setEmail("20213tn011@utez.edu.mx");
-            user.setPhoneNumber("7774857215");
-            user.setLocalitation("Cuernavaca");
-            user.setPassword("Quesadilla123#");
-            user.setRol(rolAdmin);
-            this.userService.insert(user);
+                // Recuperar los roles guardados
+                rolAdmin = this.rolRepository.findByNrol("ADMIN");
+                rolModerador = this.rolRepository.findByNrol("MODE");
+                rolCliente = this.rolRepository.findByNrol("CLIENTE");
+
+                // Crear usuario con los roles recuperados
+                Users user = new Users();
+                user.setNameUser("MichKwon");
+                user.setName("Michelle");
+                user.setLastname("Estrada");
+                user.setLastnameMatern("Hernández");
+                user.setEmail("20213tn011@utez.edu.mx");
+                user.setPhoneNumber("7774857215");
+                user.setLocalitation("Cuernavaca");
+                user.setPassword("Quesadilla123#");
+                user.setRol(rolAdmin);
+                this.userService.insert(user);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
+    @Transactional(readOnly = true)
+    public CustomResponse<List<Rol>> getAllRoles() {
+        try {
+            List<Rol> roles = this.rolRepository.findAll();
+            return new CustomResponse<>(
+                    roles,
+                    false,
+                    200,
+                    "OK"
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new CustomResponse<>(
+                    null,
+                    true,
+                    500,
+                    "Error al obtener roles"
+            );
+        }
+    }
 }
