@@ -21,11 +21,11 @@ public class Animals {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "type_pet", nullable = false)
-    private String typePet;
-
     @Column(name = "name_pet", nullable = false)
     private String namePet;
+
+    @Column(name = "type_pet", nullable = false)
+    private String typePet;
 
     @Column(name = "location", nullable = false)
     private String location;
@@ -53,9 +53,6 @@ public class Animals {
 
     @Column(name = "color", nullable = false)
     private String color;
-
-    @Column(name = "sociable")
-    private Boolean sociable;
 
     @Column(name = "sterilized")
     private Boolean sterilized;

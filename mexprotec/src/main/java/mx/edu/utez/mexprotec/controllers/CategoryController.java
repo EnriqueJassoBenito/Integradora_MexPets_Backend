@@ -55,7 +55,7 @@ public class CategoryController {
         );
     }
 
-    //Insertar un horario
+    //Insertar
     @PostMapping("/")
     public ResponseEntity<CustomResponse<Category>> insert(
             @RequestBody CategoryDto dto, @Valid BindingResult result) {
@@ -71,7 +71,7 @@ public class CategoryController {
         );
     }
 
-    //Modificar un horario
+    //Modificar
     @PutMapping("/{id}")
     public ResponseEntity<CustomResponse<Category>> update(
             @RequestBody CategoryDto dto, @Valid BindingResult result) {
@@ -87,7 +87,7 @@ public class CategoryController {
         );
     }
 
-    //Modificar el status de una categoría
+    //Modificar el status
     @PatchMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> enableOrDisable(
             @RequestBody CategoryDto dto) {

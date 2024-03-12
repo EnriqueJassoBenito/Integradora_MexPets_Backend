@@ -18,8 +18,8 @@ import mx.edu.utez.mexprotec.models.users.Users;
 public class AnimalDto {
 
     private Long id;
-    private String typePet;
     private String namePet;
+    private String typePet;
     private String location;
     private String race;
     private String description;
@@ -29,7 +29,6 @@ public class AnimalDto {
     private Double weight;
     private Integer age;
     private String color;
-    private Boolean sociable;
     private Boolean sterilized;
     private String image;
     //@JsonIgnore
@@ -39,8 +38,8 @@ public class AnimalDto {
     public Animals getAdnimals(){
         return new Animals(
                 getId(),
-                getTypePet(),
                 getNamePet(),
+                getTypePet(),
                 getLocation(),
                 getRace(),
                 getDescription(),
@@ -50,7 +49,6 @@ public class AnimalDto {
                 getWeight(),
                 getAge(),
                 getColor(),
-                getSociable(),
                 getSterilized(),
                 getImage(),
                 getStatus(),
