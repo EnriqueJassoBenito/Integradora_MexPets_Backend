@@ -1,4 +1,4 @@
-package mx.edu.utez.mexprotec.models.adoption;
+package mx.edu.utez.mexprotec.models.processed;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AdoptionRepository extends JpaRepository<Adoption, Long> {
+public interface ProcessedRepository extends JpaRepository<Processed, Long>{
 
     @Modifying
     @Query(
-            value = "UPDATE adoption SET status = :status WHERE id = :id",
+            value = "UPDATE adoption_processed SET status = :status WHERE id = :id",
             nativeQuery = true
     )
     int updateStatusById(
@@ -22,7 +22,8 @@ public interface AdoptionRepository extends JpaRepository<Adoption, Long> {
             @Param("id") Long id
     );
 
-    Optional<Adoption> findById(Long aLong);
-    List<Adoption> findAllByStatus(Boolean status);
-    Adoption getById(Long id);
+    Optional<Processed> findById(Long aLong);
+    List<Processed> findAllByStatus(Boolean status);
+    Processed getById(Long id);
+
 }

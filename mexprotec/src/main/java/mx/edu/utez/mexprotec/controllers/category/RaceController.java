@@ -1,9 +1,9 @@
-package mx.edu.utez.mexprotec.controllers;
+package mx.edu.utez.mexprotec.controllers.category;
 
 import jakarta.validation.Valid;
-import mx.edu.utez.mexprotec.dtos.RaceDto;
+import mx.edu.utez.mexprotec.dtos.category.RaceDto;
 import mx.edu.utez.mexprotec.models.animals.race.Race;
-import mx.edu.utez.mexprotec.services.RaceService;
+import mx.edu.utez.mexprotec.services.category.RaceService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

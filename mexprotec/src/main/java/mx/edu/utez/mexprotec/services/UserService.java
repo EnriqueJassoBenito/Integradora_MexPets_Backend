@@ -1,6 +1,5 @@
 package mx.edu.utez.mexprotec.services;
 
-import mx.edu.utez.mexprotec.models.category.Category;
 import mx.edu.utez.mexprotec.models.rol.Rol;
 import mx.edu.utez.mexprotec.models.rol.RolRepository;
 import mx.edu.utez.mexprotec.models.users.Users;
@@ -46,54 +45,54 @@ public class UserService {
     ///Buscar por id
     @Transactional(readOnly = true)
     public CustomResponse<Users> getOne(Integer id) {
-        Users usuario = this.usersRepository.findByIdAndActivo(id);
-        if (usuario != null) {
+        Users user = this.usersRepository.findByIdAndActivo(id);
+        if (user != null) {
             return new CustomResponse<>(
-                    usuario, false, 200, "Ok"
+                    user, false, 200, "Ok"
             );
         } else {
             return new CustomResponse<>(
-                    null, true, 400, "No se encontro el usuario"
+                    null, true, 400, "No se encontro el user"
             );
         }
     }
 
     //Crear
     @Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<Users> insert(Users usuario) {
-        if (this.usersRepository.findByEmailAndActivo(usuario.getEmail()) == null) {
-            if (usuario.getRol() != null) {
+    public CustomResponse<Users> insert(Users user) {
+        if (this.usersRepository.findByEmailAndActivo(user.getEmail()) == null) {
+            if (user.getRol() != null) {
                 // Check if the role is already persisted in the database
-                if (usuario.getRol().getIdRol() == null) {
+                if (user.getRol().getIdRol() == null) {
                     // If the role is not persisted, save it first
                     // Ensure that the status is set to true or the default value
-                    usuario.getRol().setStatus(true);
-                    Rol persistedRol = rolRepository.save(usuario.getRol());
+                    user.getRol().setStatus(true);
+                    Rol persistedRol = rolRepository.save(user.getRol());
                     // Set the persisted role in the user entity
-                    usuario.setRol(persistedRol);
+                    user.setRol(persistedRol);
                 }
 
-                String telefono = usuario.getPhoneNumber();
-                if (telefono != null && telefono.length() < 12) {
-                    String contrasena = usuario.getPassword();
-                    if (contrasena != null && contrasena.length() >= 10 && contieneMayuscula(contrasena) && contieneCaracterEspecial(contrasena)) {
-                        usuario.setPassword(
+                String phoneNumber = user.getPhoneNumber();
+                if (phoneNumber != null && phoneNumber.length() < 12) {
+                    String password = user.getPassword();
+                    if (password != null && password.length() >= 10 && contieneMayuscula(password) && contieneCaracterEspecial(password)) {
+                        user.setPassword(
                                 // Encrypt password
-                                this.encoder.encode(usuario.getPassword())
+                                this.encoder.encode(user.getPassword())
                         );
                         // Set default configuration
-                        usuario.setStatus(true);
-                        Users usuarioSave = this.usersRepository.save(usuario);
+                        user.setStatus(true);
+                        Users userSave = this.usersRepository.save(user);
                         try {
                             // Send email
-                            this.mailer.EnviarMensajeBienvenida(usuario.getEmail(), usuario.getName(), "¡Te damos la bienvenida a la Biblioteca!");
+                            this.mailer.EnviarMensajeBienvenida(user.getEmail(), user.getName(), "¡Te damos la bienvenida a la Biblioteca!");
                         } catch (Exception e) {
                             return new CustomResponse<>(
                                     null, true, 400, "Ocurrió un error al enviar el correo"
                             );
                         }
                         return new CustomResponse<>(
-                                usuarioSave, false, 200, "Usuario registrado correctamente"
+                                userSave, false, 200, "user registrado correctamente"
                         );
                     } else {
                         return new CustomResponse<>(null, true, 400, "La contraseña no cumple con los requisitos mínimos");
@@ -132,22 +131,22 @@ public class UserService {
     }
 
     /*@Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<Users> update(Users usuario) {
-        Users us = this.usersRepository.findById(usuario.getId()).orElse(null);
+    public CustomResponse<Users> update(Users user) {
+        Users us = this.usersRepository.findById(user.getId()).orElse(null);
         if (us != null){
-            usuario.setPassword(us.getPassword());
+            user.setPassword(us.getPassword());
             return new CustomResponse<>(
-                    this.usersRepository.saveAndFlush(usuario),
+                    this.usersRepository.saveAndFlush(user),
                     false,
                     200,
-                    "Usuario actualizado correctamente"
+                    "user actualizado correctamente"
             );
         } else {
             return new CustomResponse<>(
                     null,
                     true,
                     400,
-                    "No se encontro el usuario"
+                    "No se encontro el user"
             );
         }
     }*/
@@ -156,38 +155,38 @@ public class UserService {
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Boolean> delete(Integer id) {
         if (this.usersRepository.existsById(id)) {
-            Users usuario = this.usersRepository.findByIdAndActivo(id);
-            usuario.setStatus(false);
-            this.usersRepository.saveAndFlush(usuario);
+            Users user = this.usersRepository.findByIdAndActivo(id);
+            user.setStatus(false);
+            this.usersRepository.saveAndFlush(user);
             return new CustomResponse<>(
-                    true, false, 200, "Usuario eliminado correctamente"
+                    true, false, 200, "user eliminado correctamente"
             );
         } else {
             return new CustomResponse<>(
-                    null, true, 400, "No se encontro el usuario"
+                    null, true, 400, "No se encontro el user"
             );
         }
     }
 
     @Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<Boolean> updatePassword(Users usuario) {
-        Users temp = this.usersRepository.findByRolAndUserAndActivo(usuario.getId(), usuario.getRol().getIdRol());
-        if (this.usersRepository.existsById(usuario.getId()) && usuario.getStatus() && temp != null) {
-            String contrasena = usuario.getPassword();
-            if (contrasena != null && contrasena.length() >= 10 && contieneMayuscula(contrasena) && contieneCaracterEspecial(contrasena)) {
-                usuario.setPassword(
-                        encoder.encode(usuario.getPassword())
+    public CustomResponse<Boolean> updatePassword(Users user) {
+        Users temp = this.usersRepository.findByRolAndUserAndActivo(user.getId(), user.getRol().getIdRol());
+        if (this.usersRepository.existsById(user.getId()) && user.getStatus() && temp != null) {
+            String password = user.getPassword();
+            if (password != null && password.length() >= 10 && contieneMayuscula(password) && contieneCaracterEspecial(password)) {
+                user.setPassword(
+                        encoder.encode(user.getPassword())
                 );
-                this.usersRepository.saveAndFlush(usuario);
+                this.usersRepository.saveAndFlush(user);
                 return new CustomResponse<>(
-                        true, false, 200, "Usuario actualizado correctamente"
+                        true, false, 200, "user actualizado correctamente"
                 );
             } else {
                 return new CustomResponse<>(null, true, 400, "La contraseña no cumple con los requisitos mínimos");
             }
         } else {
             return new CustomResponse<>(
-                    null, true, 400, "No se encontro el usuario"
+                    null, true, 400, "No se encontro el user"
             );
         }
     }
@@ -198,12 +197,12 @@ public class UserService {
         return this.usersRepository.findByEmailAndActivo(correo);
     }
 
-    private boolean contieneMayuscula(String contrasena) {
-        return contrasena.matches(".*[A-Z].*");
+    private boolean contieneMayuscula(String password) {
+        return password.matches(".*[A-Z].*");
     }
 
-    private boolean contieneCaracterEspecial(String contrasena) {
-        return contrasena.matches(".*[!@#$%^&*(),.?\":{}|<>].*");
+    private boolean contieneCaracterEspecial(String password) {
+        return password.matches(".*[!@#$%^&*(),.?\":{}|<>].*");
     }
 
 }

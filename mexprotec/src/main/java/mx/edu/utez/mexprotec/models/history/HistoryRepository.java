@@ -1,4 +1,4 @@
-package mx.edu.utez.mexprotec.models.category;
+package mx.edu.utez.mexprotec.models.history;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+public interface HistoryRepository extends JpaRepository<History, Long>{
 
     @Modifying
     @Query(
-            value = "UPDATE category SET status = :status WHERE id = :id",
+            value = "UPDATE historial SET status = :status WHERE id = :id",
             nativeQuery = true
     )
     int updateStatusById(
@@ -22,8 +22,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             @Param("id") Long id
     );
 
-    Optional<Category> findById(Long aLong);
-    List<Category> findAllByStatus(Boolean status);
-    Category getById(Long id);
-
+    Optional<History> findById(Long aLong);
+    List<History> findAllByStatus(Boolean status);
+    History getById(Long id);
 }

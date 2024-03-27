@@ -1,6 +1,5 @@
 package mx.edu.utez.mexprotec.models.adoption;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,14 +29,17 @@ public class Adoption {
     @JoinColumn(name = "id_users")
     private Users cliente;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
+    private String description;
+
+    /*@Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "photo_url")
-    private String photoUrl;
+    private String photoUrl;*/
 
     @Column(columnDefinition = "boolean default true")
     //@JsonIgnore

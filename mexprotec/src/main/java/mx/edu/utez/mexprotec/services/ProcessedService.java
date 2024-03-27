@@ -1,7 +1,7 @@
 package mx.edu.utez.mexprotec.services;
 
-import mx.edu.utez.mexprotec.models.category.Category;
-import mx.edu.utez.mexprotec.models.category.CategoryRepository;
+import mx.edu.utez.mexprotec.models.processed.Processed;
+import mx.edu.utez.mexprotec.models.processed.ProcessedRepository;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,15 +12,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CategoryService {
+public class ProcessedService {
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private ProcessedRepository processedRepository;
 
     @Transactional(readOnly = true)
-    public CustomResponse<List<Category>> getAll(){
+    public CustomResponse<List<Processed>> getAll(){
         return new CustomResponse<>(
-                this.categoryRepository.findAll(),
+                this.processedRepository.findAll(),
                 false,
                 200,
                 "Ok"
@@ -29,9 +29,9 @@ public class CategoryService {
 
     ///Servicio para los activos
     @Transactional(readOnly = true)
-    public  CustomResponse<List<Category>> getAllActive(){
+    public  CustomResponse<List<Processed>> getAllActive(){
         return new CustomResponse<>(
-                this.categoryRepository.findAllByStatus(true),
+                this.processedRepository.findAllByStatus(true),
                 false,
                 200,
                 "Ok"
@@ -40,9 +40,9 @@ public class CategoryService {
 
     ///Servicio para los inactivos
     @Transactional(readOnly = true)
-    public  CustomResponse<List<Category>> getAllInactive(){
+    public  CustomResponse<List<Processed>> getAllInactive(){
         return new CustomResponse<>(
-                this.categoryRepository.findAllByStatus(false),
+                this.processedRepository.findAllByStatus(false),
                 false,
                 200,
                 "Ok"
@@ -51,8 +51,8 @@ public class CategoryService {
 
     ///Id
     @Transactional(readOnly = true)
-    public CustomResponse<Category> getOne(Long id){
-        Optional<Category> optional = this.categoryRepository.findById(id);
+    public CustomResponse<Processed> getOne(Long id){
+        Optional<Processed> optional = this.processedRepository.findById(id);
         if (optional.isPresent()){
             return new CustomResponse<>(
                     optional.get(),
@@ -72,9 +72,9 @@ public class CategoryService {
 
     //Insertar
     @Transactional(rollbackFor =  {SQLException.class})
-    public CustomResponse<Category> insert(Category category){
+    public CustomResponse<Processed> insert(Processed processed){
         return new CustomResponse<>(
-                this.categoryRepository.saveAndFlush(category),
+                this.processedRepository.saveAndFlush(processed),
                 false,
                 200,
                 "Registrado correctamente"
@@ -83,8 +83,8 @@ public class CategoryService {
 
     //Actualizar
     @Transactional(rollbackFor =  {SQLException.class})
-    public CustomResponse<Category> update(Category category){
-        if(!this.categoryRepository.existsById(category.getId()))
+    public CustomResponse<Processed> update(Processed processed){
+        if(!this.processedRepository.existsById(processed.getId()))
             return new CustomResponse<>(
                     null,
                     true,
@@ -92,7 +92,7 @@ public class CategoryService {
                     "No encontrado"
             );
         return new CustomResponse<>(
-                this.categoryRepository.saveAndFlush(category),
+                this.processedRepository.saveAndFlush(processed),
                 false,
                 200,
                 "Actualizado correctamente"
@@ -101,8 +101,8 @@ public class CategoryService {
 
     //Cambiar Status
     @Transactional(rollbackFor =  {SQLException.class})
-    public CustomResponse<Boolean> changeStatus(Category category){
-        if(!this.categoryRepository.existsById(category.getId())){
+    public CustomResponse<Boolean> changeStatus(Processed processed){
+        if(!this.processedRepository.existsById(processed.getId())){
             return new CustomResponse<>(
                     false,
                     true,
@@ -111,8 +111,8 @@ public class CategoryService {
             );
         }
         return new CustomResponse<>(
-                this.categoryRepository.updateStatusById(
-                        category.getStatus(), category.getId()
+                this.processedRepository.updateStatusById(
+                        processed.getStatus(), processed.getId()
                 ) == 1,
                 false,
                 200,
@@ -120,10 +120,10 @@ public class CategoryService {
         );
     }
 
-    // Eliminar una categoría por ID
+    // Eliminar
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Boolean> deleteById(Long id) {
-        if (!this.categoryRepository.existsById(id)) {
+        if (!this.processedRepository.existsById(id)) {
             return new CustomResponse<>(
                     false,
                     true,
@@ -132,13 +132,13 @@ public class CategoryService {
             );
         }
 
-        this.categoryRepository.deleteById(id);
+        this.processedRepository.deleteById(id);
 
         return new CustomResponse<>(
                 true,
                 false,
                 200,
-                "Categoría eliminada correctamente"
+                "Eliminado correctamente"
         );
     }
 }

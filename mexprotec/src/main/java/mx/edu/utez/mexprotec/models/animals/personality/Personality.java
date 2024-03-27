@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import mx.edu.utez.mexprotec.models.animals.Animals;
+
+import java.util.List;
 
 @Entity
 @Table(name= "personality")
@@ -21,4 +24,8 @@ public class Personality {
 
     @Column(name = "personality_pet", nullable = false)
     private String personalityPet;
+
+    @OneToMany(mappedBy = "personality")
+    private List<Animals> animals;
+
 }

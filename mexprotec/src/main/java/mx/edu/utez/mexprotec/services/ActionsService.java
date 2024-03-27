@@ -1,11 +1,10 @@
 package mx.edu.utez.mexprotec.services;
 
-
-import mx.edu.utez.mexprotec.models.animals.typePet.TypePet;
-import mx.edu.utez.mexprotec.models.animals.typePet.TypePetRepository;
+import mx.edu.utez.mexprotec.models.action.Actions;
+import mx.edu.utez.mexprotec.models.action.ActionsRepository;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
@@ -13,15 +12,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TypePetService {
+public class ActionsService {
 
-    @Autowired
-    private TypePetRepository typeRepository;
+     @Autowired
+    private ActionsRepository actionsRepository;
 
     @Transactional(readOnly = true)
-    public CustomResponse<List<TypePet>> getAll(){
+    public CustomResponse<List<Actions>> getAll(){
         return new CustomResponse<>(
-                this.typeRepository.findAll(),
+                this.actionsRepository.findAll(),
                 false,
                 200,
                 "Ok"
@@ -29,8 +28,8 @@ public class TypePetService {
     }
 
     @Transactional(readOnly = true)
-    public CustomResponse<TypePet> getOne(Long id){
-        Optional<TypePet> optional = this.typeRepository.findById(id);
+    public CustomResponse<Actions> getOne(Long id){
+        Optional<Actions> optional = this.actionsRepository.findById(id);
         if (optional.isPresent()){
             return new CustomResponse<>(
                     optional.get(),
@@ -50,9 +49,9 @@ public class TypePetService {
 
     //Insertar
     @Transactional(rollbackFor =  {SQLException.class})
-    public CustomResponse<TypePet> insert(TypePet type){
+    public CustomResponse<Actions> insert(Actions actions){
         return new CustomResponse<>(
-                this.typeRepository.saveAndFlush(type),
+                this.actionsRepository.saveAndFlush(actions),
                 false,
                 200,
                 "Registrado correctamente"
@@ -61,8 +60,8 @@ public class TypePetService {
 
     //Actualizar
     @Transactional(rollbackFor =  {SQLException.class})
-    public CustomResponse<TypePet> update(TypePet type){
-        if(!this.typeRepository.existsById(type.getId()))
+    public CustomResponse<Actions> update(Actions actions){
+        if(!this.actionsRepository.existsById(actions.getId()))
             return new CustomResponse<>(
                     null,
                     true,
@@ -70,7 +69,7 @@ public class TypePetService {
                     "No encontrado"
             );
         return new CustomResponse<>(
-                this.typeRepository.saveAndFlush(type),
+                this.actionsRepository.saveAndFlush(actions),
                 false,
                 200,
                 "Actualizado correctamente"
@@ -80,7 +79,7 @@ public class TypePetService {
     // Eliminar una categoría por ID
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Boolean> deleteById(Long id) {
-        if (!this.typeRepository.existsById(id)) {
+        if (!this.actionsRepository.existsById(id)) {
             return new CustomResponse<>(
                     false,
                     true,
@@ -89,12 +88,12 @@ public class TypePetService {
             );
         }
 
-        this.typeRepository.deleteById(id);
+        this.actionsRepository.deleteById(id);
         return new CustomResponse<>(
                 true,
                 false,
                 200,
-                "Personalidad eliminada correctamente"
+                "Action eliminada correctamente"
         );
     }
 }

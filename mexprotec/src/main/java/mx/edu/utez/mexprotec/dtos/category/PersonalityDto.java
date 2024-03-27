@@ -1,10 +1,13 @@
-package mx.edu.utez.mexprotec.dtos;
+package mx.edu.utez.mexprotec.dtos.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import mx.edu.utez.mexprotec.models.animals.Animals;
 import mx.edu.utez.mexprotec.models.animals.personality.Personality;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,11 +17,13 @@ public class PersonalityDto {
 
     private Long id;
     private String personalityPet;
+    private List<Animals> animals;
 
     public Personality getPersonality(){
         return new Personality(
                 getId(),
-                getPersonalityPet()
+                getPersonalityPet(),
+                getAnimals()
         );
     }
 }

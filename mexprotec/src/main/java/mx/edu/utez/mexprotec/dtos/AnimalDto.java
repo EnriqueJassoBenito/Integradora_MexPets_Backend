@@ -1,14 +1,13 @@
 package mx.edu.utez.mexprotec.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mx.edu.utez.mexprotec.models.animals.Animals;
+import mx.edu.utez.mexprotec.models.animals.personality.Personality;
+import mx.edu.utez.mexprotec.models.animals.race.Race;
+import mx.edu.utez.mexprotec.models.animals.typePet.TypePet;
 import mx.edu.utez.mexprotec.models.users.Users;
 
 @AllArgsConstructor
@@ -19,11 +18,11 @@ public class AnimalDto {
 
     private Long id;
     private String namePet;
-    private String typePet;
+    private TypePet typePet;
     private String location;
-    private String race;
+    private Race race;
     private String description;
-    private String personality;
+    private Personality personality;
     private String sex;
     private String size;
     private Double weight;

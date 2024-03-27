@@ -16,11 +16,15 @@ public class Mailer {
     @Value("${spring.mail.username}")
     public String mailFrom;
     public boolean EnviarMensajeBienvenida(String correo, String nombre, String asunto) throws MessagingException {
+
+        try {
+
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(correo);
         helper.setFrom(mailFrom);
         helper.setSubject(asunto);
+
         //Plantilla del correo de bienvenida
         helper.setText("<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
@@ -70,8 +74,12 @@ public class Mailer {
                 "  </body>\n" +
                 "</html>\n", true);
 
-        //Enviar el correo electrónico
         javaMailSender.send(message);
+        } catch (MessagingException e) {
+            // Manejar la excepción de MessagingException (por ejemplo, registro de errores)
+            e.printStackTrace(); // Imprimir la traza de la excepción (puedes cambiar esto por un registro en el archivo de registros)
+            return false; // Devolver false indicando que hubo un error al enviar el correo electrónico
+        }
         return true;
     }
     public boolean EnviarDetalleRenta(String correo, String nombre, String titulo, String autor, String genero, String fecha, String anio) throws MessagingException {

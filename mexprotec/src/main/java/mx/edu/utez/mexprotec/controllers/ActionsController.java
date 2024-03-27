@@ -1,9 +1,9 @@
 package mx.edu.utez.mexprotec.controllers;
 
 import jakarta.validation.Valid;
-import mx.edu.utez.mexprotec.dtos.PersonalityDto;
-import mx.edu.utez.mexprotec.models.animals.personality.Personality;
-import mx.edu.utez.mexprotec.services.PersonalityService;
+import mx.edu.utez.mexprotec.dtos.ActionsDto;
+import mx.edu.utez.mexprotec.models.action.Actions;
+import mx.edu.utez.mexprotec.services.ActionsService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,33 +14,33 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/personality/")
+@RequestMapping("/api/actions/")
 @CrossOrigin(origins = {"*"})
-public class PersonalityController {
+public class ActionsController {
 
     @Autowired
-    private PersonalityService personalityService;
+    private ActionsService actionsService;
 
     @GetMapping("/")
-    public ResponseEntity<CustomResponse<List<Personality>>> getAll() {
+    public ResponseEntity<CustomResponse<List<Actions>>> getAll() {
         return new ResponseEntity<>(
-                this.personalityService.getAll(),
+                this.actionsService.getAll(),
                 HttpStatus.OK
         );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomResponse<Personality>> getOne(@PathVariable("id") Long id) {
+    public ResponseEntity<CustomResponse<Actions>> getOne(@PathVariable("id") Long id) {
         return new ResponseEntity<>(
-                this.personalityService.getOne(id),
+                this.actionsService.getOne(id),
                 HttpStatus.OK
         );
     }
 
     //Insertar un horario
     @PostMapping("/")
-    public ResponseEntity<CustomResponse<Personality>> insert(
-            @RequestBody PersonalityDto dto, @Valid BindingResult result) {
+    public ResponseEntity<CustomResponse<Actions>> insert(
+            @RequestBody ActionsDto dto, @Valid BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<>(
                     null,
@@ -48,15 +48,15 @@ public class PersonalityController {
             );
         }
         return new ResponseEntity<>(
-                this.personalityService.insert(dto.getPersonality()),
+                this.actionsService.insert(dto.getActions()),
                 HttpStatus.CREATED
         );
     }
 
     //Modificar
     @PutMapping("/{id}")
-    public ResponseEntity<CustomResponse<Personality>> update(
-            @RequestBody PersonalityDto dto, @Valid BindingResult result) {
+    public ResponseEntity<CustomResponse<Actions>> update(
+            @RequestBody ActionsDto dto, @Valid BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<>(
                     null,
@@ -64,7 +64,7 @@ public class PersonalityController {
             );
         }
         return new ResponseEntity<>(
-                this.personalityService.update(dto.getPersonality()),
+                this.actionsService.update(dto.getActions()),
                 HttpStatus.CREATED
         );
     }
@@ -72,8 +72,9 @@ public class PersonalityController {
     @DeleteMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> deleteById(@PathVariable("id") Long id) {
         return new ResponseEntity<>(
-                this.personalityService.deleteById(id),
+                this.actionsService.deleteById(id),
                 HttpStatus.OK
         );
     }
+
 }

@@ -1,9 +1,9 @@
 package mx.edu.utez.mexprotec.controllers;
 
 import jakarta.validation.Valid;
-import mx.edu.utez.mexprotec.dtos.AnimalDto;
-import mx.edu.utez.mexprotec.models.animals.Animals;
-import mx.edu.utez.mexprotec.services.AnimalService;
+import mx.edu.utez.mexprotec.dtos.ProcessedDto;
+import mx.edu.utez.mexprotec.models.processed.Processed;
+import mx.edu.utez.mexprotec.services.ProcessedService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,50 +14,51 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/animals/")
+@RequestMapping("/api/adoption_processed/")
 @CrossOrigin(origins = {"*"})
-public class AnimalController {
+public class ProcessedController {
 
     @Autowired
-    private AnimalService animalService;
+    private ProcessedService processedService;
 
     @GetMapping("/")
-    public ResponseEntity<CustomResponse<List<Animals>>> getAll() {
+    public ResponseEntity<CustomResponse<List<Processed>>> getAll() {
         return new ResponseEntity<>(
-                this.animalService.getAll(),
+                this.processedService.getAll(),
                 HttpStatus.OK
         );
     }
 
     @GetMapping("/getActive")
-    public ResponseEntity<CustomResponse<List<Animals>>>
+    public ResponseEntity<CustomResponse<List<Processed>>>
     getAllActive(){
         return new ResponseEntity<>(
-                this.animalService.getAllActive(),
+                this.processedService.getAllActive(),
                 HttpStatus.OK
         );
     }
 
     @GetMapping("/getAllInactive")
-    public ResponseEntity<CustomResponse<List<Animals>>>
+    public ResponseEntity<CustomResponse<List<Processed>>>
     getAllInactive(){
         return new ResponseEntity<>(
-                this.animalService.getAllInactive(),
+                this.processedService.getAllInactive(),
                 HttpStatus.OK
         );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomResponse<Animals>> getOne(@PathVariable("id") Long id) {
+    public ResponseEntity<CustomResponse<Processed>> getOne(@PathVariable("id") Long id) {
         return new ResponseEntity<>(
-                this.animalService.getOne(id),
+                this.processedService.getOne(id),
                 HttpStatus.OK
         );
     }
 
+    //Insertar
     @PostMapping("/")
-    public ResponseEntity<CustomResponse<Animals>> insert(
-            @RequestBody AnimalDto dto, @Valid BindingResult result) {
+    public ResponseEntity<CustomResponse<Processed>> insert(
+            @RequestBody ProcessedDto dto, @Valid BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<>(
                     null,
@@ -65,14 +66,15 @@ public class AnimalController {
             );
         }
         return new ResponseEntity<>(
-                this.animalService.insert(dto.getAdnimals()),
+                this.processedService.insert(dto.getProcessed()),
                 HttpStatus.CREATED
         );
     }
 
+    //Modificar
     @PutMapping("/{id}")
-    public ResponseEntity<CustomResponse<Animals>> update(
-            @RequestBody AnimalDto dto, @Valid BindingResult result) {
+    public ResponseEntity<CustomResponse<Processed>> update(
+            @RequestBody ProcessedDto dto, @Valid BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<>(
                     null,
@@ -80,25 +82,25 @@ public class AnimalController {
             );
         }
         return new ResponseEntity<>(
-                this.animalService.update(dto.getAdnimals()),
+                this.processedService.update(dto.getProcessed()),
                 HttpStatus.CREATED
         );
     }
 
+    //Modificar el status
     @PatchMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> enableOrDisable(
-            @RequestBody AnimalDto dto) {
+            @RequestBody ProcessedDto dto) {
         return new ResponseEntity<>(
-                this.animalService.changeStatus(dto.getAdnimals()),
+                this.processedService.changeStatus(dto.getProcessed()),
                 HttpStatus.OK
         );
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CustomResponse<Boolean>> delete(
-            @PathVariable("id") Long id) {
+    public ResponseEntity<CustomResponse<Boolean>> deleteById(@PathVariable("id") Long id) {
         return new ResponseEntity<>(
-                this.animalService.delete(id),
+                this.processedService.deleteById(id),
                 HttpStatus.OK
         );
     }

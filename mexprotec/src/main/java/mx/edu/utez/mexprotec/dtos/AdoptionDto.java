@@ -1,9 +1,6 @@
 package mx.edu.utez.mexprotec.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,9 +18,11 @@ public class AdoptionDto {
     private Long id;
     private Animals animal;
     private Users cliente;
-    private String name;
+    private String description;
+
+    /*private String name;
     private String email;
-    private String photoUrl;
+    private String photoUrl;*/
     @JsonIgnore
     private Boolean status;
 
@@ -32,9 +31,10 @@ public class AdoptionDto {
                 getId(),
                 getAnimal(),
                 getCliente(),
-                getName(),
+                getDescription(),
+                /*getName(),
                 getEmail(),
-                getPhotoUrl(),
+                getPhotoUrl(),*/
                 getStatus()
         );
     }

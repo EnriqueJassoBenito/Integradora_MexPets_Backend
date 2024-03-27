@@ -6,7 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import mx.edu.utez.mexprotec.models.animals.personality.Personality;
+import mx.edu.utez.mexprotec.models.animals.race.Race;
+import mx.edu.utez.mexprotec.models.animals.typePet.TypePet;
 import mx.edu.utez.mexprotec.models.users.Users;
+
+import java.util.List;
 
 @Entity
 @Table(name="animals")
@@ -24,20 +29,23 @@ public class Animals {
     @Column(name = "name_pet", nullable = false)
     private String namePet;
 
-    @Column(name = "type_pet", nullable = false)
-    private String typePet;
+    @ManyToOne
+    @JoinColumn(name = "type_pet", referencedColumnName = "id")
+    private TypePet typePet;
 
     @Column(name = "location", nullable = false)
     private String location;
 
-    @Column(name = "race", nullable = false)
-    private String race;
+    @ManyToOne
+    @JoinColumn(name = "race", referencedColumnName = "id")
+    private Race race;
 
     @Column(name = "description", columnDefinition = "TEXT", nullable = false)
     private String description;
 
-    @Column(name = "personality", nullable = false)
-    private String personality;
+    @ManyToOne
+    @JoinColumn(name = "personality", referencedColumnName = "id")
+    private Personality personality;
 
     @Column(name = "sex", nullable = false)
     private String sex;

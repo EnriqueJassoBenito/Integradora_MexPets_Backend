@@ -1,26 +1,27 @@
-package mx.edu.utez.mexprotec.services;
+package mx.edu.utez.mexprotec.services.category;
 
-import org.springframework.transaction.annotation.Transactional;
-import mx.edu.utez.mexprotec.models.animals.personality.Personality;
-import mx.edu.utez.mexprotec.models.animals.personality.PersonalityRepository;
+
+import mx.edu.utez.mexprotec.models.animals.typePet.TypePet;
+import mx.edu.utez.mexprotec.models.animals.typePet.TypePetRepository;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PersonalityService {
+public class TypePetService {
 
     @Autowired
-    private PersonalityRepository personalityRepository;
+    private TypePetRepository typeRepository;
 
     @Transactional(readOnly = true)
-    public CustomResponse<List<Personality>> getAll(){
+    public CustomResponse<List<TypePet>> getAll(){
         return new CustomResponse<>(
-                this.personalityRepository.findAll(),
+                this.typeRepository.findAll(),
                 false,
                 200,
                 "Ok"
@@ -28,8 +29,8 @@ public class PersonalityService {
     }
 
     @Transactional(readOnly = true)
-    public CustomResponse<Personality> getOne(Long id){
-        Optional<Personality> optional = this.personalityRepository.findById(id);
+    public CustomResponse<TypePet> getOne(Long id){
+        Optional<TypePet> optional = this.typeRepository.findById(id);
         if (optional.isPresent()){
             return new CustomResponse<>(
                     optional.get(),
@@ -49,9 +50,9 @@ public class PersonalityService {
 
     //Insertar
     @Transactional(rollbackFor =  {SQLException.class})
-    public CustomResponse<Personality> insert(Personality personality){
+    public CustomResponse<TypePet> insert(TypePet type){
         return new CustomResponse<>(
-                this.personalityRepository.saveAndFlush(personality),
+                this.typeRepository.saveAndFlush(type),
                 false,
                 200,
                 "Registrado correctamente"
@@ -60,8 +61,8 @@ public class PersonalityService {
 
     //Actualizar
     @Transactional(rollbackFor =  {SQLException.class})
-    public CustomResponse<Personality> update(Personality personality){
-        if(!this.personalityRepository.existsById(personality.getId()))
+    public CustomResponse<TypePet> update(TypePet type){
+        if(!this.typeRepository.existsById(type.getId()))
             return new CustomResponse<>(
                     null,
                     true,
@@ -69,7 +70,7 @@ public class PersonalityService {
                     "No encontrado"
             );
         return new CustomResponse<>(
-                this.personalityRepository.saveAndFlush(personality),
+                this.typeRepository.saveAndFlush(type),
                 false,
                 200,
                 "Actualizado correctamente"
@@ -79,7 +80,7 @@ public class PersonalityService {
     // Eliminar una categoría por ID
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Boolean> deleteById(Long id) {
-        if (!this.personalityRepository.existsById(id)) {
+        if (!this.typeRepository.existsById(id)) {
             return new CustomResponse<>(
                     false,
                     true,
@@ -88,13 +89,12 @@ public class PersonalityService {
             );
         }
 
-        this.personalityRepository.deleteById(id);
+        this.typeRepository.deleteById(id);
         return new CustomResponse<>(
                 true,
                 false,
                 200,
-                "Personalidad eliminada correctamente"
+                "Tipo de animal eliminado correctamente"
         );
     }
-
 }

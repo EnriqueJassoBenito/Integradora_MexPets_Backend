@@ -1,9 +1,7 @@
 package mx.edu.utez.mexprotec.controllers;
 
 import jakarta.validation.Valid;
-import mx.edu.utez.mexprotec.dtos.CategoryDto;
 import mx.edu.utez.mexprotec.dtos.UserDto;
-import mx.edu.utez.mexprotec.models.category.Category;
 import mx.edu.utez.mexprotec.models.users.Users;
 import mx.edu.utez.mexprotec.services.UserService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
@@ -43,9 +41,17 @@ public class UserController {
 
     @PostMapping("/")
     public ResponseEntity<CustomResponse<Users>> insert(@RequestBody UserDto usuario) {
-        return new ResponseEntity<>(
-                this.usuarioService.insert(usuario.getUsers()), HttpStatus.CREATED
-        );
+        try {
+            CustomResponse<Users> response = this.usuarioService.insert(usuario.getUsers());
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            // Manejar la excepción
+            String errorMessage = "Error al enviar correo: " + e.getMessage();
+            return new ResponseEntity<>(
+                    new CustomResponse<>(null, true, 400, errorMessage),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     @PutMapping("/{id}")
