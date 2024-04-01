@@ -1,12 +1,18 @@
 package mx.edu.utez.mexprotec.models.adoption;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mx.edu.utez.mexprotec.models.animals.Animals;
+import mx.edu.utez.mexprotec.models.image.adoption.AdoptionImage;
 import mx.edu.utez.mexprotec.models.users.Users;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name="adoption")
@@ -23,6 +29,7 @@ public class Adoption {
 
     @ManyToOne
     @JoinColumn(name = "id_animals")
+    @JsonIgnore
     private Animals animal;
 
     @ManyToOne
@@ -32,17 +39,14 @@ public class Adoption {
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    /*@Column(name = "name", nullable = false)
-    private String name;
-
-    @Column(name = "email", nullable = false)
-    private String email;
-
-    @Column(name = "photo_url")
-    private String photoUrl;*/
-
-    @Column(columnDefinition = "boolean default true")
+    @Column(columnDefinition = "boolean default false")
     //@JsonIgnore
     private Boolean status;
 
+    @Column(name = "creation_date", columnDefinition = "DATE")
+    private LocalDate creationDate = LocalDate.now();
+
+    @OneToMany(mappedBy = "adoption", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<AdoptionImage> images;
 }

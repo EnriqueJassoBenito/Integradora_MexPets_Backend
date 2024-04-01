@@ -1,5 +1,6 @@
 package mx.edu.utez.mexprotec.dtos.category;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class TypePetDto {
 
     private Long id;
     private String type;
+    @JsonIgnore
     private List<Animals> animals;
 
     public TypePet getTypePet(){

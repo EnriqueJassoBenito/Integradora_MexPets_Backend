@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,4 +26,7 @@ public interface AdoptionRepository extends JpaRepository<Adoption, Long> {
     Optional<Adoption> findById(Long aLong);
     List<Adoption> findAllByStatus(Boolean status);
     Adoption getById(Long id);
+
+    @Query("SELECT COUNT(a) FROM Adoption a WHERE DATE(a.creationDate) = :date")
+    long countByDate(@Param("date") LocalDate date);
 }

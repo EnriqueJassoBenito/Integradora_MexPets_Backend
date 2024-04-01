@@ -1,6 +1,5 @@
 package mx.edu.utez.mexprotec.models.users;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -52,5 +51,4 @@ public class Users {
     @Column(nullable = false, columnDefinition = "boolean default true")
     //@JsonIgnore
     private Boolean status;
-
 }

@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -60,7 +61,9 @@ public class AdoptionController {
 
     @PostMapping("/")
     public ResponseEntity<CustomResponse<Adoption>> insert(
-            @RequestBody AdoptionDto dto, @Valid BindingResult result) {
+            @ModelAttribute AdoptionDto dto,
+            @RequestParam("imageFiles") List<MultipartFile> imageFiles,
+            @Valid BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<>(
                     null,
@@ -68,34 +71,40 @@ public class AdoptionController {
             );
         }
         return new ResponseEntity<>(
-                this.adoptionService.insert(dto.getAdoption()),
+                this.adoptionService.insert(dto.toAdoption(), imageFiles),
                 HttpStatus.CREATED
         );
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CustomResponse<Adoption>> update(
-            @RequestBody AdoptionDto dto, @Valid BindingResult result) {
+            @PathVariable("id") Long id,
+            @RequestBody AdoptionDto dto,
+            @Valid BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<>(
                     null,
                     HttpStatus.BAD_REQUEST
             );
         }
+        dto.setId(id);
         return new ResponseEntity<>(
-                this.adoptionService.update(dto.getAdoption()),
-                HttpStatus.CREATED
+                this.adoptionService.update(dto.toAdoption()),
+                HttpStatus.OK
         );
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> enableOrDisable(
+            @PathVariable("id") Long id,
             @RequestBody AdoptionDto dto) {
+        dto.setId(id);
         return new ResponseEntity<>(
-                this.adoptionService.changeStatus(dto.getAdoption()),
+                this.adoptionService.changeStatus(dto.toAdoption()),
                 HttpStatus.OK
         );
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> delete(@PathVariable("id") Long id) {

@@ -1,8 +1,12 @@
 package mx.edu.utez.mexprotec.services;
 
+import jakarta.mail.MessagingException;
+import mx.edu.utez.mexprotec.models.adoption.Adoption;
+import mx.edu.utez.mexprotec.models.adoption.AdoptionRepository;
 import mx.edu.utez.mexprotec.models.processed.Processed;
 import mx.edu.utez.mexprotec.models.processed.ProcessedRepository;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
+import mx.edu.utez.mexprotec.utils.Mailer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +21,12 @@ public class ProcessedService {
     @Autowired
     private ProcessedRepository processedRepository;
 
+    @Autowired
+    private AdoptionRepository adoptionRepository;
+
+    @Autowired
+    private Mailer mailer;
+
     @Transactional(readOnly = true)
     public CustomResponse<List<Processed>> getAll(){
         return new CustomResponse<>(
@@ -27,7 +37,6 @@ public class ProcessedService {
         );
     }
 
-    ///Servicio para los activos
     @Transactional(readOnly = true)
     public  CustomResponse<List<Processed>> getAllActive(){
         return new CustomResponse<>(
@@ -38,7 +47,6 @@ public class ProcessedService {
         );
     }
 
-    ///Servicio para los inactivos
     @Transactional(readOnly = true)
     public  CustomResponse<List<Processed>> getAllInactive(){
         return new CustomResponse<>(
@@ -49,7 +57,6 @@ public class ProcessedService {
         );
     }
 
-    ///Id
     @Transactional(readOnly = true)
     public CustomResponse<Processed> getOne(Long id){
         Optional<Processed> optional = this.processedRepository.findById(id);
@@ -70,7 +77,6 @@ public class ProcessedService {
         }
     }
 
-    //Insertar
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Processed> insert(Processed processed){
         return new CustomResponse<>(
@@ -81,7 +87,33 @@ public class ProcessedService {
         );
     }
 
-    //Actualizar
+    @Transactional(rollbackFor = {SQLException.class})
+    public CustomResponse<Boolean> acceptAdoption(Long adoptionId) {
+        Optional<Adoption> optionalAdoption = adoptionRepository.findById(adoptionId);
+        if (optionalAdoption.isPresent()) {
+            Adoption adoption = optionalAdoption.get();
+            adoption.setStatus(true);
+            adoptionRepository.save(adoption);
+
+            Processed processed = new Processed();
+            processed.setAdoption(adoption);
+            processed.setStatus(true);
+            processedRepository.save(processed);
+
+            // Envíar correo electrónico al solicitante informando la aceptación
+            try {
+                mailer.sendAcceptedRequest(adoption.getCliente().getEmail(), adoption.getCliente().getName());
+            } catch (MessagingException e) {
+                e.printStackTrace();
+                return new CustomResponse<>(false, true, 500, "Error al enviar el correo electrónico de aceptación");
+            }
+
+            return new CustomResponse<>(true, false, 200, "Solicitud de adopción aceptada correctamente");
+        } else {
+            return new CustomResponse<>(false, true, 404, "Solicitud de adopción no encontrada");
+        }
+    }
+
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Processed> update(Processed processed){
         if(!this.processedRepository.existsById(processed.getId()))
@@ -99,7 +131,6 @@ public class ProcessedService {
         );
     }
 
-    //Cambiar Status
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Boolean> changeStatus(Processed processed){
         if(!this.processedRepository.existsById(processed.getId())){
@@ -120,7 +151,6 @@ public class ProcessedService {
         );
     }
 
-    // Eliminar
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Boolean> deleteById(Long id) {
         if (!this.processedRepository.existsById(id)) {

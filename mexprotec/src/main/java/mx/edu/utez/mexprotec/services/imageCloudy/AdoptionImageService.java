@@ -1,4 +1,4 @@
-package mx.edu.utez.mexprotec.services;
+package mx.edu.utez.mexprotec.services.imageCloudy;
 
 import mx.edu.utez.mexprotec.config.service.CloudinaryService;
 import mx.edu.utez.mexprotec.models.adoption.Adoption;
@@ -29,6 +29,4 @@ public class AdoptionImageService {
             return null;
         }
     }
-
-    // Otros métodos para gestionar imágenes de adopciones
 }

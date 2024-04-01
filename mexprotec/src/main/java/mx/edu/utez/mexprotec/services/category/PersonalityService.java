@@ -47,18 +47,25 @@ public class PersonalityService {
         }
     }
 
-    //Insertar
-    @Transactional(rollbackFor =  {SQLException.class})
-    public CustomResponse<Personality> insert(Personality personality){
-        return new CustomResponse<>(
-                this.personalityRepository.saveAndFlush(personality),
-                false,
-                200,
-                "Registrado correctamente"
-        );
+    @Transactional(rollbackFor = {SQLException.class})
+    public CustomResponse<Personality> insert(Personality personality) {
+        Optional<Personality> existingPersonality = personalityRepository.findByPersonalityPet(personality.getPersonalityPet());
+        if (existingPersonality.isPresent()) {
+            return new CustomResponse<>(
+                    null,
+                    true,
+                    400,
+                    "La personalidad ya existe"
+            );
+        } else {
+            return new CustomResponse<>(
+                    personalityRepository.saveAndFlush(personality),
+                    false,
+                    200,
+                    "Registrado correctamente"
+            );
+        }
     }
-
-    //Actualizar
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Personality> update(Personality personality){
         if(!this.personalityRepository.existsById(personality.getId()))
@@ -75,8 +82,6 @@ public class PersonalityService {
                 "Actualizado correctamente"
         );
     }
-
-    // Eliminar una categoría por ID
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Boolean> deleteById(Long id) {
         if (!this.personalityRepository.existsById(id)) {

@@ -26,7 +26,7 @@ public class Rol {
     private String nrol;
 
     @Column(nullable = false, columnDefinition = "boolean default true")
-    //@JsonIgnore
+    @JsonIgnore
     private Boolean status;
 
     @OneToMany(mappedBy = "rol")

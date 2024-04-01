@@ -11,5 +11,7 @@ public interface TypePetRepository extends JpaRepository<TypePet, Long> {
 
     Optional<TypePet> findById(Long aLong);
     TypePet getById(Long id);
+    Optional<TypePet> findByType(String type); // Corregido a findByType
 
 }
+

@@ -1,4 +1,4 @@
-package mx.edu.utez.mexprotec.models.image;
+package mx.edu.utez.mexprotec.models.image.adoption;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,5 +22,4 @@ public class AdoptionImage {
     @Column(name = "image_url")
     private String imageUrl;
 
-    // Otros campos y métodos necesarios
 }

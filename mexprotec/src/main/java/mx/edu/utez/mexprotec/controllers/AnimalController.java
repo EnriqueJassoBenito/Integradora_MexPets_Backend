@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -57,7 +58,9 @@ public class AnimalController {
 
     @PostMapping("/")
     public ResponseEntity<CustomResponse<Animals>> insert(
-            @RequestBody AnimalDto dto, @Valid BindingResult result) {
+            @ModelAttribute AnimalDto dto,
+            @RequestParam("imageFiles") List<MultipartFile> imageFiles,
+            @Valid BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<>(
                     null,
@@ -65,31 +68,36 @@ public class AnimalController {
             );
         }
         return new ResponseEntity<>(
-                this.animalService.insert(dto.getAdnimals()),
+                this.animalService.insert(dto.toAnimals(), imageFiles),
                 HttpStatus.CREATED
         );
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CustomResponse<Animals>> update(
-            @RequestBody AnimalDto dto, @Valid BindingResult result) {
+            @PathVariable("id") Long id,
+            @RequestBody AnimalDto dto,
+            @Valid BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<>(
                     null,
                     HttpStatus.BAD_REQUEST
             );
         }
+        dto.setId(id); // Asegurar que el ID se establezca correctamente en el DTO
         return new ResponseEntity<>(
-                this.animalService.update(dto.getAdnimals()),
-                HttpStatus.CREATED
+                this.animalService.update(dto.toAnimals()),
+                HttpStatus.OK
         );
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> enableOrDisable(
+            @PathVariable("id") Long id,
             @RequestBody AnimalDto dto) {
+        dto.setId(id); // Asegurar que el ID se establezca correctamente en el DTO
         return new ResponseEntity<>(
-                this.animalService.changeStatus(dto.getAdnimals()),
+                this.animalService.changeStatus(dto.toAnimals()),
                 HttpStatus.OK
         );
     }

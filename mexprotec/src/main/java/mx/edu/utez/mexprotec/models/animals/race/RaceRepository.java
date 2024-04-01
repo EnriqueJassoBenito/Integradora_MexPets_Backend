@@ -11,5 +11,6 @@ public interface RaceRepository extends JpaRepository<Race, Long> {
 
     Optional<Race> findById(Long aLong);
     Race getById(Long id);
+    Optional<Race> findByRacePet(String racePet);
 
 }

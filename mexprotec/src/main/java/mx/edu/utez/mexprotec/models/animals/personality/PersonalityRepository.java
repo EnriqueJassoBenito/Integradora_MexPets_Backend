@@ -10,5 +10,5 @@ public interface PersonalityRepository extends JpaRepository<Personality, Long> 
 
     Optional<Personality> findById(Long aLong);
     Personality getById(Long id);
-
+    Optional<Personality> findByPersonalityPet(String personalityPet);
 }

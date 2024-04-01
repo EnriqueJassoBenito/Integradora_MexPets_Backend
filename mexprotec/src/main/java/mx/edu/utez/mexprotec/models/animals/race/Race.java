@@ -1,5 +1,6 @@
 package mx.edu.utez.mexprotec.models.animals.race;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class Race {
     private String racePet;
 
     @OneToMany(mappedBy = "race")
+    @JsonIgnore
     private List<Animals> animals;
 
 }

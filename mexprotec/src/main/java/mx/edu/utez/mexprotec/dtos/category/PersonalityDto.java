@@ -1,5 +1,6 @@
 package mx.edu.utez.mexprotec.dtos.category;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class PersonalityDto {
 
     private Long id;
     private String personalityPet;
+    @JsonIgnore
     private List<Animals> animals;
 
     public Personality getPersonality(){

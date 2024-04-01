@@ -47,18 +47,26 @@ public class RaceService {
         }
     }
 
-    //Insertar
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Race> insert(Race race){
-        return new CustomResponse<>(
-                this.raceRepository.saveAndFlush(race),
-                false,
-                200,
-                "Registrado correctamente"
-        );
+        Optional<Race> existingRace = raceRepository.findByRacePet(race.getRacePet());
+        if (existingRace.isPresent()) {
+            return new CustomResponse<>(
+                    null,
+                    true,
+                    400,
+                    "La raza ya existe"
+            );
+        } else {
+            return new CustomResponse<>(
+                    this.raceRepository.saveAndFlush(race),
+                    false,
+                    200,
+                    "Registrado correctamente"
+            );
+        }
     }
 
-    //Actualizar
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Race> update(Race race){
         if(!this.raceRepository.existsById(race.getId()))
@@ -76,7 +84,6 @@ public class RaceService {
         );
     }
 
-    // Eliminar una categoría por ID
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Boolean> deleteById(Long id) {
         if (!this.raceRepository.existsById(id)) {

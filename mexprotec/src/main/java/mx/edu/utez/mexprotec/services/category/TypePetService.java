@@ -47,19 +47,26 @@ public class TypePetService {
             );
         }
     }
-
-    //Insertar
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<TypePet> insert(TypePet type){
-        return new CustomResponse<>(
-                this.typeRepository.saveAndFlush(type),
-                false,
-                200,
-                "Registrado correctamente"
-        );
+        Optional<TypePet> existingType = typeRepository.findByType(type.getType());
+        if (existingType.isPresent()) {
+            return new CustomResponse<>(
+                    null,
+                    true,
+                    400,
+                    "El tipo de animal ya existe"
+            );
+        } else {
+            return new CustomResponse<>(
+                    this.typeRepository.saveAndFlush(type),
+                    false,
+                    200,
+                    "Tipo de animal insertado correctamente"
+            );
+        }
     }
 
-    //Actualizar
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<TypePet> update(TypePet type){
         if(!this.typeRepository.existsById(type.getId()))
@@ -76,8 +83,6 @@ public class TypePetService {
                 "Actualizado correctamente"
         );
     }
-
-    // Eliminar una categoría por ID
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Boolean> deleteById(Long id) {
         if (!this.typeRepository.existsById(id)) {

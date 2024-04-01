@@ -62,37 +62,30 @@ public class UserService {
     public CustomResponse<Users> insert(Users user) {
         if (this.usersRepository.findByEmailAndActivo(user.getEmail()) == null) {
             if (user.getRol() != null) {
-                // Check if the role is already persisted in the database
                 if (user.getRol().getIdRol() == null) {
-                    // If the role is not persisted, save it first
-                    // Ensure that the status is set to true or the default value
                     user.getRol().setStatus(true);
                     Rol persistedRol = rolRepository.save(user.getRol());
-                    // Set the persisted role in the user entity
                     user.setRol(persistedRol);
                 }
 
                 String phoneNumber = user.getPhoneNumber();
                 if (phoneNumber != null && phoneNumber.length() < 12) {
                     String password = user.getPassword();
-                    if (password != null && password.length() >= 10 && contieneMayuscula(password) && contieneCaracterEspecial(password)) {
+                    if (password != null && password.length() >= 10 && containsUppercase(password) && containsSpecialCharacter(password)) {
                         user.setPassword(
-                                // Encrypt password
                                 this.encoder.encode(user.getPassword())
                         );
-                        // Set default configuration
                         user.setStatus(true);
                         Users userSave = this.usersRepository.save(user);
                         try {
-                            // Send email
-                            this.mailer.EnviarMensajeBienvenida(user.getEmail(), user.getName(), "¡Te damos la bienvenida a la Biblioteca!");
+                            this.mailer.sendEmailWelcome(user.getEmail(), user.getName(), "¡Te damos la bienvenida MexPet!");
                         } catch (Exception e) {
                             return new CustomResponse<>(
                                     null, true, 400, "Ocurrió un error al enviar el correo"
                             );
                         }
                         return new CustomResponse<>(
-                                userSave, false, 200, "user registrado correctamente"
+                                userSave, false, 200, "Usuario registrado correctamente"
                         );
                     } else {
                         return new CustomResponse<>(null, true, 400, "La contraseña no cumple con los requisitos mínimos");
@@ -173,7 +166,7 @@ public class UserService {
         Users temp = this.usersRepository.findByRolAndUserAndActivo(user.getId(), user.getRol().getIdRol());
         if (this.usersRepository.existsById(user.getId()) && user.getStatus() && temp != null) {
             String password = user.getPassword();
-            if (password != null && password.length() >= 10 && contieneMayuscula(password) && contieneCaracterEspecial(password)) {
+            if (password != null && password.length() >= 10 && containsUppercase(password) && containsSpecialCharacter(password)) {
                 user.setPassword(
                         encoder.encode(user.getPassword())
                 );
@@ -197,11 +190,11 @@ public class UserService {
         return this.usersRepository.findByEmailAndActivo(correo);
     }
 
-    private boolean contieneMayuscula(String password) {
+    private boolean containsUppercase(String password) {
         return password.matches(".*[A-Z].*");
     }
 
-    private boolean contieneCaracterEspecial(String password) {
+    private boolean containsSpecialCharacter(String password) {
         return password.matches(".*[!@#$%^&*(),.?\":{}|<>].*");
     }
 

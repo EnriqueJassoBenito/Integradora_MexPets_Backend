@@ -1,4 +1,4 @@
-package mx.edu.utez.mexprotec.models.image;
+package mx.edu.utez.mexprotec.models.image.animal;
 
 import jakarta.persistence.*;
 import lombok.Getter;
