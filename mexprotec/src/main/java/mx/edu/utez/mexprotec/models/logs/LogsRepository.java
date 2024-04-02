@@ -1,4 +1,4 @@
-package mx.edu.utez.mexprotec.models;
+package mx.edu.utez.mexprotec.models.logs;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

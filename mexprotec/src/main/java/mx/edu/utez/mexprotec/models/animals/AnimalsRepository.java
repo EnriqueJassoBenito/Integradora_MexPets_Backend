@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface AnimalsRepository extends JpaRepository<Animals, Long> {
 
-    @Modifying
+    /*@Modifying
     @Query(
             value = "UPDATE animals SET status = :status WHERE id = :id",
             nativeQuery = true
@@ -20,10 +20,11 @@ public interface AnimalsRepository extends JpaRepository<Animals, Long> {
     int updateStatusById(
             @Param("status") Boolean status,
             @Param("id") Long id
-    );
+    );*/
 
     Optional<Animals> findById(Long aLong);
-    List<Animals> findAllByStatus(Boolean status);
+    //List<Animals> findAllByStatus(Boolean status);
     Animals getById(Long id);
 
+    List<Animals> findByApprovalStatus(ApprovalStatus approvalStatus);
 }

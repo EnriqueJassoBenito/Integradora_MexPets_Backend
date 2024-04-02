@@ -1,6 +1,6 @@
 package mx.edu.utez.mexprotec.controllers;
 
-import mx.edu.utez.mexprotec.models.Logs;
+import mx.edu.utez.mexprotec.models.logs.Logs;
 import mx.edu.utez.mexprotec.services.LogsService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +33,4 @@ public class LogsController {
             @RequestBody Logs logs) throws SQLException {
         return service.save(logs);
     }
-
-
 }

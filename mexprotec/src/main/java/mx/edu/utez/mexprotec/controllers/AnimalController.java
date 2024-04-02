@@ -3,6 +3,7 @@ package mx.edu.utez.mexprotec.controllers;
 import jakarta.validation.Valid;
 import mx.edu.utez.mexprotec.dtos.AnimalDto;
 import mx.edu.utez.mexprotec.models.animals.Animals;
+import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import mx.edu.utez.mexprotec.services.AnimalService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class AnimalController {
         );
     }
 
-    @GetMapping("/getActive")
+    /*@GetMapping("/getActive")
     public ResponseEntity<CustomResponse<List<Animals>>>
     getAllActive(){
         return new ResponseEntity<>(
@@ -46,7 +47,7 @@ public class AnimalController {
                 this.animalService.getAllInactive(),
                 HttpStatus.OK
         );
-    }
+    }*/
 
     @GetMapping("/{id}")
     public ResponseEntity<CustomResponse<Animals>> getOne(@PathVariable("id") Long id) {
@@ -55,6 +56,13 @@ public class AnimalController {
                 HttpStatus.OK
         );
     }
+
+    @GetMapping("/pendientes")
+    public ResponseEntity<CustomResponse<List<Animals>>> getPendingApprovalAnimals() {
+        CustomResponse<List<Animals>> response = animalService.getPendingApprovalAnimals();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
     @PostMapping("/")
     public ResponseEntity<CustomResponse<Animals>> insert(
@@ -84,23 +92,31 @@ public class AnimalController {
                     HttpStatus.BAD_REQUEST
             );
         }
-        dto.setId(id); // Asegurar que el ID se establezca correctamente en el DTO
+        dto.setId(id);
         return new ResponseEntity<>(
                 this.animalService.update(dto.toAnimals()),
                 HttpStatus.OK
         );
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<CustomResponse<Boolean>> enableOrDisable(
-            @PathVariable("id") Long id,
-            @RequestBody AnimalDto dto) {
-        dto.setId(id); // Asegurar que el ID se establezca correctamente en el DTO
-        return new ResponseEntity<>(
-                this.animalService.changeStatus(dto.toAnimals()),
-                HttpStatus.OK
-        );
+    @PatchMapping("/{id}/aprobacion")
+    public ResponseEntity<CustomResponse<String>> approveOrRejectAnimal(@PathVariable Long id,
+                                                                        @RequestParam ApprovalStatus approvalStatus,
+                                                                        @RequestParam String moderatorComment) {
+        CustomResponse<Boolean> response = animalService.approveOrRejectAnimal(id, approvalStatus, moderatorComment);
+        String message;
+        HttpStatus httpStatus;
+
+        if (response.getData() != null && response.getData()) {
+            message = "Animal aprobado correctamente";
+            httpStatus = HttpStatus.OK;
+        } else {
+            message = "Animal rechazado o no encontrado";
+            httpStatus = HttpStatus.NOT_FOUND;
+        }
+        return new ResponseEntity<>(new CustomResponse<>(message, false, httpStatus.value(), message), httpStatus);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> delete(

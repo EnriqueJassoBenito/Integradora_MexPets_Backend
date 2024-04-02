@@ -23,6 +23,8 @@ public class UserService {
     private UsersRepository usersRepository;
 
     @Autowired
+    private LogsService logsService;
+    @Autowired
     private RolRepository rolRepository;
 
     @Autowired
@@ -67,7 +69,6 @@ public class UserService {
                     Rol persistedRol = rolRepository.save(user.getRol());
                     user.setRol(persistedRol);
                 }
-
                 String phoneNumber = user.getPhoneNumber();
                 if (phoneNumber != null && phoneNumber.length() < 12) {
                     String password = user.getPassword();
@@ -84,6 +85,7 @@ public class UserService {
                                     null, true, 400, "Ocurrió un error al enviar el correo"
                             );
                         }
+                        logsService.logUserCreation(userSave); // Registrar la acción de creación de usuario
                         return new CustomResponse<>(
                                 userSave, false, 200, "Usuario registrado correctamente"
                         );

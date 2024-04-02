@@ -1,13 +1,15 @@
 package mx.edu.utez.mexprotec.services;
 
-import mx.edu.utez.mexprotec.models.Logs;
-import mx.edu.utez.mexprotec.models.LogsRepository;
+import mx.edu.utez.mexprotec.models.logs.Logs;
+import mx.edu.utez.mexprotec.models.logs.LogsRepository;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -40,5 +42,18 @@ public class LogsService {
                 false,
                 200,
                 "Correcto funcionando");
+    }
+
+    public void logUserCreation(User user) {
+        String details = String.format("User '%s' created", user.getUsername());
+        logAction("USER_CREATION", details);
+    }
+
+    private void logAction(String action, String details) {
+        Logs log = new Logs();
+        log.setAction(action);
+        log.setDetails(details);
+        log.setTimestamp(LocalDateTime.now());
+        repository.save(log);
     }
 }

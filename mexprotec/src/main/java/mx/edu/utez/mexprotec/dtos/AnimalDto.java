@@ -1,10 +1,12 @@
 package mx.edu.utez.mexprotec.dtos;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mx.edu.utez.mexprotec.models.animals.Animals;
+import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import mx.edu.utez.mexprotec.models.animals.personality.Personality;
 import mx.edu.utez.mexprotec.models.animals.race.Race;
 import mx.edu.utez.mexprotec.models.animals.typePet.TypePet;
@@ -33,7 +35,9 @@ public class AnimalDto {
     private Integer age;
     private String color;
     private Boolean sterilized;
-    private Boolean status;
+    //private Boolean status;
+    private ApprovalStatus approvalStatus;
+    private String moderatorComment;
     private Users register;
     private List<String> imageUrl;
 
@@ -52,7 +56,9 @@ public class AnimalDto {
         animal.setAge(getAge());
         animal.setColor(getColor());
         animal.setSterilized(getSterilized());
-        animal.setStatus(getStatus());
+        //animal.setStatus(getStatus());
+        animal.setApprovalStatus(getApprovalStatus());
+        animal.setModeratorComment(getModeratorComment());
         animal.setRegister(getRegister());
 
         List<AnimalImage> animalImages = new ArrayList<>();

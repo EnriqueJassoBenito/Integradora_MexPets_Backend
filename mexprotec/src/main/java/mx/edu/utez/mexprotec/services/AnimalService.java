@@ -3,6 +3,7 @@ package mx.edu.utez.mexprotec.services;
 import mx.edu.utez.mexprotec.config.service.CloudinaryService;
 import mx.edu.utez.mexprotec.models.animals.Animals;
 import mx.edu.utez.mexprotec.models.animals.AnimalsRepository;
+import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import mx.edu.utez.mexprotec.models.image.animal.AnimalImage;
 import mx.edu.utez.mexprotec.models.image.animal.AnimalImageRepository;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
@@ -39,7 +40,7 @@ public class AnimalService {
     }
 
     ///Servicio para los activos
-    @Transactional(readOnly = true)
+    /*@Transactional(readOnly = true)
     public  CustomResponse<List<Animals>> getAllActive(){
         return new CustomResponse<>(
                 this.animalsRepository.findAllByStatus(true),
@@ -58,9 +59,8 @@ public class AnimalService {
                 200,
                 "Ok"
         );
-    }
+    }*/
 
-    ///Id
     @Transactional(readOnly = true)
     public CustomResponse<Animals> getOne(Long id){
         Optional<Animals> optional = this.animalsRepository.findById(id);
@@ -81,13 +81,36 @@ public class AnimalService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public CustomResponse<List<Animals>> getPendingApprovalAnimals() {
+        List<Animals> pendingAnimals = animalsRepository.findByApprovalStatus(ApprovalStatus.PENDING);
+        return new CustomResponse<>( pendingAnimals,
+                false,
+                200,
+                "Animales pendientes de aprobación obtenidos correctamente");
+    }
+
+    @Transactional(rollbackFor = {SQLException.class})
+    public CustomResponse<Boolean> approveOrRejectAnimal(Long animalId,
+                                                         ApprovalStatus approvalStatus,
+                                                         String moderatorComment) {
+        Optional<Animals> optionalAnimal = animalsRepository.findById(animalId);
+        if (optionalAnimal.isPresent()) {
+            Animals animal = optionalAnimal.get();
+            animal.setApprovalStatus(approvalStatus);
+            animal.setModeratorComment(moderatorComment);
+            animalsRepository.save(animal);
+            return new CustomResponse<>(true, false, 200, "Animal aprobado/rechazado correctamente");
+        } else {
+            return new CustomResponse<>(false, true, 404, "Animal no encontrado");
+        }
+    }
+
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Animals> insert(Animals animal, List<MultipartFile> imageFiles) {
         try {
-            // Guarda el animal en la base de datos
             Animals savedAnimal = animalsRepository.saveAndFlush(animal);
 
-            // Sube y asocia las imágenes con el animal
             List<AnimalImage> images = new ArrayList<>();
             for (MultipartFile file : imageFiles) {
                 String imageUrl = cloudinaryService.uploadFile(file, "animal_images");
@@ -98,7 +121,6 @@ public class AnimalService {
             }
             savedAnimal.setImages(images);
 
-            // Guarda las imágenes asociadas con el animal
             animalImageRepository.saveAll(images);
 
             return new CustomResponse<>(savedAnimal, false, 200, "Animal registrado correctamente");
@@ -125,7 +147,7 @@ public class AnimalService {
         );
     }
 
-    @Transactional(rollbackFor =  {SQLException.class})
+    /*@Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Boolean> changeStatus(Animals animals){
         if(!this.animalsRepository.existsById(animals.getId())){
             return new CustomResponse<>(
@@ -143,7 +165,7 @@ public class AnimalService {
                 200,
                 "¡Se ha cambiado el status correctamente!"
         );
-    }
+    }*/
 
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Boolean> delete(Long id){

@@ -71,9 +71,15 @@ public class Animals {
     @Column(name = "sterilized")
     private Boolean sterilized;
 
-    @Column(columnDefinition = "boolean default true")
+    /*@Column(columnDefinition = "boolean default true")
     //@JsonIgnore
-    private Boolean status;
+    private Boolean status;*/
+
+    @Column(name = "approval_status", nullable = false)
+    private ApprovalStatus approvalStatus;
+
+    @Column(name = "moderator_comment")
+    private String moderatorComment;
 
     @ManyToOne
     @JoinColumn(name = "id_register")
