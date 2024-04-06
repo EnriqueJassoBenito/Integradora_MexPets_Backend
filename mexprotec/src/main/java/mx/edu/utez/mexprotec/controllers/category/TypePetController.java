@@ -3,6 +3,7 @@ package mx.edu.utez.mexprotec.controllers.category;
 import jakarta.validation.Valid;
 import mx.edu.utez.mexprotec.dtos.category.TypePetDto;
 import mx.edu.utez.mexprotec.models.animals.typePet.TypePet;
+import mx.edu.utez.mexprotec.services.LogsService;
 import mx.edu.utez.mexprotec.services.category.TypePetService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,9 @@ public class TypePetController {
     @Autowired
     private TypePetService typeService;
 
+    @Autowired
+    private LogsService logsService;
+
     @GetMapping("/")
     public ResponseEntity<CustomResponse<List<TypePet>>> getAll() {
         return new ResponseEntity<>(
@@ -38,23 +42,24 @@ public class TypePetController {
         );
     }
 
-    //Insertar un horario
     @PostMapping("/")
     public ResponseEntity<CustomResponse<TypePet>> insert(
             @RequestBody TypePetDto dto, @Valid BindingResult result) {
         if (result.hasErrors()) {
-            return new ResponseEntity<>(
-                    null,
-                    HttpStatus.BAD_REQUEST
-            );
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(
-                this.typeService.insert(dto.getTypePet()),
-                HttpStatus.CREATED
-        );
+
+        CustomResponse<TypePet> response = this.typeService.insert(dto.getTypePet());
+
+        if (response != null && response.getData() != null) {
+            String action = "INSERT_TYPE_PET";
+            String details = "Tipo de mascota insertado: " + response.getData().getId();
+            this.logsService.logAction(action, details);
+        }
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    //Modificar
+
     @PutMapping("/{id}")
     public ResponseEntity<CustomResponse<TypePet>> update(
             @RequestBody TypePetDto dto, @Valid BindingResult result) {

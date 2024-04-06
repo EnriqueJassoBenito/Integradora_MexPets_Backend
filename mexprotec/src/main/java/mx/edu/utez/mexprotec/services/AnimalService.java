@@ -4,6 +4,9 @@ import mx.edu.utez.mexprotec.config.service.CloudinaryService;
 import mx.edu.utez.mexprotec.models.animals.Animals;
 import mx.edu.utez.mexprotec.models.animals.AnimalsRepository;
 import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
+import mx.edu.utez.mexprotec.models.animals.personality.Personality;
+import mx.edu.utez.mexprotec.models.animals.race.Race;
+import mx.edu.utez.mexprotec.models.animals.typePet.TypePet;
 import mx.edu.utez.mexprotec.models.image.animal.AnimalImage;
 import mx.edu.utez.mexprotec.models.image.animal.AnimalImageRepository;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
@@ -22,10 +25,8 @@ public class AnimalService {
 
     @Autowired
     private AnimalsRepository animalsRepository;
-
     @Autowired
     private CloudinaryService cloudinaryService;
-
     @Autowired
     private AnimalImageRepository animalImageRepository;
 
@@ -38,28 +39,6 @@ public class AnimalService {
                 "Ok"
         );
     }
-
-    ///Servicio para los activos
-    /*@Transactional(readOnly = true)
-    public  CustomResponse<List<Animals>> getAllActive(){
-        return new CustomResponse<>(
-                this.animalsRepository.findAllByStatus(true),
-                false,
-                200,
-                "Ok"
-        );
-    }
-
-    ///Servicio para los inactivos
-    @Transactional(readOnly = true)
-    public  CustomResponse<List<Animals>> getAllInactive(){
-        return new CustomResponse<>(
-                this.animalsRepository.findAllByStatus(false),
-                false,
-                200,
-                "Ok"
-        );
-    }*/
 
     @Transactional(readOnly = true)
     public CustomResponse<Animals> getOne(Long id){
@@ -79,6 +58,101 @@ public class AnimalService {
                     "No encontrado"
             );
         }
+    }
+
+    @Transactional(readOnly = true)
+    public CustomResponse<List<Animals>> getAnimalsByTypePet(TypePet typePet) {
+        List<Animals> animals = this.animalsRepository.findByTypePet(typePet);
+        if (animals.isEmpty()) {
+            return new CustomResponse<>(
+                    null,
+                    true,
+                    404,
+                    "No se encontraron animales para el tipo de mascota especificado"
+            );
+        }
+        return new CustomResponse<>(
+                animals,
+                false,
+                200,
+                "Animales encontrados por"
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public CustomResponse<List<Animals>> getAnimalsByRace(Race race) {
+        List<Animals> animals = this.animalsRepository.findByRace(race);
+        if (animals.isEmpty()) {
+            return new CustomResponse<>(
+                    null,
+                    true,
+                    404,
+                    "No se encontraron animales para la raza especificada"
+            );
+        }
+        return new CustomResponse<>(
+                animals,
+                false,
+                200,
+                "Animales encontrados por"
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public CustomResponse<List<Animals>> getAnimalsByPersonality(Personality personality) {
+        List<Animals> animals = this.animalsRepository.findByPersonality(personality);
+        if (animals.isEmpty()) {
+            return new CustomResponse<>(
+                    null,
+                    true,
+                    404,
+                    "No se encontraron animales para la personalidad especificada"
+            );
+        }
+        return new CustomResponse<>(
+                animals,
+                false,
+                200,
+                "Animales encontrados por personalidad"
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public CustomResponse<List<Animals>> getFemaleAnimals() {
+        List<Animals> animals = this.animalsRepository.findBySex("Female");
+        if (animals.isEmpty()) {
+            return new CustomResponse<>(
+                    null,
+                    true,
+                    404,
+                    "No se encontraron animales hembra"
+            );
+        }
+        return new CustomResponse<>(
+                animals,
+                false,
+                200,
+                "Animales hembra encontrados"
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public CustomResponse<List<Animals>> getMaleAnimals() {
+        List<Animals> animals = this.animalsRepository.findBySex("Male");
+        if (animals.isEmpty()) {
+            return new CustomResponse<>(
+                    null,
+                    true,
+                    404,
+                    "No se encontraron animales macho"
+            );
+        }
+        return new CustomResponse<>(
+                animals,
+                false,
+                200,
+                "Animales macho encontrados"
+        );
     }
 
     @Transactional(readOnly = true)
@@ -146,26 +220,6 @@ public class AnimalService {
                 "Actualizado correctamente"
         );
     }
-
-    /*@Transactional(rollbackFor =  {SQLException.class})
-    public CustomResponse<Boolean> changeStatus(Animals animals){
-        if(!this.animalsRepository.existsById(animals.getId())){
-            return new CustomResponse<>(
-                    false,
-                    true,
-                    400,
-                    "No encontrado"
-            );
-        }
-        return new CustomResponse<>(
-                this.animalsRepository.updateStatusById(
-                        animals.getStatus(), animals.getId()
-                ) == 1,
-                false,
-                200,
-                "¡Se ha cambiado el status correctamente!"
-        );
-    }*/
 
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Boolean> delete(Long id){

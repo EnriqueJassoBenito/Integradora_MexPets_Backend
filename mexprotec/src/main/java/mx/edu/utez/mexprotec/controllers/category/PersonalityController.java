@@ -3,6 +3,7 @@ package mx.edu.utez.mexprotec.controllers.category;
 import jakarta.validation.Valid;
 import mx.edu.utez.mexprotec.dtos.category.PersonalityDto;
 import mx.edu.utez.mexprotec.models.animals.personality.Personality;
+import mx.edu.utez.mexprotec.services.LogsService;
 import mx.edu.utez.mexprotec.services.category.PersonalityService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class PersonalityController {
     @Autowired
     private PersonalityService personalityService;
 
+    @Autowired
+    private LogsService logsService;
+
     @GetMapping("/")
     public ResponseEntity<CustomResponse<List<Personality>>> getAll() {
         return new ResponseEntity<>(
@@ -37,23 +41,24 @@ public class PersonalityController {
         );
     }
 
-    //Insertar un horario
     @PostMapping("/")
     public ResponseEntity<CustomResponse<Personality>> insert(
             @RequestBody PersonalityDto dto, @Valid BindingResult result) {
         if (result.hasErrors()) {
-            return new ResponseEntity<>(
-                    null,
-                    HttpStatus.BAD_REQUEST
-            );
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(
-                this.personalityService.insert(dto.getPersonality()),
-                HttpStatus.CREATED
-        );
+
+        CustomResponse<Personality> response = this.personalityService.insert(dto.getPersonality());
+
+        if (response != null && response.getData() != null) {
+            String action = "INSERT_PERSONALITY";
+            String details = "Personalidad insertada: " + response.getData().getId();
+            this.logsService.logAction(action, details);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    //Modificar
     @PutMapping("/{id}")
     public ResponseEntity<CustomResponse<Personality>> update(
             @RequestBody PersonalityDto dto, @Valid BindingResult result) {

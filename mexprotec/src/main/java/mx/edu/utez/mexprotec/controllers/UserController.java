@@ -3,6 +3,7 @@ package mx.edu.utez.mexprotec.controllers;
 import jakarta.validation.Valid;
 import mx.edu.utez.mexprotec.dtos.UserDto;
 import mx.edu.utez.mexprotec.models.users.Users;
+import mx.edu.utez.mexprotec.services.LogsService;
 import mx.edu.utez.mexprotec.services.UserService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,15 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UserService usuarioService;
+    private UserService userService;
+
+    @Autowired
+    private LogsService logsService;
 
     @GetMapping("/")
     public ResponseEntity<CustomResponse<List<Users>>> getAll(){
         return new ResponseEntity<>(
-                this.usuarioService.getAll(),
+                this.userService.getAll(),
                 HttpStatus.OK
         );
     }
@@ -34,18 +38,44 @@ public class UserController {
             @PathVariable("id")
             Integer id){
         return new ResponseEntity<>(
-                this.usuarioService.getOne(id),
+                this.userService.getOne(id),
+                HttpStatus.OK
+        );
+    }
+    @GetMapping("/role/{roleName}")
+    public ResponseEntity<CustomResponse<List<Users>>> getByRole(@PathVariable("roleName") String roleName) {
+        return new ResponseEntity<>(
+                this.userService.getByRole(roleName),
                 HttpStatus.OK
         );
     }
 
-    @PostMapping("/")
+    /*@PostMapping("/")
     public ResponseEntity<CustomResponse<Users>> insert(@RequestBody UserDto usuario) {
         try {
-            CustomResponse<Users> response = this.usuarioService.insert(usuario.getUsers());
+            CustomResponse<Users> response = this.userService.insert(usuario.getUsers());
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             // Manejar la excepción
+            String errorMessage = "Error al enviar correo: " + e.getMessage();
+            return new ResponseEntity<>(
+                    new CustomResponse<>(null, true, 400, errorMessage),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+    }*/
+
+    @PostMapping("/")
+    public ResponseEntity<CustomResponse<Users>> insert(@RequestBody UserDto usuario) {
+        try {
+            CustomResponse<Users> response = this.userService.insert(usuario.getUsers());
+            String action = "INSERT_USER";
+            String details = "Usuario insertado: " + response.getData().getNameUser();
+            this.logsService.logAction(action, details);
+
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+        } catch (Exception e) {
             String errorMessage = "Error al enviar correo: " + e.getMessage();
             return new ResponseEntity<>(
                     new CustomResponse<>(null, true, 400, errorMessage),
@@ -64,7 +94,7 @@ public class UserController {
             );
         }
         return new ResponseEntity<>(
-                this.usuarioService.update(dto.getUsers()),
+                this.userService.update(dto.getUsers()),
                 HttpStatus.CREATED
         );
     }
@@ -74,7 +104,7 @@ public class UserController {
             @PathVariable("id") Integer id
     ){
         return new ResponseEntity<>(
-                this.usuarioService.delete(id),
+                this.userService.delete(id),
                 HttpStatus.OK
         );
     }

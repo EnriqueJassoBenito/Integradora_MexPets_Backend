@@ -13,7 +13,6 @@ import java.util.Map;
 public class CloudinaryService {
     @Autowired
     private Cloudinary cloudinary;
-
     public String uploadFile(MultipartFile file, String folderName) {
         try {
             if (file.getSize() > 5 * 1024 * 1024) {

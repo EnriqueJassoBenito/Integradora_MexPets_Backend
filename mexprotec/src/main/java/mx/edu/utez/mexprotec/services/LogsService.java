@@ -2,6 +2,7 @@ package mx.edu.utez.mexprotec.services;
 
 import mx.edu.utez.mexprotec.models.logs.Logs;
 import mx.edu.utez.mexprotec.models.logs.LogsRepository;
+import mx.edu.utez.mexprotec.models.users.Users;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -44,14 +45,9 @@ public class LogsService {
                 "Correcto funcionando");
     }
 
-    public void logUserCreation(User user) {
-        String details = String.format("User '%s' created", user.getUsername());
-        logAction("USER_CREATION", details);
-    }
-
-    private void logAction(String action, String details) {
+    public void logAction(String actionType, String details) {
         Logs log = new Logs();
-        log.setAction(action);
+        log.setActionType(actionType);
         log.setDetails(details);
         log.setTimestamp(LocalDateTime.now());
         repository.save(log);

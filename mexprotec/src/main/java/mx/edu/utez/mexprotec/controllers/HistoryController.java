@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import mx.edu.utez.mexprotec.dtos.HistoryDto;
 import mx.edu.utez.mexprotec.models.history.History;
 import mx.edu.utez.mexprotec.services.HistoryService;
+import mx.edu.utez.mexprotec.services.LogsService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,9 @@ public class HistoryController {
 
     @Autowired
     private HistoryService historyService;
+
+    @Autowired
+    private LogsService logsService;
 
     @GetMapping("/")
     public ResponseEntity<CustomResponse<List<History>>> getAll() {
@@ -64,8 +68,16 @@ public class HistoryController {
                     HttpStatus.BAD_REQUEST
             );
         }
+
+        CustomResponse<History> response = this.historyService.insert(dto.getHistory());
+
+        if (response != null && response.getData() != null) {
+            String action = "INSERT_HISTORY";
+            String details = "Historial insertado: " + response.getData().getId();
+            this.logsService.logAction(action, details);
+        }
         return new ResponseEntity<>(
-                this.historyService.insert(dto.getHistory()),
+                response,
                 HttpStatus.CREATED
         );
     }

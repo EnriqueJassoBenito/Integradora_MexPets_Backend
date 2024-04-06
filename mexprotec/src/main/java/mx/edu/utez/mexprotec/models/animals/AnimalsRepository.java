@@ -1,5 +1,8 @@
 package mx.edu.utez.mexprotec.models.animals;
 
+import mx.edu.utez.mexprotec.models.animals.personality.Personality;
+import mx.edu.utez.mexprotec.models.animals.race.Race;
+import mx.edu.utez.mexprotec.models.animals.typePet.TypePet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,8 +26,11 @@ public interface AnimalsRepository extends JpaRepository<Animals, Long> {
     );*/
 
     Optional<Animals> findById(Long aLong);
-    //List<Animals> findAllByStatus(Boolean status);
     Animals getById(Long id);
-
     List<Animals> findByApprovalStatus(ApprovalStatus approvalStatus);
+
+    List<Animals> findByTypePet(TypePet typePet);
+    List<Animals> findByRace(Race race);
+    List<Animals> findByPersonality(Personality personality);
+    List<Animals> findBySex(String sex);
 }

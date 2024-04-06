@@ -8,7 +8,7 @@ import lombok.Setter;
 import mx.edu.utez.mexprotec.models.users.Users;
 
 @Entity
-@Table(name= "actions")
+@Table(name = "adoption_registration_status")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -17,16 +17,16 @@ public class Actions {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_user")
+    @OneToOne
+    @JoinColumn(name = "user_id")
     private Users user;
 
-    @Column(name = "register_ado")
-    private Boolean registerAdo;
-
-    @Column(name = "adoption")
-    private Boolean adoption;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private AdoptionRegistrationType status;
 
 }
+

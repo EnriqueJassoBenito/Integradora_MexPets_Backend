@@ -7,6 +7,7 @@ import mx.edu.utez.mexprotec.models.adoption.Adoption;
 
 import mx.edu.utez.mexprotec.services.AdoptionService;
 
+import mx.edu.utez.mexprotec.services.LogsService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,9 @@ public class AdoptionController {
 
     @Autowired
     private AdoptionService adoptionService;
+
+    @Autowired
+    private LogsService logsService;
 
     @GetMapping("/")
     public ResponseEntity<CustomResponse<List<Adoption>>> getAll() {
@@ -59,7 +63,7 @@ public class AdoptionController {
         );
     }
 
-    @PostMapping("/")
+    /*@PostMapping("/")
     public ResponseEntity<CustomResponse<Adoption>> insert(
             @ModelAttribute AdoptionDto dto,
             @RequestParam("imageFiles") List<MultipartFile> imageFiles,
@@ -72,6 +76,28 @@ public class AdoptionController {
         }
         return new ResponseEntity<>(
                 this.adoptionService.insert(dto.toAdoption(), imageFiles),
+                HttpStatus.CREATED
+        );
+    }*/
+    @PostMapping("/")
+    public ResponseEntity<CustomResponse<Adoption>> insert(
+            @ModelAttribute AdoptionDto dto,
+            @RequestParam("imageFiles") List<MultipartFile> imageFiles,
+            @Valid BindingResult result) {
+        if (result.hasErrors()) {
+            return new ResponseEntity<>(
+                    null,
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+        CustomResponse<Adoption> response = this.adoptionService.insert(dto.toAdoption(), imageFiles);
+        if (response != null && response.getData() != null) {
+            String action = "INSERT_ADOPTION";
+            String details = "Adopción insertada: " + response.getData().getId();
+            this.logsService.logAction(action, details);
+        }
+        return new ResponseEntity<>(
+                response,
                 HttpStatus.CREATED
         );
     }

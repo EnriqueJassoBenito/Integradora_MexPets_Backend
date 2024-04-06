@@ -11,6 +11,7 @@ import java.util.List;
 public interface UsersRepository extends JpaRepository<Users, Integer> {
 
     List<Users> findAllByStatus(Boolean status);
+    List<Users> findByRol_Nrol(String nrol);
     Users getById(Integer id);
 
     @Query(value = "SELECT * FROM users WHERE status=true AND id = :id", nativeQuery = true)

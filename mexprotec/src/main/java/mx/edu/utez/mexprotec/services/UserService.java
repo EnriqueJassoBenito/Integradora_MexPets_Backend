@@ -44,7 +44,6 @@ public class UserService {
         );
     }
 
-    ///Buscar por id
     @Transactional(readOnly = true)
     public CustomResponse<Users> getOne(Integer id) {
         Users user = this.usersRepository.findByIdAndActivo(id);
@@ -59,7 +58,16 @@ public class UserService {
         }
     }
 
-    //Crear
+    @Transactional(readOnly = true)
+    public CustomResponse<List<Users>> getByRole(String roleName) {
+        List<Users> users = this.usersRepository.findByRol_Nrol(roleName);
+        if (!users.isEmpty()) {
+            return new CustomResponse<>(users, false, 200, "Usuarios encontrados por rol");
+        } else {
+            return new CustomResponse<>(null, true, 404, "No se encontraron usuarios con ese rol");
+        }
+    }
+
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Users> insert(Users user) {
         if (this.usersRepository.findByEmailAndActivo(user.getEmail()) == null) {
@@ -85,7 +93,6 @@ public class UserService {
                                     null, true, 400, "Ocurrió un error al enviar el correo"
                             );
                         }
-                        logsService.logUserCreation(userSave); // Registrar la acción de creación de usuario
                         return new CustomResponse<>(
                                 userSave, false, 200, "Usuario registrado correctamente"
                         );
@@ -107,7 +114,6 @@ public class UserService {
         }
     }
 
-    ///Actualizar
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Users> update(Users users){
         if(!this.usersRepository.existsById(users.getId()))
@@ -124,28 +130,6 @@ public class UserService {
                 "Actualizado correctamente"
         );
     }
-
-    /*@Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<Users> update(Users user) {
-        Users us = this.usersRepository.findById(user.getId()).orElse(null);
-        if (us != null){
-            user.setPassword(us.getPassword());
-            return new CustomResponse<>(
-                    this.usersRepository.saveAndFlush(user),
-                    false,
-                    200,
-                    "user actualizado correctamente"
-            );
-        } else {
-            return new CustomResponse<>(
-                    null,
-                    true,
-                    400,
-                    "No se encontro el user"
-            );
-        }
-    }*/
-
 
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Boolean> delete(Integer id) {

@@ -26,30 +26,25 @@ public class RolService {
             List<Rol> roles = this.rolRepository.findAll();
             if (roles.isEmpty()) {
 
-                // Crear roles
                 Rol rolAdmin = new Rol();
                 rolAdmin.setStatus(true);
                 rolAdmin.setNrol("ADMIN");
                 this.rolRepository.save(rolAdmin);
 
-                ///Crea rol MODERADOR
                 Rol rolModerador = new Rol();
                 rolModerador.setStatus(true);
-                rolModerador.setNrol("MODE");
+                rolModerador.setNrol("MODERADOR");
                 this.rolRepository.save(rolModerador);
 
-                ///Crea rol CLIENTE
                 Rol rolCliente = new Rol();
                 rolCliente.setStatus(true);
                 rolCliente.setNrol("CLIENTE");
                 this.rolRepository.save(rolCliente);
 
-                // Recuperar los roles guardados
                 rolAdmin = this.rolRepository.findByNrol("ADMIN");
-                rolModerador = this.rolRepository.findByNrol("MODE");
+                rolModerador = this.rolRepository.findByNrol("MODERADOR");
                 rolCliente = this.rolRepository.findByNrol("CLIENTE");
 
-                // Crear usuario con los roles recuperados
                 Users user = new Users();
                 user.setNameUser("MichKwon");
                 user.setName("Michelle");

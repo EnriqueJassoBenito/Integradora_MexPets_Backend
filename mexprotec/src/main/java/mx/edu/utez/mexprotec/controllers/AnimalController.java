@@ -4,7 +4,11 @@ import jakarta.validation.Valid;
 import mx.edu.utez.mexprotec.dtos.AnimalDto;
 import mx.edu.utez.mexprotec.models.animals.Animals;
 import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
+import mx.edu.utez.mexprotec.models.animals.personality.Personality;
+import mx.edu.utez.mexprotec.models.animals.race.Race;
+import mx.edu.utez.mexprotec.models.animals.typePet.TypePet;
 import mx.edu.utez.mexprotec.services.AnimalService;
+import mx.edu.utez.mexprotec.services.LogsService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +27,9 @@ public class AnimalController {
     @Autowired
     private AnimalService animalService;
 
+    @Autowired
+    private LogsService logsService;
+
     @GetMapping("/")
     public ResponseEntity<CustomResponse<List<Animals>>> getAll() {
         return new ResponseEntity<>(
@@ -30,24 +37,6 @@ public class AnimalController {
                 HttpStatus.OK
         );
     }
-
-    /*@GetMapping("/getActive")
-    public ResponseEntity<CustomResponse<List<Animals>>>
-    getAllActive(){
-        return new ResponseEntity<>(
-                this.animalService.getAllActive(),
-                HttpStatus.OK
-        );
-    }
-
-    @GetMapping("/getAllInactive")
-    public ResponseEntity<CustomResponse<List<Animals>>>
-    getAllInactive(){
-        return new ResponseEntity<>(
-                this.animalService.getAllInactive(),
-                HttpStatus.OK
-        );
-    }*/
 
     @GetMapping("/{id}")
     public ResponseEntity<CustomResponse<Animals>> getOne(@PathVariable("id") Long id) {
@@ -57,14 +46,65 @@ public class AnimalController {
         );
     }
 
+    /**/
+    @GetMapping("/type/{typePetId}")
+    public ResponseEntity<CustomResponse<List<Animals>>> getAnimalsByTypePet(@PathVariable Long typePetId) {
+        TypePet typePet = new TypePet();
+        typePet.setId(typePetId);
+
+        CustomResponse<List<Animals>> response = this.animalService.getAnimalsByTypePet(typePet);
+        if (response.getError()) {
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/race/{raceId}")
+    public ResponseEntity<CustomResponse<List<Animals>>> getAnimalsByRace(@PathVariable Long raceId) {
+        Race race = new Race();
+        race.setId(raceId);
+
+        CustomResponse<List<Animals>> response = this.animalService.getAnimalsByRace(race);
+        if (response.getError()) {
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/personality/{personalityId}")
+    public ResponseEntity<CustomResponse<List<Animals>>> getAnimalsByPersonality(@PathVariable Long personalityId) {
+        Personality personality = new Personality();
+        personality.setId(personalityId);
+
+        CustomResponse<List<Animals>> response = this.animalService.getAnimalsByPersonality(personality);
+        if (response.getError()) {
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/female")
+    public ResponseEntity<CustomResponse<List<Animals>>> getFemaleAnimals() {
+        CustomResponse<List<Animals>> response = this.animalService.getFemaleAnimals();
+        if (response.getError()) {
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/male")
+    public ResponseEntity<CustomResponse<List<Animals>>> getMaleAnimals() {
+        CustomResponse<List<Animals>> response = this.animalService.getMaleAnimals();
+        if (response.getError()) {
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    /**/
     @GetMapping("/pendientes")
     public ResponseEntity<CustomResponse<List<Animals>>> getPendingApprovalAnimals() {
         CustomResponse<List<Animals>> response = animalService.getPendingApprovalAnimals();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-
-    @PostMapping("/")
+    /*@PostMapping("/")
     public ResponseEntity<CustomResponse<Animals>> insert(
             @ModelAttribute AnimalDto dto,
             @RequestParam("imageFiles") List<MultipartFile> imageFiles,
@@ -79,7 +119,34 @@ public class AnimalController {
                 this.animalService.insert(dto.toAnimals(), imageFiles),
                 HttpStatus.CREATED
         );
+    }*/
+
+    @PostMapping("/")
+    public ResponseEntity<CustomResponse<Animals>> insert(
+            @ModelAttribute AnimalDto dto,
+            @RequestParam("imageFiles") List<MultipartFile> imageFiles,
+            @Valid BindingResult result) {
+        if (result.hasErrors()) {
+            return new ResponseEntity<>(
+                    null,
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
+        CustomResponse<Animals> response = this.animalService.insert(dto.toAnimals(), imageFiles);
+
+        if (response != null && response.getData() != null) {
+            String action = "INSERT_ANIMAL";
+            String details = "Animal insertado: " + response.getData().getId();
+            this.logsService.logAction(action, details);
+        }
+
+        return new ResponseEntity<>(
+                response,
+                HttpStatus.CREATED
+        );
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<CustomResponse<Animals>> update(

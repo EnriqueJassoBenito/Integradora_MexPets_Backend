@@ -1,6 +1,5 @@
 package mx.edu.utez.mexprotec.models.animals.race;
 
-import mx.edu.utez.mexprotec.models.animals.personality.Personality;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

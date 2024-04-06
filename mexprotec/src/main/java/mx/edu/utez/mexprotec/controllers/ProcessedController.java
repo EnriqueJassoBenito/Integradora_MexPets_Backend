@@ -3,6 +3,7 @@ package mx.edu.utez.mexprotec.controllers;
 import jakarta.validation.Valid;
 import mx.edu.utez.mexprotec.dtos.ProcessedDto;
 import mx.edu.utez.mexprotec.models.processed.Processed;
+import mx.edu.utez.mexprotec.services.LogsService;
 import mx.edu.utez.mexprotec.services.ProcessedService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class ProcessedController {
 
     @Autowired
     private ProcessedService processedService;
+
+    @Autowired
+    private LogsService logsService;
 
     @GetMapping("/")
     public ResponseEntity<CustomResponse<List<Processed>>> getAll() {

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import mx.edu.utez.mexprotec.models.users.Users;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
@@ -22,8 +23,11 @@ public class Logs {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "action")
-    private String action;
+    @Column(name = "entity_type")
+    private String entityType;
+
+    @Column(name = "action_type")
+    private String actionType;
 
     @Column(name = "details")
     private String details;
