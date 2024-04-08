@@ -9,13 +9,15 @@ import mx.edu.utez.mexprotec.models.history.History;
 import mx.edu.utez.mexprotec.models.processed.Processed;
 import mx.edu.utez.mexprotec.models.users.Users;
 
+import java.util.UUID;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 public class HistoryDto {
 
-    private Long id;
+    private UUID id;
     private Users cliente;
     private Animals animal;
     private Processed adoptionProcessed;

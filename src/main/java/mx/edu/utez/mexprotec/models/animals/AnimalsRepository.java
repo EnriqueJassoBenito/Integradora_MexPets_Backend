@@ -11,9 +11,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface AnimalsRepository extends JpaRepository<Animals, Long> {
+public interface AnimalsRepository extends JpaRepository<Animals, UUID> {
 
     /*@Modifying
     @Query(
@@ -25,8 +26,8 @@ public interface AnimalsRepository extends JpaRepository<Animals, Long> {
             @Param("id") Long id
     );*/
 
-    Optional<Animals> findById(Long aLong);
-    Animals getById(Long id);
+    Optional<Animals> findById(UUID id);
+    Animals getById(UUID id);
     List<Animals> findByApprovalStatus(ApprovalStatus approvalStatus);
 
     List<Animals> findByTypePet(TypePet typePet);

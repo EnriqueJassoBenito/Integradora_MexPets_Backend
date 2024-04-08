@@ -7,8 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mx.edu.utez.mexprotec.models.animals.Animals;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name= "race")
@@ -19,9 +21,13 @@ import java.util.List;
 public class Race {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
 
     @Column(name = "race_pet", nullable = false)
     private String racePet;

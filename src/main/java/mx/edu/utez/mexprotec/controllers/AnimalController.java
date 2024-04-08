@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/animals/")
@@ -39,7 +40,7 @@ public class AnimalController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomResponse<Animals>> getOne(@PathVariable("id") Long id) {
+    public ResponseEntity<CustomResponse<Animals>> getOne(@PathVariable("id") UUID id) {
         return new ResponseEntity<>(
                 this.animalService.getOne(id),
                 HttpStatus.OK
@@ -48,7 +49,7 @@ public class AnimalController {
 
     /**/
     @GetMapping("/type/{typePetId}")
-    public ResponseEntity<CustomResponse<List<Animals>>> getAnimalsByTypePet(@PathVariable Long typePetId) {
+    public ResponseEntity<CustomResponse<List<Animals>>> getAnimalsByTypePet(@PathVariable UUID typePetId) {
         TypePet typePet = new TypePet();
         typePet.setId(typePetId);
 
@@ -60,7 +61,7 @@ public class AnimalController {
     }
 
     @GetMapping("/race/{raceId}")
-    public ResponseEntity<CustomResponse<List<Animals>>> getAnimalsByRace(@PathVariable Long raceId) {
+    public ResponseEntity<CustomResponse<List<Animals>>> getAnimalsByRace(@PathVariable UUID raceId) {
         Race race = new Race();
         race.setId(raceId);
 
@@ -71,7 +72,7 @@ public class AnimalController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping("/personality/{personalityId}")
-    public ResponseEntity<CustomResponse<List<Animals>>> getAnimalsByPersonality(@PathVariable Long personalityId) {
+    public ResponseEntity<CustomResponse<List<Animals>>> getAnimalsByPersonality(@PathVariable UUID personalityId) {
         Personality personality = new Personality();
         personality.setId(personalityId);
 
@@ -150,7 +151,7 @@ public class AnimalController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CustomResponse<Animals>> update(
-            @PathVariable("id") Long id,
+            @PathVariable("id") UUID id,
             @RequestBody AnimalDto dto,
             @Valid BindingResult result) {
         if (result.hasErrors()) {
@@ -167,7 +168,7 @@ public class AnimalController {
     }
 
     @PatchMapping("/{id}/aprobacion")
-    public ResponseEntity<CustomResponse<String>> approveOrRejectAnimal(@PathVariable Long id,
+    public ResponseEntity<CustomResponse<String>> approveOrRejectAnimal(@PathVariable UUID id,
                                                                         @RequestParam ApprovalStatus approvalStatus,
                                                                         @RequestParam String moderatorComment) {
         CustomResponse<Boolean> response = animalService.approveOrRejectAnimal(id, approvalStatus, moderatorComment);
@@ -187,7 +188,7 @@ public class AnimalController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> delete(
-            @PathVariable("id") Long id) {
+            @PathVariable("id") UUID id) {
         return new ResponseEntity<>(
                 this.animalService.delete(id),
                 HttpStatus.OK

@@ -11,6 +11,7 @@ import mx.edu.utez.mexprotec.models.rol.Rol;
 import mx.edu.utez.mexprotec.models.users.Users;
 
 import java.util.Set;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,7 +19,7 @@ import java.util.Set;
 @Getter
 public class RolDto {
 
-    private Integer idRol;
+    private UUID idRol;
     private String nrol;
     private Boolean status;
     private Set<Users> usuario;

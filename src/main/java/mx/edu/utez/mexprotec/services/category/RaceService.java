@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class RaceService {
@@ -28,7 +29,7 @@ public class RaceService {
     }
 
     @Transactional(readOnly = true)
-    public CustomResponse<Race> getOne(Long id){
+    public CustomResponse<Race> getOne(UUID id){
         Optional<Race> optional = this.raceRepository.findById(id);
         if (optional.isPresent()){
             return new CustomResponse<>(
@@ -85,7 +86,7 @@ public class RaceService {
     }
 
     @Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<Boolean> deleteById(Long id) {
+    public CustomResponse<Boolean> deleteById(UUID id) {
         if (!this.raceRepository.existsById(id)) {
             return new CustomResponse<>(
                     false,
@@ -100,7 +101,7 @@ public class RaceService {
                 true,
                 false,
                 200,
-                "Personalidad eliminada correctamente"
+                "Raza eliminada correctamente"
         );
     }
 }

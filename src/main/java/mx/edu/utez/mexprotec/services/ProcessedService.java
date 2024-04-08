@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProcessedService {
@@ -58,7 +59,7 @@ public class ProcessedService {
     }
 
     @Transactional(readOnly = true)
-    public CustomResponse<Processed> getOne(Long id){
+    public CustomResponse<Processed> getOne(UUID id){
         Optional<Processed> optional = this.processedRepository.findById(id);
         if (optional.isPresent()){
             return new CustomResponse<>(
@@ -88,7 +89,7 @@ public class ProcessedService {
     }
 
     @Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<Boolean> acceptAdoption(Long adoptionId) {
+    public CustomResponse<Boolean> acceptAdoption(UUID adoptionId) {
         Optional<Adoption> optionalAdoption = adoptionRepository.findById(adoptionId);
         if (optionalAdoption.isPresent()) {
             Adoption adoption = optionalAdoption.get();
@@ -152,7 +153,7 @@ public class ProcessedService {
     }
 
     @Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<Boolean> deleteById(Long id) {
+    public CustomResponse<Boolean> deleteById(UUID id) {
         if (!this.processedRepository.existsById(id)) {
             return new CustomResponse<>(
                     false,

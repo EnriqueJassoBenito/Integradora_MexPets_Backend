@@ -10,13 +10,15 @@ import lombok.*;
 import mx.edu.utez.mexprotec.models.rol.Rol;
 import mx.edu.utez.mexprotec.models.users.Users;
 
+import java.util.UUID;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
 public class UserDto {
 
-    private Integer id;
+    private UUID id;
     @NotNull
     private String nameUser;
     @NotNull

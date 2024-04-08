@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class TypePetService {
@@ -29,7 +30,7 @@ public class TypePetService {
     }
 
     @Transactional(readOnly = true)
-    public CustomResponse<TypePet> getOne(Long id){
+    public CustomResponse<TypePet> getOne(UUID id){
         Optional<TypePet> optional = this.typeRepository.findById(id);
         if (optional.isPresent()){
             return new CustomResponse<>(
@@ -84,7 +85,7 @@ public class TypePetService {
         );
     }
     @Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<Boolean> deleteById(Long id) {
+    public CustomResponse<Boolean> deleteById(UUID id) {
         if (!this.typeRepository.existsById(id)) {
             return new CustomResponse<>(
                     false,

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/adoption/")
@@ -56,7 +57,7 @@ public class AdoptionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomResponse<Adoption>> getOne(@PathVariable("id") Long id) {
+    public ResponseEntity<CustomResponse<Adoption>> getOne(@PathVariable("id") UUID id) {
         return new ResponseEntity<>(
                 this.adoptionService.getOne(id),
                 HttpStatus.OK
@@ -104,7 +105,7 @@ public class AdoptionController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CustomResponse<Adoption>> update(
-            @PathVariable("id") Long id,
+            @PathVariable("id") UUID id,
             @RequestBody AdoptionDto dto,
             @Valid BindingResult result) {
         if (result.hasErrors()) {
@@ -122,7 +123,7 @@ public class AdoptionController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> enableOrDisable(
-            @PathVariable("id") Long id,
+            @PathVariable("id") UUID id,
             @RequestBody AdoptionDto dto) {
         dto.setId(id);
         return new ResponseEntity<>(
@@ -133,7 +134,7 @@ public class AdoptionController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CustomResponse<Boolean>> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<CustomResponse<Boolean>> delete(@PathVariable("id") UUID id) {
         return new ResponseEntity<>(
                 this.adoptionService.delete(id),
                 HttpStatus.OK

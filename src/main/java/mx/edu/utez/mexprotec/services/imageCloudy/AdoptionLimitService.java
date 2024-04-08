@@ -12,11 +12,10 @@ public class AdoptionLimitService {
     @Autowired
     private AdoptionRepository adoptionRepository;
 
-    // Método para verificar si se han alcanzado las adopciones límite por día
     public boolean isAdoptionLimitReached() {
         LocalDate today = LocalDate.now();
         long adoptionCount = adoptionRepository.countByDate(today);
-        int adoptionLimit = 2; // Límite de adopciones por día
+        int adoptionLimit = 2;
         return adoptionCount >= adoptionLimit;
     }
 }

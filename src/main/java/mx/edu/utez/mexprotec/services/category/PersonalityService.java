@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class PersonalityService {
@@ -28,7 +29,7 @@ public class PersonalityService {
     }
 
     @Transactional(readOnly = true)
-    public CustomResponse<Personality> getOne(Long id){
+    public CustomResponse<Personality> getOne(UUID id){
         Optional<Personality> optional = this.personalityRepository.findById(id);
         if (optional.isPresent()){
             return new CustomResponse<>(
@@ -83,7 +84,7 @@ public class PersonalityService {
         );
     }
     @Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<Boolean> deleteById(Long id) {
+    public CustomResponse<Boolean> deleteById(UUID id) {
         if (!this.personalityRepository.existsById(id)) {
             return new CustomResponse<>(
                     false,

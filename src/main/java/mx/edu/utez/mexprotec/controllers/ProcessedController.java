@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/adoption_processed/")
@@ -21,9 +22,6 @@ public class ProcessedController {
 
     @Autowired
     private ProcessedService processedService;
-
-    @Autowired
-    private LogsService logsService;
 
     @GetMapping("/")
     public ResponseEntity<CustomResponse<List<Processed>>> getAll() {
@@ -52,7 +50,7 @@ public class ProcessedController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomResponse<Processed>> getOne(@PathVariable("id") Long id) {
+    public ResponseEntity<CustomResponse<Processed>> getOne(@PathVariable("id") UUID id) {
         return new ResponseEntity<>(
                 this.processedService.getOne(id),
                 HttpStatus.OK
@@ -74,7 +72,7 @@ public class ProcessedController {
         );
     }
     @PostMapping("/acceptAdoption")
-    public ResponseEntity<CustomResponse<Boolean>> acceptAdoption(@RequestParam Long adoptionId) {
+    public ResponseEntity<CustomResponse<Boolean>> acceptAdoption(@RequestParam UUID adoptionId) {
         CustomResponse<Boolean> response = processedService.acceptAdoption(adoptionId);
         HttpStatus status = response.getError() ? HttpStatus.BAD_REQUEST : HttpStatus.OK;
         return new ResponseEntity<>(response, status);
@@ -95,7 +93,6 @@ public class ProcessedController {
         );
     }
 
-    //Modificar el status
     @PatchMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> enableOrDisable(
             @RequestBody ProcessedDto dto) {
@@ -106,7 +103,7 @@ public class ProcessedController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CustomResponse<Boolean>> deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<CustomResponse<Boolean>> deleteById(@PathVariable("id") UUID id) {
         return new ResponseEntity<>(
                 this.processedService.deleteById(id),
                 HttpStatus.OK

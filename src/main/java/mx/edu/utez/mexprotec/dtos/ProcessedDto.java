@@ -8,13 +8,15 @@ import mx.edu.utez.mexprotec.models.adoption.Adoption;
 import mx.edu.utez.mexprotec.models.processed.Processed;
 import mx.edu.utez.mexprotec.models.users.Users;
 
+import java.util.UUID;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
 public class ProcessedDto {
 
-    private Long id;
+    private UUID id;
     private Adoption adoption;
     private Users moderador;
     private Boolean status;

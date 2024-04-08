@@ -28,7 +28,6 @@ public class CaptchaService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        //Crear el cuerpo de la solicitud
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("solution", solution);
         requestBody.put("secret", captchaKey);

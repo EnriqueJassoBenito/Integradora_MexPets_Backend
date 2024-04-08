@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mx.edu.utez.mexprotec.models.adoption.Adoption;
 import mx.edu.utez.mexprotec.models.users.Users;
+import org.hibernate.annotations.GenericGenerator;
+
+import java.util.UUID;
 
 @Entity
 @Table(name="adoption_processed")
@@ -17,9 +20,13 @@ import mx.edu.utez.mexprotec.models.users.Users;
 public class Processed {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "id_adoption")

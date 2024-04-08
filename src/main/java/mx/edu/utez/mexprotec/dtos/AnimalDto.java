@@ -15,6 +15,7 @@ import mx.edu.utez.mexprotec.models.users.Users;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,7 +23,7 @@ import java.util.List;
 @Getter
 public class AnimalDto {
 
-    private Long id;
+    private UUID id;
     private String namePet;
     private TypePet typePet;
     private String location;

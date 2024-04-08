@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class HistoryService {
@@ -27,7 +28,6 @@ public class HistoryService {
         );
     }
 
-    ///Servicio para los activos
     @Transactional(readOnly = true)
     public  CustomResponse<List<History>> getAllActive(){
         return new CustomResponse<>(
@@ -38,7 +38,6 @@ public class HistoryService {
         );
     }
 
-    ///Servicio para los inactivos
     @Transactional(readOnly = true)
     public  CustomResponse<List<History>> getAllInactive(){
         return new CustomResponse<>(
@@ -49,9 +48,8 @@ public class HistoryService {
         );
     }
 
-    ///Id
     @Transactional(readOnly = true)
-    public CustomResponse<History> getOne(Long id){
+    public CustomResponse<History> getOne(UUID id){
         Optional<History> optional = this.historyRepository.findById(id);
         if (optional.isPresent()){
             return new CustomResponse<>(
@@ -70,7 +68,6 @@ public class HistoryService {
         }
     }
 
-    //Insertar
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<History> insert(History history){
         return new CustomResponse<>(
@@ -81,7 +78,6 @@ public class HistoryService {
         );
     }
 
-    //Actualizar
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<History> update(History history){
         if(!this.historyRepository.existsById(history.getId()))
@@ -99,7 +95,6 @@ public class HistoryService {
         );
     }
 
-    //Cambiar Status
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Boolean> changeStatus(History history){
         if(!this.historyRepository.existsById(history.getId())){
@@ -120,9 +115,8 @@ public class HistoryService {
         );
     }
 
-    ///Eliminar
     @Transactional(rollbackFor =  {SQLException.class})
-    public CustomResponse<Boolean> delete(Long id){
+    public CustomResponse<Boolean> delete(UUID id){
         if(!this.historyRepository.existsById(id)){
             return new CustomResponse<>(
                     false,

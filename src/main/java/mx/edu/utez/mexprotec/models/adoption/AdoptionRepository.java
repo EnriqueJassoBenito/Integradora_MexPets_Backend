@@ -9,9 +9,10 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface AdoptionRepository extends JpaRepository<Adoption, Long> {
+public interface AdoptionRepository extends JpaRepository<Adoption, UUID> {
 
     @Modifying
     @Query(
@@ -20,12 +21,12 @@ public interface AdoptionRepository extends JpaRepository<Adoption, Long> {
     )
     int updateStatusById(
             @Param("status") Boolean status,
-            @Param("id") Long id
+            @Param("id") UUID id
     );
 
-    Optional<Adoption> findById(Long aLong);
+    Optional<Adoption> findById(UUID id);
     List<Adoption> findAllByStatus(Boolean status);
-    Adoption getById(Long id);
+    Adoption getById(UUID id);
 
     @Query("SELECT COUNT(a) FROM Adoption a WHERE DATE(a.creationDate) = :date")
     long countByDate(@Param("date") LocalDate date);

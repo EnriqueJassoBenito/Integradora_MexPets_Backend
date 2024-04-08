@@ -11,8 +11,10 @@ import mx.edu.utez.mexprotec.models.animals.race.Race;
 import mx.edu.utez.mexprotec.models.animals.typePet.TypePet;
 import mx.edu.utez.mexprotec.models.image.animal.AnimalImage;
 import mx.edu.utez.mexprotec.models.users.Users;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Entity
@@ -24,9 +26,13 @@ import java.util.List;
 public class Animals {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
 
     @Column(name = "name_pet", nullable = false)
     private String namePet;

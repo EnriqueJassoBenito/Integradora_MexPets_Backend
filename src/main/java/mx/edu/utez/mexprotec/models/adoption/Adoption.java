@@ -10,9 +10,11 @@ import lombok.Setter;
 import mx.edu.utez.mexprotec.models.animals.Animals;
 import mx.edu.utez.mexprotec.models.image.adoption.AdoptionImage;
 import mx.edu.utez.mexprotec.models.users.Users;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name="adoption")
@@ -23,9 +25,13 @@ import java.util.List;
 public class Adoption {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "id_animals")

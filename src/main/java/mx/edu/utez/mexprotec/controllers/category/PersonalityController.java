@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/personality/")
@@ -34,7 +35,7 @@ public class PersonalityController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomResponse<Personality>> getOne(@PathVariable("id") Long id) {
+    public ResponseEntity<CustomResponse<Personality>> getOne(@PathVariable("id") UUID id) {
         return new ResponseEntity<>(
                 this.personalityService.getOne(id),
                 HttpStatus.OK
@@ -75,7 +76,7 @@ public class PersonalityController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CustomResponse<Boolean>> deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<CustomResponse<Boolean>> deleteById(@PathVariable("id") UUID id) {
         return new ResponseEntity<>(
                 this.personalityService.deleteById(id),
                 HttpStatus.OK

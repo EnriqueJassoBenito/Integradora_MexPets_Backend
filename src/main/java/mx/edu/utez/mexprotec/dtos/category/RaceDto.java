@@ -9,6 +9,7 @@ import mx.edu.utez.mexprotec.models.animals.Animals;
 import mx.edu.utez.mexprotec.models.animals.race.Race;
 
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +17,7 @@ import java.util.List;
 @Getter
 public class RaceDto {
 
-    private Long id;
+    private UUID id;
     private String racePet;
     @JsonIgnore
     private List<Animals> animals;

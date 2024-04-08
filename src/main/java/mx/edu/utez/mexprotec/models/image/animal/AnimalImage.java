@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import mx.edu.utez.mexprotec.models.animals.Animals;
+import org.hibernate.annotations.GenericGenerator;
+
+import java.util.UUID;
 
 @Entity
 @Table(name = "animal_images")
@@ -12,8 +15,13 @@ import mx.edu.utez.mexprotec.models.animals.Animals;
 public class AnimalImage {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "animals_id")

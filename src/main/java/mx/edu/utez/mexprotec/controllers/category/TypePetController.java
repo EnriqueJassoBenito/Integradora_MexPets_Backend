@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -35,7 +36,7 @@ public class TypePetController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomResponse<TypePet>> getOne(@PathVariable("id") Long id) {
+    public ResponseEntity<CustomResponse<TypePet>> getOne(@PathVariable("id") UUID id) {
         return new ResponseEntity<>(
                 this.typeService.getOne(id),
                 HttpStatus.OK
@@ -76,7 +77,7 @@ public class TypePetController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CustomResponse<Boolean>> deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<CustomResponse<Boolean>> deleteById(@PathVariable("id") UUID id) {
         return new ResponseEntity<>(
                 this.typeService.deleteById(id),
                 HttpStatus.OK

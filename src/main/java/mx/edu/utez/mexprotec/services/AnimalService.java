@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AnimalService {
@@ -41,7 +42,7 @@ public class AnimalService {
     }
 
     @Transactional(readOnly = true)
-    public CustomResponse<Animals> getOne(Long id){
+    public CustomResponse<Animals> getOne(UUID id){
         Optional<Animals> optional = this.animalsRepository.findById(id);
         if (optional.isPresent()){
             return new CustomResponse<>(
@@ -165,7 +166,7 @@ public class AnimalService {
     }
 
     @Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<Boolean> approveOrRejectAnimal(Long animalId,
+    public CustomResponse<Boolean> approveOrRejectAnimal(UUID animalId,
                                                          ApprovalStatus approvalStatus,
                                                          String moderatorComment) {
         Optional<Animals> optionalAnimal = animalsRepository.findById(animalId);
@@ -222,7 +223,7 @@ public class AnimalService {
     }
 
     @Transactional(rollbackFor =  {SQLException.class})
-    public CustomResponse<Boolean> delete(Long id){
+    public CustomResponse<Boolean> delete(UUID id){
         if(!this.animalsRepository.existsById(id)){
             return new CustomResponse<>(
                     false,

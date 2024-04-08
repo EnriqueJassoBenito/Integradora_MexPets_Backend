@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/user/")
@@ -36,7 +37,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<CustomResponse<Users>> getById(
             @PathVariable("id")
-            Integer id){
+            UUID id){
         return new ResponseEntity<>(
                 this.userService.getOne(id),
                 HttpStatus.OK
@@ -101,7 +102,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> enableDisable(
-            @PathVariable("id") Integer id
+            @PathVariable("id") UUID id
     ){
         return new ResponseEntity<>(
                 this.userService.delete(id),

@@ -7,8 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mx.edu.utez.mexprotec.models.users.Users;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name="rol")
@@ -19,8 +21,13 @@ import java.util.Set;
 public class Rol {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idRol;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID idRol;
 
     @Column(name = "nrol", nullable = false)
     private String nrol;

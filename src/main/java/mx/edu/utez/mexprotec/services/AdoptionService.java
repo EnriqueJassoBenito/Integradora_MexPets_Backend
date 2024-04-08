@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AdoptionService {
@@ -70,7 +71,7 @@ public class AdoptionService {
     }
 
     @Transactional(readOnly = true)
-    public CustomResponse<Adoption> getOne(Long id){
+    public CustomResponse<Adoption> getOne(UUID id){
         Optional<Adoption> optional = this.adoptionRepository.findById(id);
         if (optional.isPresent()){
             return new CustomResponse<>(
@@ -89,7 +90,6 @@ public class AdoptionService {
         }
     }
 
-    //Insertar
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Adoption> insert(Adoption adoption, List<MultipartFile> imageFiles) {
         if (adoptionLimitService.isAdoptionLimitReached()) {
@@ -145,7 +145,7 @@ public class AdoptionService {
         );
     }
     @Transactional(rollbackFor =  {SQLException.class})
-    public CustomResponse<Boolean> delete(Long id){
+    public CustomResponse<Boolean> delete(UUID id){
         if(!this.adoptionRepository.existsById(id)){
             return new CustomResponse<>(
                     false,

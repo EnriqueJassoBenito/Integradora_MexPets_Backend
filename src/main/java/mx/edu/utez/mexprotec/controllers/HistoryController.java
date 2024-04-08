@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/historial/")
@@ -52,7 +53,7 @@ public class HistoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomResponse<History>> getOne(@PathVariable("id") Long id) {
+    public ResponseEntity<CustomResponse<History>> getOne(@PathVariable("id") UUID id) {
         return new ResponseEntity<>(
                 this.historyService.getOne(id),
                 HttpStatus.OK
@@ -108,7 +109,7 @@ public class HistoryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> delete(
-            @PathVariable("id") Long id) {
+            @PathVariable("id") UUID id) {
         return new ResponseEntity<>(
                 this.historyService.delete(id),
                 HttpStatus.OK

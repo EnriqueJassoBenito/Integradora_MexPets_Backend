@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -45,7 +46,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public CustomResponse<Users> getOne(Integer id) {
+    public CustomResponse<Users> getOne(UUID id) {
         Users user = this.usersRepository.findByIdAndActivo(id);
         if (user != null) {
             return new CustomResponse<>(
@@ -132,7 +133,7 @@ public class UserService {
     }
 
     @Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<Boolean> delete(Integer id) {
+    public CustomResponse<Boolean> delete(UUID id) {
         if (this.usersRepository.existsById(id)) {
             Users user = this.usersRepository.findByIdAndActivo(id);
             user.setStatus(false);

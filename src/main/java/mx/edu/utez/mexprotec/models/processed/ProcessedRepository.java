@@ -8,9 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface ProcessedRepository extends JpaRepository<Processed, Long>{
+public interface ProcessedRepository extends JpaRepository<Processed, UUID>{
 
     @Modifying
     @Query(
@@ -19,11 +20,11 @@ public interface ProcessedRepository extends JpaRepository<Processed, Long>{
     )
     int updateStatusById(
             @Param("status") Boolean status,
-            @Param("id") Long id
+            @Param("id") UUID id
     );
 
-    Optional<Processed> findById(Long aLong);
+    Optional<Processed> findById(UUID id);
     List<Processed> findAllByStatus(Boolean status);
-    Processed getById(Long id);
+    Processed getById(UUID id);
 
 }

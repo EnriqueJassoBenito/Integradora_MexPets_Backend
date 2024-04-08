@@ -10,6 +10,7 @@ import mx.edu.utez.mexprotec.models.animals.Animals;
 import mx.edu.utez.mexprotec.models.animals.typePet.TypePet;
 
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +18,7 @@ import java.util.List;
 @Setter
 public class TypePetDto {
 
-    private Long id;
+    private UUID id;
     private String type;
     @JsonIgnore
     private List<Animals> animals;

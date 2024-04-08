@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/race/")
@@ -34,7 +35,7 @@ public class RaceController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomResponse<Race>> getOne(@PathVariable("id") Long id) {
+    public ResponseEntity<CustomResponse<Race>> getOne(@PathVariable("id") UUID id) {
         return new ResponseEntity<>(
                 this.raceService.getOne(id),
                 HttpStatus.OK
@@ -75,7 +76,7 @@ public class RaceController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CustomResponse<Boolean>> deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<CustomResponse<Boolean>> deleteById(@PathVariable("id") UUID id) {
         return new ResponseEntity<>(
                 this.raceService.deleteById(id),
                 HttpStatus.OK

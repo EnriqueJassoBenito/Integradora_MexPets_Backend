@@ -1,6 +1,5 @@
 package mx.edu.utez.mexprotec.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +12,7 @@ import mx.edu.utez.mexprotec.models.users.Users;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,7 +20,7 @@ import java.util.List;
 @Getter
 public class AdoptionDto {
 
-    private Long id;
+    private UUID id;
     private Animals animal;
     private Users cliente;
     private String description;
