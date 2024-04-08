@@ -14,10 +14,8 @@ import java.util.UUID;
 @Component
 public class JwtProvider {
     private  final static Logger LOGGER = LoggerFactory.getLogger(JwtProvider.class);
-
     @Value("${jwt.secret}")
     private String secret;
-
     @Value("${jwt.expiration}")
     private int expiration;
 
@@ -25,13 +23,10 @@ public class JwtProvider {
         AuthUser user = (AuthUser) authentication.getPrincipal();
         String tokenId = UUID.randomUUID().toString();
 
-        // Configurar la fecha de emisión del token
         Date issuedAt = new Date();
 
-        // Configurar la fecha de expiración del token
         Date expirationDate = new Date(issuedAt.getTime() + expiration * 1000L);
 
-        // Construir el token JWT
         return Jwts.builder()
                 .setId(tokenId)
                 .setSubject(user.getUsername())
@@ -45,7 +40,6 @@ public class JwtProvider {
         return Jwts.parser().setSigningKey(secret)
                 .parseClaimsJws(token).getBody().getSubject();
     }
-
 
     public boolean validateToken(String token) {
         try {
@@ -81,7 +75,6 @@ public class JwtProvider {
     public String getEmailFromPasswordResetToken(String token) {
         try {
             if (validateToken(token)) {
-                // Obtener el correo electrónico del token
                 return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
             } else {
                 return null;

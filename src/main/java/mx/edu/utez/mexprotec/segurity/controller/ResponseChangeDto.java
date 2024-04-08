@@ -7,12 +7,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-public class CambioResponseDto {
-    private String mensaje;
+public class ResponseChangeDto {
+    private String message;
     private boolean error;
 
-    public CambioResponseDto(String mensaje, boolean error) {
-        this.mensaje = mensaje;
+    public ResponseChangeDto(String message, boolean error) {
+        this.message = message;
         this.error = error;
     }
 

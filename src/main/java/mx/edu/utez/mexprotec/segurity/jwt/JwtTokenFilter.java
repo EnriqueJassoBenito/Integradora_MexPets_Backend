@@ -21,19 +21,19 @@ import java.io.IOException;
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
     private final static Logger LOGGER = LoggerFactory.getLogger(JwtTokenFilter.class);
-
     @Autowired
     JwtProvider provider;
 
     @Autowired
     AuthService service;
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 
+                                    FilterChain filterChain) throws ServletException, IOException {
         try{
             String token = getToken(request);
             if(token != null && provider.validateToken(token)){
-                String correo = provider.getUsernameFromToken(token);
-                UserDetails userDetails = service.loadUserByUsername(correo);
+                String email = provider.getUsernameFromToken(token);
+                UserDetails userDetails = service.loadUserByUsername(email);
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,

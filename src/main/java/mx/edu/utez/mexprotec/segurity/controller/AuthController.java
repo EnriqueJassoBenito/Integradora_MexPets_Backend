@@ -29,19 +29,14 @@ import java.util.Map;
 @CrossOrigin()
 public class AuthController {
 
-    // AuthenticationManager es una interfaz que se encarga de la autenticación
     @Autowired
     private AuthenticationManager manager;
-    // JwtProvider es una clase que se encarga de generar el token
     @Autowired
     private JwtProvider provider;
-    // JavaMailSender es una interfaz que se encarga de enviar correos
     @Autowired
     private JavaMailSender javaMailSender;
-    // mailFrom es el correo electrónico desde el que se enviarán los correos
     @Value("${spring.mail.username}")
     private String mailFrom;
-    // service es una instancia de UsuarioService para poder acceder a los métodos de la clase
     @Autowired
     UserService service;
 
@@ -50,15 +45,12 @@ public class AuthController {
             @Valid @RequestBody LoginDto login
     ) {
         try {
-            // Se crea un objeto de tipo Authentication que contiene el usuario y la contraseña
             Authentication authentication = manager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            login.getCorreo(), login.getContrasena()
+                            login.getEmail(), login.getPassword()
                     )
             );
-            // Se establece el contexto de seguridad con el objeto Authentication
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            // Se genera el token
             String token = provider.generateToken(authentication);
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             Map<String, Object> data = new HashMap<>();
@@ -77,22 +69,19 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password")
-    public CambioResponseDto requestPasswordReset(@Valid @RequestBody CambioRequestDto datosRequest) throws MessagingException {
+        public ResponseChangeDto requestPasswordReset(@Valid @RequestBody RequestChangeDto datosRequest)
+            throws MessagingException {
         String host = "http://localhost:5173/auth/changePassword";
-        // Obtener el usuario a partir del correo electrónico
-        Users user = service.findByEmail(datosRequest.getCorreo());
+        Users user = service.findByEmail(datosRequest.getEmail());
 
-        // Verificar que el usuario existe
         if (user == null) {
-            CambioResponseDto response = new CambioResponseDto();
-            response.setMensaje("Ocurrió un error al enviar el correo electrónico.");
+            ResponseChangeDto response = new ResponseChangeDto();
+            response.setMessage("Ocurrió un error al enviar el correo electrónico.");
             response.setError(true);
             return response;
         } else {
-            // Generar un token JWT para restablecer la contraseña
             String token = provider.generatePasswordResetToken(user.getEmail());
 
-            // Crear el correo electrónico
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setTo(user.getEmail());
@@ -142,12 +131,10 @@ public class AuthController {
                     "    </div>\n" +
                     "  </body>\n" +
                     "</html>\n", true);
-            // Enviar el correo electrónico
             javaMailSender.send(message);
 
-            // Devolver una respuesta indicando que se ha enviado el correo electrónico
-            CambioResponseDto response = new CambioResponseDto();
-            response.setMensaje("Se ha enviado un correo electrónico a " +
+            ResponseChangeDto response = new ResponseChangeDto();
+            response.setMessage("Se ha enviado un correo electrónico a " +
                     user.getEmail() + " con las instrucciones para restablecer tu contraseña.");
             response.setError(false);
             return response;
@@ -155,30 +142,26 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password/confirm")
-    public CambioResponseDto resetPassword(@Valid @RequestBody ResetPasswordDto resetPasswordData) {
-        // Obtener los datos del usuario a partir del token
+    public ResponseChangeDto resetPassword(@Valid @RequestBody ResetPasswordDto resetPasswordData) {
         String user = provider.getEmailFromPasswordResetToken(resetPasswordData.getToken());
-        // Verificar que el token sea válido y no haya expirado
         if (user == null) {
-            // Devolver una respuesta indicando que el token no es válido
-            CambioResponseDto response = new CambioResponseDto();
-            response.setMensaje("El token no es válido o ha expirado.");
+            ResponseChangeDto response = new ResponseChangeDto();
+            response.setMessage("El token no es válido o ha expirado.");
             response.setError(true);
             return response;
         } else {
-            // Actualizar la contraseña del usuario
             Users usuario = service.findByEmail(user);
             usuario.setPassword(resetPasswordData.getPassword());
             CustomResponse<Boolean> result = service.updatePassword(usuario);
             if (!result.getError()) {
-                CambioResponseDto response = new CambioResponseDto();
-                response.setMensaje("Contraseña actualizada correctamente.");
+                ResponseChangeDto response = new ResponseChangeDto();
+                response.setMessage("Contraseña actualizada correctamente.");
                 response.setError(false);
                 return response;
 
             }else {
-                CambioResponseDto response = new CambioResponseDto();
-                response.setMensaje("Ocurrió un error al actualizar la contraseña.");
+                ResponseChangeDto response = new ResponseChangeDto();
+                response.setMessage("Ocurrió un error al actualizar la contraseña.");
                 response.setError(true);
                 return response;
             }

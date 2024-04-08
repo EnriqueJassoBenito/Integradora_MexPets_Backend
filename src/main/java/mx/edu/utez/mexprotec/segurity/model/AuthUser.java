@@ -10,23 +10,24 @@ import java.util.Collection;
 import java.util.List;
 
 public class AuthUser implements UserDetails {
-    private String correo;
+    private String email;
     @JsonIgnore
-    private String contrasena;
+    private String password;
 
-    private Users usuario;
+    private Users user;
     public Collection<? extends GrantedAuthority> authorities;
 
-    public AuthUser(String correo, String contrasena, Users usuario, Collection<? extends GrantedAuthority> authorities) {
-        this.correo = correo;
-        this.contrasena = contrasena;
-        this.usuario = usuario;
+    public AuthUser(String email, String password, Users user,
+                    Collection<? extends GrantedAuthority> authorities) {
+        this.email = email;
+        this.password = password;
+        this.user = user;
         this.authorities = authorities;
     }
 
-    public static AuthUser build(Users usuario){
-        GrantedAuthority authority = new SimpleGrantedAuthority(usuario.getRol().getNrol());
-        return new AuthUser(usuario.getEmail(), usuario.getPassword(), usuario, List.of(authority));
+    public static AuthUser build(Users user){
+        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRol().getNrol());
+        return new AuthUser(user.getEmail(), user.getPassword(), user, List.of(authority));
     }
 
     @Override
@@ -36,12 +37,12 @@ public class AuthUser implements UserDetails {
 
     @Override
     public String getPassword() {
-        return contrasena;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return correo;
+        return email;
     }
 
     @Override
@@ -64,12 +65,12 @@ public class AuthUser implements UserDetails {
         return true;
     }
 
-    public Users getUsuario(){
-        return usuario;
+    public Users getuser(){
+        return user;
     }
 
-    public void setUsuario(Users usuario){
-        this.usuario = usuario;
+    public void setuser(Users user){
+        this.user = user;
     }
 
 }

@@ -15,7 +15,8 @@ import java.io.IOException;
 public class JwtEntryPoint implements AuthenticationEntryPoint {
     private final static Logger LOGGER = LoggerFactory.getLogger(JwtEntryPoint.class);
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response,
+                         AuthenticationException authException) throws IOException, ServletException {
         LOGGER.error("Error no autorizado");
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
                 "No Autorizado");

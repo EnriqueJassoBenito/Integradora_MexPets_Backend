@@ -15,7 +15,6 @@ public class MexprotecApplication {
 		SpringApplication.run(MexprotecApplication.class, args);
 	}
 	@Bean
-	//Metodo que se ejecuta al iniciar la aplicacion
 	public CommandLineRunner crearRoles(RolController controller) {
 		return args -> {
 			try {

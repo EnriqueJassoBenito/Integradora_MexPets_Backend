@@ -14,8 +14,8 @@ import lombok.Setter;
 public class LoginDto {
     @NotEmpty
     @NotBlank
-    private String correo;
+    private String email;
     @NotEmpty
     @NotBlank
-    private String contrasena;
+    private String password;
 }

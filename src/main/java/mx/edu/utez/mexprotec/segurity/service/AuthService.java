@@ -17,8 +17,8 @@ public class AuthService implements UserDetailsService {
     @Autowired
     UserService service;
     @Override
-    public UserDetails loadUserByUsername(String correo) throws UsernameNotFoundException {
-        Users usuario = this.service.findByEmail(correo);
-        return AuthUser.build(usuario);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Users user = this.service.findByEmail(email);
+        return AuthUser.build(user);
     }
 }

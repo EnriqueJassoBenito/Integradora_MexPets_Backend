@@ -5,10 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 public class ResetPasswordDto {
     @NotBlank
     private String token;
-
     @NotBlank
     private String password;
-
     @NotBlank
     private String confirmPassword;
     public String getToken() {
