@@ -45,17 +45,42 @@ public class RolService {
                 rolModerador = this.rolRepository.findByNrol("MODERADOR");
                 rolCliente = this.rolRepository.findByNrol("CLIENTE");
 
-                Users user = new Users();
-                user.setNameUser("MichKwon");
-                user.setName("Michelle");
-                user.setLastname("Estrada");
-                user.setLastnameMatern("Hernández");
-                user.setEmail("20213tn011@utez.edu.mx");
-                user.setPhoneNumber("7774857215");
-                user.setLocalitation("Cuernavaca");
-                user.setPassword("Quesadilla123#");
-                user.setRol(rolAdmin);
-                this.userService.insert(user);
+                Users adminUser = new Users();
+                adminUser.setNameUser("MichKwon");
+                adminUser.setName("Michelle");
+                adminUser.setLastname("Estrada");
+                adminUser.setLastnameMatern("Hernández");
+                adminUser.setEmail("20213tn011@utez.edu.mx");
+                adminUser.setPhoneNumber("7774857215");
+                adminUser.setLocalitation("Cuernavaca");
+                adminUser.setPassword("OsmichKwon05#");
+                adminUser.setRol(rolAdmin);
+                this.userService.insert(adminUser);
+
+                Users modeUser = new Users();
+                modeUser.setNameUser("RichieRG");
+                modeUser.setName("Ricardo");
+                modeUser.setLastname("Rodríguez");
+                modeUser.setLastnameMatern("Trejo");
+                modeUser.setEmail("20203tn145@utez.edu.mx");
+                modeUser.setPhoneNumber("7777654321");
+                modeUser.setLocalitation("Emiliano Zapata");
+                modeUser.setPassword("Contraseña!123");
+                modeUser.setRol(rolModerador);
+                this.userService.insert(modeUser);
+
+                Users clientUser = new Users();
+                clientUser.setNameUser("NattyAraujo");
+                clientUser.setName("Natalia");
+                clientUser.setLastname("García");
+                clientUser.setLastnameMatern("Araujo");
+                clientUser.setEmail("20213tn015@utez.edu.mx");
+                clientUser.setPhoneNumber("7771234567");
+                clientUser.setLocalitation("Cuernavaca");
+                clientUser.setPassword("Natty.Araujo#");
+                clientUser.setRol(rolCliente);
+                this.userService.insert(clientUser);
+
             }
         } catch (Exception e) {
             e.printStackTrace();
