@@ -105,7 +105,7 @@ public class AnimalController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    /*@PostMapping("/")
+    @PostMapping("/")
     public ResponseEntity<CustomResponse<Animals>> insert(
             @ModelAttribute AnimalDto dto,
             @RequestParam("imageFiles") List<MultipartFile> imageFiles,
@@ -120,9 +120,9 @@ public class AnimalController {
                 this.animalService.insert(dto.toAnimals(), imageFiles),
                 HttpStatus.CREATED
         );
-    }*/
+    }
 
-    @PostMapping("/")
+    /*@PostMapping("/")
     public ResponseEntity<CustomResponse<Animals>> insert(
             @ModelAttribute AnimalDto dto,
             @RequestParam("imageFiles") List<MultipartFile> imageFiles,
@@ -146,7 +146,7 @@ public class AnimalController {
                 response,
                 HttpStatus.CREATED
         );
-    }
+    }*/
 
 
     @PutMapping("/{id}")

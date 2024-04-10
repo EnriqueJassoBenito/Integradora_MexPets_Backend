@@ -36,7 +36,7 @@ public class UserDto {
     @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     private String password;
     private Rol rol;
-    @JsonIgnore
+    //@JsonIgnore
     private Boolean status;
 
     public Users getUsers(){
@@ -51,7 +51,7 @@ public class UserDto {
                 getLocalitation(),
                 getPassword(),
                 getRol(),
-                true
+                getStatus()
         );
     }
 }

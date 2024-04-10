@@ -51,6 +51,14 @@ public class UserController {
         );
     }
 
+    @GetMapping("/roles/admin-moderador")
+    public ResponseEntity<CustomResponse<List<Users>>> getUsersByAdminAndModeratorRoles() {
+        return new ResponseEntity<>(
+                this.userService.getUsersByAdminAndModeratorRoles(),
+                HttpStatus.OK
+        );
+    }
+
     @PostMapping("/")
     public ResponseEntity<CustomResponse<Users>> insert(@RequestBody UserDto usuario) {
         try {

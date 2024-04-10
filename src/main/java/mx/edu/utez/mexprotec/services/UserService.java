@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,8 +24,6 @@ public class UserService {
     @Autowired
     private UsersRepository usersRepository;
 
-    @Autowired
-    private LogsService logsService;
     @Autowired
     private RolRepository rolRepository;
 
@@ -66,6 +65,17 @@ public class UserService {
             return new CustomResponse<>(users, false, 200, "Usuarios encontrados por rol");
         } else {
             return new CustomResponse<>(null, true, 404, "No se encontraron usuarios con ese rol");
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public CustomResponse<List<Users>> getUsersByAdminAndModeratorRoles() {
+        List<String> roles = Arrays.asList("ADMIN", "MODERADOR");
+        List<Users> users = this.usersRepository.findAllByRol_NrolIn(roles);
+        if (!users.isEmpty()) {
+            return new CustomResponse<>(users, false, 200, "Usuarios encontrados por roles ADMIN y MODERADOR");
+        } else {
+            return new CustomResponse<>(null, true, 404, "No se encontraron usuarios con los roles especificados");
         }
     }
 

@@ -1,5 +1,6 @@
 package mx.edu.utez.mexprotec.models.users;
 
+import org.apache.catalina.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Repository
 public interface UsersRepository extends JpaRepository<Users, UUID> {
 
+    List<Users> findAllByRol_NrolIn(List<String> nrol);
     List<Users> findAllByStatus(Boolean status);
     List<Users> findByRol_Nrol(String nrol);
     Users getById(UUID id);

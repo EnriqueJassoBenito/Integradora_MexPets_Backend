@@ -64,7 +64,7 @@ public class AdoptionController {
         );
     }
 
-    /*@PostMapping("/")
+    @PostMapping("/")
     public ResponseEntity<CustomResponse<Adoption>> insert(
             @ModelAttribute AdoptionDto dto,
             @RequestParam("imageFiles") List<MultipartFile> imageFiles,
@@ -79,8 +79,8 @@ public class AdoptionController {
                 this.adoptionService.insert(dto.toAdoption(), imageFiles),
                 HttpStatus.CREATED
         );
-    }*/
-    @PostMapping("/")
+    }
+    /*@PostMapping("/")
     public ResponseEntity<CustomResponse<Adoption>> insert(
             @ModelAttribute AdoptionDto dto,
             @RequestParam("imageFiles") List<MultipartFile> imageFiles,
@@ -101,7 +101,7 @@ public class AdoptionController {
                 response,
                 HttpStatus.CREATED
         );
-    }
+    }*/
 
     @PutMapping("/{id}")
     public ResponseEntity<CustomResponse<Adoption>> update(

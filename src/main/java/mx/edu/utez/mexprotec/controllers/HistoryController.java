@@ -69,14 +69,7 @@ public class HistoryController {
                     HttpStatus.BAD_REQUEST
             );
         }
-
         CustomResponse<History> response = this.historyService.insert(dto.getHistory());
-
-        if (response != null && response.getData() != null) {
-            String action = "INSERT_HISTORY";
-            String details = "Historial insertado: " + response.getData().getId();
-            this.logsService.logAction(action, details);
-        }
         return new ResponseEntity<>(
                 response,
                 HttpStatus.CREATED
