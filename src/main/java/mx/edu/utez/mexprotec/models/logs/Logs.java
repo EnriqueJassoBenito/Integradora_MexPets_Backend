@@ -20,19 +20,30 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Logs {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id;
 
-    @Column(name = "entity_type")
-    private String entityType;
+    @Column(columnDefinition = "json")
+    @Type(JsonType.class)
+    private JsonNode data;
 
-    @Column(name = "action_type")
-    private String actionType;
+    @Column(name = "method")
+    private String method;
 
-    @Column(name = "details")
-    private String details;
+    @Column(name = "request_uri")
+    private String requestUri;
 
-    @Column(name = "timestamp")
-    private LocalDateTime timestamp;
+    @Column(name = "ip")
+    private String ip;
+
+    @Column(name = "user_agent")
+    private String userAgent;
+
+    @Column(name = "status")
+    private int status;
+
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP")
+    private String createdAt;
 }
 

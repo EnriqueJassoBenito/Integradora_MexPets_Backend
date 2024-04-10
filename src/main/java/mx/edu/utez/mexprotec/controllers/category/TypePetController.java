@@ -52,11 +52,6 @@ public class TypePetController {
 
         CustomResponse<TypePet> response = this.typeService.insert(dto.getTypePet());
 
-        if (response != null && response.getData() != null) {
-            String action = "INSERT_TYPE_PET";
-            String details = "Tipo de mascota insertado: " + response.getData().getId();
-            this.logsService.logAction(action, details);
-        }
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

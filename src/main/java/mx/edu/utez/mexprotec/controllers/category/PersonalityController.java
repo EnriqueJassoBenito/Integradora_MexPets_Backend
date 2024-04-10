@@ -51,12 +51,6 @@ public class PersonalityController {
 
         CustomResponse<Personality> response = this.personalityService.insert(dto.getPersonality());
 
-        if (response != null && response.getData() != null) {
-            String action = "INSERT_PERSONALITY";
-            String details = "Personalidad insertada: " + response.getData().getId();
-            this.logsService.logAction(action, details);
-        }
-
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

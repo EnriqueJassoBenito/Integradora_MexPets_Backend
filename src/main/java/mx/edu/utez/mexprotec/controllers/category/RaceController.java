@@ -50,12 +50,6 @@ public class RaceController {
         }
 
         CustomResponse<Race> response = this.raceService.insert(dto.getRace());
-
-        if (response != null && response.getData() != null) {
-            String action = "INSERT_RACE";
-            String details = "Raza insertada: " + response.getData().getId();
-            this.logsService.logAction(action, details);
-        }
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

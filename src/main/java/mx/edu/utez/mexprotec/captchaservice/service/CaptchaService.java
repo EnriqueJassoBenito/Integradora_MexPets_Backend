@@ -22,12 +22,11 @@ public class CaptchaService {
     @Value("${FRIENDLYCAPTCHA.SITEKEY}")
     private String siteKey;
 
-    public CaptchaResponse verificarCaptcha(String solution) {
+    public CaptchaResponse verifyCaptcha(String solution) {
         String url = "https://api.friendlycaptcha.com/api/v1/siteverify";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("solution", solution);
         requestBody.put("secret", captchaKey);
@@ -35,9 +34,11 @@ public class CaptchaService {
 
         HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CaptchaResponse> responseEntity = restTemplate.postForEntity(
-                url, requestEntity, CaptchaResponse.class
-        );
+        ResponseEntity<CaptchaResponse> responseEntity =
+                restTemplate.postForEntity(
+                        url,
+                        requestEntity,
+                        CaptchaResponse.class);
         return responseEntity.getBody();
     }
 }

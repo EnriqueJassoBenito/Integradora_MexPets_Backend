@@ -15,8 +15,8 @@ public class CaptchaController {
     @Autowired
     private CaptchaService captchaService;
 
-    @PostMapping("/verificar-captcha")
-    public CaptchaResponse verificarCaptcha(@RequestParam("solution") String solution) {
-        return captchaService.verificarCaptcha(solution);
+    @PostMapping("/verify captcha")
+    public CaptchaResponse verifyCaptcha(@RequestParam("solution") String solution) {
+        return captchaService.verifyCaptcha(solution);
     }
 }
