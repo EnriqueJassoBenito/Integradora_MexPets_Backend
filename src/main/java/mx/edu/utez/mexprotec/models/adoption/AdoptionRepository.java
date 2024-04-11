@@ -1,5 +1,7 @@
 package mx.edu.utez.mexprotec.models.adoption;
 
+import mx.edu.utez.mexprotec.models.animals.Animals;
+import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +16,7 @@ import java.util.UUID;
 @Repository
 public interface AdoptionRepository extends JpaRepository<Adoption, UUID> {
 
-    @Modifying
+    /*@Modifying
     @Query(
             value = "UPDATE adoption SET status = :status WHERE id = :id",
             nativeQuery = true
@@ -22,12 +24,13 @@ public interface AdoptionRepository extends JpaRepository<Adoption, UUID> {
     int updateStatusById(
             @Param("status") Boolean status,
             @Param("id") UUID id
-    );
+    );*/
 
     Optional<Adoption> findById(UUID id);
-    List<Adoption> findAllByStatus(Boolean status);
     Adoption getById(UUID id);
-
+    List<Adoption> findByApprovalStatus(ApprovalStatus approvalStatus);
     @Query("SELECT COUNT(a) FROM Adoption a WHERE DATE(a.creationDate) = :date")
     long countByDate(@Param("date") LocalDate date);
+
+    void deleteById(UUID id);
 }

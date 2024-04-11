@@ -37,25 +37,19 @@ public class Animals {
     @Column(name = "name_pet", nullable = false)
     private String namePet;
 
-    @ManyToOne
-    @JoinColumn(name = "type_pet", referencedColumnName = "id")
-    //@JsonIgnore
-    private TypePet typePet;
-
     @Column(name = "location", nullable = false)
     private String location;
 
     @ManyToOne
-    @JoinColumn(name = "race", referencedColumnName = "id")
-    //@JsonIgnore
-    private Race race;
+    @JoinColumn(name = "type_pet", referencedColumnName = "id")
+    private TypePet typePet;
 
-    @Column(name = "description", columnDefinition = "TEXT", nullable = false)
-    private String description;
+    @ManyToOne
+    @JoinColumn(name = "race", referencedColumnName = "id")
+    private Race race;
 
     @ManyToOne
     @JoinColumn(name = "personality", referencedColumnName = "id")
-    //@JsonIgnore
     private Personality personality;
 
     @Column(name = "sex", nullable = false)
@@ -76,9 +70,12 @@ public class Animals {
     @Column(name = "sterilized")
     private Boolean sterilized;
 
-    /*@Column(columnDefinition = "boolean default true")
-    //@JsonIgnore
-    private Boolean status;*/
+    @Column(name = "description", columnDefinition = "TEXT", nullable = false)
+    private String description;
+
+    @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<AnimalImage> images;
 
     @Column(name = "approval_status", nullable = false)
     private ApprovalStatus approvalStatus;
@@ -90,7 +87,4 @@ public class Animals {
     @JoinColumn(name = "id_register")
     private Users register;
 
-    @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL)
-    @JsonBackReference
-    private List<AnimalImage> images;
 }

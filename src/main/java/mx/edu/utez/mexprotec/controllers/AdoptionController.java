@@ -5,6 +5,7 @@ import mx.edu.utez.mexprotec.dtos.AdoptionDto;
 
 import mx.edu.utez.mexprotec.models.adoption.Adoption;
 
+import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import mx.edu.utez.mexprotec.services.AdoptionService;
 
 import mx.edu.utez.mexprotec.services.LogsService;
@@ -27,9 +28,6 @@ public class AdoptionController {
     @Autowired
     private AdoptionService adoptionService;
 
-    @Autowired
-    private LogsService logsService;
-
     @GetMapping("/")
     public ResponseEntity<CustomResponse<List<Adoption>>> getAll() {
         return new ResponseEntity<>(
@@ -38,28 +36,28 @@ public class AdoptionController {
         );
     }
 
-    @GetMapping("/getActive")
-    public ResponseEntity<CustomResponse<List<Adoption>>>
-    getAllActive(){
-        return new ResponseEntity<>(
-                this.adoptionService.getAllActive(),
-                HttpStatus.OK
-        );
-    }
-
-    @GetMapping("/getAllInactive")
-    public ResponseEntity<CustomResponse<List<Adoption>>>
-    getAllInactive(){
-        return new ResponseEntity<>(
-                this.adoptionService.getAllInactive(),
-                HttpStatus.OK
-        );
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<CustomResponse<Adoption>> getOne(@PathVariable("id") UUID id) {
         return new ResponseEntity<>(
                 this.adoptionService.getOne(id),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/pending-approval")
+    public ResponseEntity<CustomResponse<List<Adoption>>> getPendingApproval() {
+        CustomResponse<List<Adoption>> response = adoptionService.getPendingApprovalAdoption();
+        return new ResponseEntity<>(
+                response,
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/approved")
+    public ResponseEntity<CustomResponse<List<Adoption>>> getApproved() {
+        CustomResponse<List<Adoption>> response = adoptionService.getApprovedAdoption();
+        return new ResponseEntity<>(
+                response,
                 HttpStatus.OK
         );
     }
@@ -80,58 +78,39 @@ public class AdoptionController {
                 HttpStatus.CREATED
         );
     }
-    /*@PostMapping("/")
-    public ResponseEntity<CustomResponse<Adoption>> insert(
-            @ModelAttribute AdoptionDto dto,
-            @RequestParam("imageFiles") List<MultipartFile> imageFiles,
-            @Valid BindingResult result) {
-        if (result.hasErrors()) {
-            return new ResponseEntity<>(
-                    null,
-                    HttpStatus.BAD_REQUEST
-            );
-        }
-        CustomResponse<Adoption> response = this.adoptionService.insert(dto.toAdoption(), imageFiles);
-        if (response != null && response.getData() != null) {
-            String action = "INSERT_ADOPTION";
-            String details = "Adopción insertada: " + response.getData().getId();
-            this.logsService.logAction(action, details);
-        }
-        return new ResponseEntity<>(
-                response,
-                HttpStatus.CREATED
-        );
-    }*/
 
     @PutMapping("/{id}")
-    public ResponseEntity<CustomResponse<Adoption>> update(
-            @PathVariable("id") UUID id,
-            @RequestBody AdoptionDto dto,
-            @Valid BindingResult result) {
-        if (result.hasErrors()) {
-            return new ResponseEntity<>(
-                    null,
-                    HttpStatus.BAD_REQUEST
-            );
+    public ResponseEntity<CustomResponse<Adoption>> update( @PathVariable UUID id,
+                                                            @ModelAttribute AdoptionDto adoptionDto,
+                                                            @RequestParam(required = false) List<MultipartFile> imageFiles){
+        CustomResponse<Adoption> response = adoptionService.update(id, adoptionDto, imageFiles);
+        if (response.isError()) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-        dto.setId(id);
-        return new ResponseEntity<>(
-                this.adoptionService.update(dto.toAdoption()),
-                HttpStatus.OK
-        );
+        return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<CustomResponse<Boolean>> enableOrDisable(
-            @PathVariable("id") UUID id,
-            @RequestBody AdoptionDto dto) {
-        dto.setId(id);
-        return new ResponseEntity<>(
-                this.adoptionService.changeStatus(dto.toAdoption()),
-                HttpStatus.OK
-        );
-    }
+    @PatchMapping("/{id}/approval")
+    public ResponseEntity<CustomResponse<String>> approvedOrRejectAdoption(@PathVariable UUID id,
+                                                                           @RequestParam ApprovalStatus approvalStatus,
+                                                                           @RequestParam String comment) {
+        CustomResponse<Boolean> response = adoptionService.approveOrRejectAdoption(id, approvalStatus, comment);
+        String message;
+        HttpStatus httpStatus;
 
+        if (response.getData() != null && response.getData()) {
+            message = "Adopción aprobada correctamente";
+            httpStatus = HttpStatus.OK;
+        } else {
+            if (ApprovalStatus.REJECTED.equals(approvalStatus)) {
+                message = "Adopción rechazada correctamente";
+            } else {
+                message = "No se pudo procesar la operación de adopción";
+            }
+            httpStatus = HttpStatus.BAD_REQUEST;
+        }
+        return new ResponseEntity<>(new CustomResponse<>(message, false, httpStatus.value(), message), httpStatus);
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> delete(@PathVariable("id") UUID id) {

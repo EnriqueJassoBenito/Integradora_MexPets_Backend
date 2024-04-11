@@ -3,6 +3,7 @@ package mx.edu.utez.mexprotec.services;
 import jakarta.mail.MessagingException;
 import mx.edu.utez.mexprotec.models.adoption.Adoption;
 import mx.edu.utez.mexprotec.models.adoption.AdoptionRepository;
+import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import mx.edu.utez.mexprotec.models.processed.Processed;
 import mx.edu.utez.mexprotec.models.processed.ProcessedRepository;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
@@ -88,30 +89,30 @@ public class ProcessedService {
         );
     }
 
-    @Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<Boolean> acceptAdoption(UUID adoptionId) {
+    @Transactional
+    public CustomResponse<Boolean> approveAdoption(UUID adoptionId) {
         Optional<Adoption> optionalAdoption = adoptionRepository.findById(adoptionId);
         if (optionalAdoption.isPresent()) {
             Adoption adoption = optionalAdoption.get();
-            adoption.setStatus(true);
+            adoption.setApprovalStatus(ApprovalStatus.APPROVED);
             adoptionRepository.save(adoption);
+
+            try {
+                mailer.sendAcceptedRequest(adoption.getAdopter().getEmail(), adoption.getAdopter().getName());
+            } catch (MessagingException e) {
+                e.printStackTrace();
+                return new CustomResponse<>(false, true, 500, "Error al enviar el correo de aprobación");
+            }
 
             Processed processed = new Processed();
             processed.setAdoption(adoption);
+            processed.setModerador(adoption.getAdopter());
             processed.setStatus(true);
             processedRepository.save(processed);
 
-            // Envíar correo electrónico al solicitante informando la aceptación
-            try {
-                mailer.sendAcceptedRequest(adoption.getCliente().getEmail(), adoption.getCliente().getName());
-            } catch (MessagingException e) {
-                e.printStackTrace();
-                return new CustomResponse<>(false, true, 500, "Error al enviar el correo electrónico de aceptación");
-            }
-
-            return new CustomResponse<>(true, false, 200, "Solicitud de adopción aceptada correctamente");
+            return new CustomResponse<>(true, false, 200, "Adopción aprobada y procesada correctamente");
         } else {
-            return new CustomResponse<>(false, true, 404, "Solicitud de adopción no encontrada");
+            return new CustomResponse<>(false, true, 404, "No se encontró la adopción con ID " + adoptionId);
         }
     }
 

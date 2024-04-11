@@ -1,6 +1,5 @@
 package mx.edu.utez.mexprotec.dtos;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,10 +24,9 @@ public class AnimalDto {
 
     private UUID id;
     private String namePet;
-    private TypePet typePet;
     private String location;
+    private TypePet typePet;
     private Race race;
-    private String description;
     private Personality personality;
     private String sex;
     private String size;
@@ -36,20 +34,19 @@ public class AnimalDto {
     private Integer age;
     private String color;
     private Boolean sterilized;
-    //private Boolean status;
+    private String description;
+    private List<String> imageUrl;
     private ApprovalStatus approvalStatus;
     private String moderatorComment;
     private Users register;
-    private List<String> imageUrl;
 
     public Animals toAnimals() {
         Animals animal = new Animals();
         animal.setId(getId());
         animal.setNamePet(getNamePet());
-        animal.setTypePet(getTypePet());
         animal.setLocation(getLocation());
+        animal.setTypePet(getTypePet());
         animal.setRace(getRace());
-        animal.setDescription(getDescription());
         animal.setPersonality(getPersonality());
         animal.setSex(getSex());
         animal.setSize(getSize());
@@ -57,10 +54,7 @@ public class AnimalDto {
         animal.setAge(getAge());
         animal.setColor(getColor());
         animal.setSterilized(getSterilized());
-        //animal.setStatus(getStatus());
-        animal.setApprovalStatus(getApprovalStatus());
-        animal.setModeratorComment(getModeratorComment());
-        animal.setRegister(getRegister());
+        animal.setDescription(getDescription());
 
         List<AnimalImage> animalImages = new ArrayList<>();
         if (getImageUrl() != null) {
@@ -72,6 +66,9 @@ public class AnimalDto {
             }
         }
         animal.setImages(animalImages);
+        animal.setApprovalStatus(approvalStatus);
+        animal.setModeratorComment(getModeratorComment());
+        animal.setRegister(getRegister());
         return animal;
     }
 }

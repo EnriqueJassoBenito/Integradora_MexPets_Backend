@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mx.edu.utez.mexprotec.models.animals.Animals;
+import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import mx.edu.utez.mexprotec.models.image.adoption.AdoptionImage;
 import mx.edu.utez.mexprotec.models.users.Users;
 import org.hibernate.annotations.GenericGenerator;
@@ -35,19 +36,15 @@ public class Adoption {
 
     @ManyToOne
     @JoinColumn(name = "id_animals")
-    @JsonIgnore
+    //@JsonIgnore
     private Animals animal;
 
     @ManyToOne
     @JoinColumn(name = "id_users")
-    private Users cliente;
+    private Users adopter;
 
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
-
-    @Column(columnDefinition = "boolean default false")
-    //@JsonIgnore
-    private Boolean status;
 
     @Column(name = "creation_date", columnDefinition = "DATE")
     private LocalDate creationDate = LocalDate.now();
@@ -55,4 +52,10 @@ public class Adoption {
     @OneToMany(mappedBy = "adoption", cascade = CascadeType.ALL)
     @JsonBackReference
     private List<AdoptionImage> images;
+
+    @Column(name = "approval_status", nullable = false)
+    private ApprovalStatus approvalStatus;
+
+    @Column(name = "moderator_comment")
+    private String moderatorComment;
 }

@@ -34,4 +34,5 @@ public interface AnimalsRepository extends JpaRepository<Animals, UUID> {
     List<Animals> findByRace(Race race);
     List<Animals> findByPersonality(Personality personality);
     List<Animals> findBySex(String sex);
+    void deleteById(UUID id);
 }

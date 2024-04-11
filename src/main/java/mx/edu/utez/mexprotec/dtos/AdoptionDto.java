@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mx.edu.utez.mexprotec.models.adoption.Adoption;
 import mx.edu.utez.mexprotec.models.animals.Animals;
+import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import mx.edu.utez.mexprotec.models.image.adoption.AdoptionImage;
 import mx.edu.utez.mexprotec.models.users.Users;
 
@@ -22,21 +23,22 @@ public class AdoptionDto {
 
     private UUID id;
     private Animals animal;
-    private Users cliente;
+    private Users adopter;
     private String description;
-    //@JsonIgnore
-    private Boolean status;
-    private LocalDate creationDate; // Nuevo campo para la fecha de creación
-    private List<String> imageUrls; // Lista de URLs de imágenes asociadas
+    private List<String> imageUrls;
+    private LocalDate creationDate;
+    private ApprovalStatus approvalStatus;
+
+    private String moderatorComment;
+
 
     public Adoption toAdoption() {
         Adoption adoption = new Adoption();
         adoption.setId(id);
         adoption.setAnimal(animal);
-        adoption.setCliente(cliente);
+        adoption.setAdopter(adopter);
         adoption.setDescription(description);
-        adoption.setStatus(status);
-        adoption.setCreationDate(creationDate);
+
         List<AdoptionImage> adoptionImages = new ArrayList<>();
         if (imageUrls != null) {
             for (String url : imageUrls) {
@@ -47,6 +49,9 @@ public class AdoptionDto {
             }
         }
         adoption.setImages(adoptionImages);
+        adoption.setCreationDate(creationDate);
+        adoption.setApprovalStatus(approvalStatus);
+        adoption.setModeratorComment(moderatorComment);
         return adoption;
     }
 

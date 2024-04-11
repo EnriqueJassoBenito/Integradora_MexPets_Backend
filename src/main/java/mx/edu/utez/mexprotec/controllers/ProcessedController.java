@@ -57,7 +57,7 @@ public class ProcessedController {
         );
     }
 
-    @PostMapping("/")
+    /*@PostMapping("/")
     public ResponseEntity<CustomResponse<Processed>> insert(
             @RequestBody ProcessedDto dto, @Valid BindingResult result) {
         if (result.hasErrors()) {
@@ -70,10 +70,10 @@ public class ProcessedController {
                 this.processedService.insert(dto.getProcessed()),
                 HttpStatus.CREATED
         );
-    }
+    }*/
     @PostMapping("/acceptAdoption")
     public ResponseEntity<CustomResponse<Boolean>> acceptAdoption(@RequestParam UUID adoptionId) {
-        CustomResponse<Boolean> response = processedService.acceptAdoption(adoptionId);
+        CustomResponse<Boolean> response = processedService.approveAdoption(adoptionId);
         HttpStatus status = response.getError() ? HttpStatus.BAD_REQUEST : HttpStatus.OK;
         return new ResponseEntity<>(response, status);
     }

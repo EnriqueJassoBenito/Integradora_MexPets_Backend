@@ -67,5 +67,4 @@ public class LogsFilter extends OncePerRequestFilter {
             e.printStackTrace();
         }
     }
-
 }

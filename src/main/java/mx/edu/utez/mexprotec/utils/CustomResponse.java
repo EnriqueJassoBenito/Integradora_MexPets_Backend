@@ -14,4 +14,8 @@ public class CustomResponse <T>{
     Boolean error;
     int StatusCode;
     String message;
+
+    public boolean isError() {
+        return error; // Use `error` property to determine if it's an error
+    }
 }

@@ -38,5 +38,4 @@ public class Processed {
 
     @Column(columnDefinition = "boolean default true")
     private Boolean status;
-
 }

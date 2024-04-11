@@ -1,7 +1,11 @@
 package mx.edu.utez.mexprotec.models.image.animal;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface AnimalImageRepository extends JpaRepository<AnimalImage, Long> {
+import java.util.UUID;
+
+@Repository
+public interface AnimalImageRepository extends JpaRepository<AnimalImage, UUID> {
 }
 

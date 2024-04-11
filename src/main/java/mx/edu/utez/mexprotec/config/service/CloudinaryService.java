@@ -15,8 +15,8 @@ public class CloudinaryService {
     private Cloudinary cloudinary;
     public String uploadFile(MultipartFile file, String folderName) {
         try {
-            if (file.getSize() > 5 * 1024 * 1024) {
-                throw new IllegalArgumentException("El tamaño de la imagen excede el límite de 5 MB.");
+            if (file.getSize() > 10 * 1024 * 1024) {
+                throw new IllegalArgumentException("El tamaño de la imagen excede el límite de 10 MB.");
             }
             Map options = new HashMap<>();
             options.put("folder", folderName);

@@ -99,9 +99,15 @@ public class AnimalController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     /**/
-    @GetMapping("/pendientes")
+
+    @GetMapping("/pending-approval")
     public ResponseEntity<CustomResponse<List<Animals>>> getPendingApprovalAnimals() {
         CustomResponse<List<Animals>> response = animalService.getPendingApprovalAnimals();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/approved")
+    public ResponseEntity<CustomResponse<List<Animals>>> getApprovedAnimals() {
+        CustomResponse<List<Animals>> response = animalService.getApprovedAnimals();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -150,24 +156,17 @@ public class AnimalController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<CustomResponse<Animals>> update(
-            @PathVariable("id") UUID id,
-            @RequestBody AnimalDto dto,
-            @Valid BindingResult result) {
-        if (result.hasErrors()) {
-            return new ResponseEntity<>(
-                    null,
-                    HttpStatus.BAD_REQUEST
-            );
+    public ResponseEntity<CustomResponse<Animals>> updateAnimal(@PathVariable UUID id,
+                                                                @ModelAttribute AnimalDto animalDto,
+                                                                @RequestParam(required = false) List<MultipartFile> imageFiles) {
+        CustomResponse<Animals> response = animalService.update(id, animalDto, imageFiles);
+        if (response.isError()) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-        dto.setId(id);
-        return new ResponseEntity<>(
-                this.animalService.update(dto.toAnimals()),
-                HttpStatus.OK
-        );
+        return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{id}/aprobacion")
+    @PatchMapping("/{id}/approval")
     public ResponseEntity<CustomResponse<String>> approveOrRejectAnimal(@PathVariable UUID id,
                                                                         @RequestParam ApprovalStatus approvalStatus,
                                                                         @RequestParam String moderatorComment) {
@@ -184,7 +183,6 @@ public class AnimalController {
         }
         return new ResponseEntity<>(new CustomResponse<>(message, false, httpStatus.value(), message), httpStatus);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> delete(

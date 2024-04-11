@@ -118,7 +118,7 @@ public class Mailer {
                     "            <img\n" +
                     "              src=\"https://demo.stripocdn.email/content/guids/d0dee27c-b951-4be2-9e65-fe5d431243a4/images/booksg5a3638f0519201633971795.jpg\"\n" +
                     "              style=\"width: 100%\"\n" +
-                    "              alt=\"Libro\"\n" +
+                    "              alt=\"mexpet\"\n" +
                     "            />\n" +
                     "            <div style=\"background-color: #b53439; height: 35px\"></div>\n" +
                     "            <div style=\"padding: 15px\">\n" +
@@ -181,7 +181,7 @@ public class Mailer {
                     "            <img\n" +
                     "              src=\"https://demo.stripocdn.email/content/guids/d0dee27c-b951-4be2-9e65-fe5d431243a4/images/booksg5a3638f0519201633971795.jpg\"\n" +
                     "              style=\"width: 100%\"\n" +
-                    "              alt=\"Libro\"\n" +
+                    "              alt=\"mexpet\"\n" +
                     "            />\n" +
                     "            <div style=\"background-color: #b53439; height: 35px\"></div>\n" +
                     "            <div style=\"padding: 15px\">\n" +
