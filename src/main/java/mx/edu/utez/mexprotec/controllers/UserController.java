@@ -73,25 +73,6 @@ public class UserController {
         }
     }
 
-    /*@PostMapping("/")
-    public ResponseEntity<CustomResponse<Users>> insert(@RequestBody UserDto usuario) {
-        try {
-            CustomResponse<Users> response = this.userService.insert(usuario.getUsers());
-            String action = "INSERT_USER";
-            String details = "Usuario insertado: " + response.getData().getName();
-            this.logsService.logAction(action, details);
-
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-
-        } catch (Exception e) {
-            String errorMessage = "Error al enviar correo: " + e.getMessage();
-            return new ResponseEntity<>(
-                    new CustomResponse<>(null, true, 400, errorMessage),
-                    HttpStatus.INTERNAL_SERVER_ERROR
-            );
-        }
-    }*/
-
     @PutMapping("/{id}")
     public ResponseEntity<CustomResponse<Users>> update(
             @RequestBody UserDto dto, @Valid BindingResult result) {

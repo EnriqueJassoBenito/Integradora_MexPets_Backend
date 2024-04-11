@@ -4,7 +4,6 @@ import java.util.List;
 
 public class CaptchaResponse {
 
-
     private boolean success;
     private List<String> errors;
 

@@ -128,32 +128,6 @@ public class AnimalController {
         );
     }
 
-    /*@PostMapping("/")
-    public ResponseEntity<CustomResponse<Animals>> insert(
-            @ModelAttribute AnimalDto dto,
-            @RequestParam("imageFiles") List<MultipartFile> imageFiles,
-            @Valid BindingResult result) {
-        if (result.hasErrors()) {
-            return new ResponseEntity<>(
-                    null,
-                    HttpStatus.BAD_REQUEST
-            );
-        }
-
-        CustomResponse<Animals> response = this.animalService.insert(dto.toAnimals(), imageFiles);
-
-        if (response != null && response.getData() != null) {
-            String action = "INSERT_ANIMAL";
-            String details = "Animal insertado: " + response.getData().getId();
-            this.logsService.logAction(action, details);
-        }
-
-        return new ResponseEntity<>(
-                response,
-                HttpStatus.CREATED
-        );
-    }*/
-
 
     @PutMapping("/{id}")
     public ResponseEntity<CustomResponse<Animals>> updateAnimal(@PathVariable UUID id,
