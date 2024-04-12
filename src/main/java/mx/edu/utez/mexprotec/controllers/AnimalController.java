@@ -28,9 +28,6 @@ public class AnimalController {
     @Autowired
     private AnimalService animalService;
 
-    @Autowired
-    private LogsService logsService;
-
     @GetMapping("/")
     public ResponseEntity<CustomResponse<List<Animals>>> getAll() {
         return new ResponseEntity<>(

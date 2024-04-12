@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -37,7 +38,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public CustomResponse<List<Users>> getAll() {
         return new CustomResponse<>(
-                this.usersRepository.findAllByStatus(true),
+                this.usersRepository.findAll(),
                 false,
                 200,
                 "Ok"
@@ -46,16 +47,32 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public CustomResponse<Users> getOne(UUID id) {
-        Users user = this.usersRepository.findByIdAndActivo(id);
-        if (user != null) {
-            return new CustomResponse<>(
-                    user, false, 200, "Ok"
-            );
+        Optional<Users> optionalUser = this.usersRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            return new CustomResponse<>(optionalUser.get(), false, 200, "Usuario encontrado");
         } else {
-            return new CustomResponse<>(
-                    null, true, 400, "No se encontro el user"
-            );
+            return new CustomResponse<>(null, true, 404, "Usuario no encontrado");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public CustomResponse<List<Users>> getActive() {
+        return new CustomResponse<>(
+                this.usersRepository.findAllByStatus(true),
+                false,
+                200,
+                "Ok"
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public CustomResponse<List<Users>> getInactive() {
+        return new CustomResponse<>(
+                this.usersRepository.findAllByStatus(false),
+                false,
+                200,
+                "Ok"
+        );
     }
 
     @Transactional(readOnly = true)
@@ -81,47 +98,53 @@ public class UserService {
 
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Users> insert(Users user) {
-        if (this.usersRepository.findByEmailAndActivo(user.getEmail()) == null) {
-            if (user.getRol() != null) {
-                if (user.getRol().getIdRol() == null) {
-                    user.getRol().setStatus(true);
-                    Rol persistedRol = rolRepository.save(user.getRol());
-                    user.setRol(persistedRol);
-                }
-                String phoneNumber = user.getPhoneNumber();
-                if (phoneNumber != null && phoneNumber.length() < 12) {
-                    String password = user.getPassword();
-                    if (password != null && password.length() >= 10 && containsUppercase(password) && containsSpecialCharacter(password)) {
-                        user.setPassword(
-                                this.encoder.encode(user.getPassword())
-                        );
-                        user.setStatus(true);
-                        Users userSave = this.usersRepository.save(user);
-                        try {
-                            this.mailer.sendEmailWelcome(user.getEmail(), user.getName(), "¡Te damos la bienvenida MexPet!");
-                        } catch (Exception e) {
-                            return new CustomResponse<>(
-                                    null, true, 400, "Ocurrió un error al enviar el correo"
+        try{
+            if (this.usersRepository.findByEmailAndActivo(user.getEmail()) == null) {
+                if (user.getRol() != null) {
+                    if (user.getRol().getIdRol() == null) {
+                        user.getRol().setStatus(true);
+                        Rol persistedRol = rolRepository.save(user.getRol());
+                        user.setRol(persistedRol);
+                    }
+                    String phoneNumber = user.getPhoneNumber();
+                    if (phoneNumber != null && phoneNumber.length() < 12) {
+                        String password = user.getPassword();
+                        if (password != null && password.length() >= 10 && containsUppercase(password) && containsSpecialCharacter(password)) {
+                            user.setPassword(
+                                    this.encoder.encode(user.getPassword())
                             );
+                            user.setStatus(true);
+                            Users userSave = this.usersRepository.save(user);
+                            try {
+                                this.mailer.sendEmailWelcome(user.getEmail(), user.getName(), "¡Te damos la bienvenida MexPet!");
+                            } catch (Exception e) {
+                                return new CustomResponse<>(
+                                        null, true, 400, "Ocurrió un error al enviar el correo"
+                                );
+                            }
+                            return new CustomResponse<>(
+                                    userSave, false, 200, "Usuario registrado correctamente"
+                            );
+                        } else {
+                            return new CustomResponse<>(null, true, 400, "La contraseña no cumple con los requisitos mínimos");
                         }
-                        return new CustomResponse<>(
-                                userSave, false, 200, "Usuario registrado correctamente"
-                        );
                     } else {
-                        return new CustomResponse<>(null, true, 400, "La contraseña no cumple con los requisitos mínimos");
+                        return new CustomResponse<>(null, true, 400, "El teléfono no es válido");
                     }
                 } else {
-                    return new CustomResponse<>(null, true, 400, "El teléfono no es válido");
+                    return new CustomResponse<>(
+                            null, true, 400, "No se encontró el rol"
+                    );
                 }
             } else {
                 return new CustomResponse<>(
-                        null, true, 400, "No se encontró el rol"
+                        null, true, 400, "El correo ya está registrado"
                 );
             }
-        } else {
-            return new CustomResponse<>(
-                    null, true, 400, "El correo ya está registrado"
-            );
+        }catch(Exception e){
+            e.printStackTrace();
+            return new CustomResponse<>(null, true, 500, "Error al registrar el usuario");
+
         }
     }
 
@@ -143,6 +166,24 @@ public class UserService {
     }
 
     @Transactional(rollbackFor = {SQLException.class})
+    public CustomResponse<Boolean> changeUserStatus(UUID id, Boolean newStatus) {
+        try {
+            Optional<Users> optionalUser = this.usersRepository.findById(id);
+            if (optionalUser.isPresent()) {
+                Users user = optionalUser.get();
+                user.setStatus(newStatus);
+                this.usersRepository.saveAndFlush(user);
+                return new CustomResponse<>(true, false, 200, "Estado de usuario actualizado correctamente");
+            } else {
+                return new CustomResponse<>(null, true, 404, "Usuario no encontrado");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new CustomResponse<>(null, true, 500, "Error al cambiar estado de usuario");
+        }
+    }
+
+    /*@Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Boolean> delete(UUID id) {
         if (this.usersRepository.existsById(id)) {
             Users user = this.usersRepository.findByIdAndActivo(id);
@@ -156,7 +197,7 @@ public class UserService {
                     null, true, 400, "No se encontro el user"
             );
         }
-    }
+    }*/
 
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Boolean> updatePassword(Users user) {

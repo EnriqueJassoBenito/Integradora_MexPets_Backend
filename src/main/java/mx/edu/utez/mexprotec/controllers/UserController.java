@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -22,9 +23,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private LogsService logsService;
 
     @GetMapping("/")
     public ResponseEntity<CustomResponse<List<Users>>> getAll(){
@@ -36,13 +34,29 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CustomResponse<Users>> getById(
-            @PathVariable("id")
-            UUID id){
+            @PathVariable("id") UUID id
+    ){
         return new ResponseEntity<>(
                 this.userService.getOne(id),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<CustomResponse<List<Users>>> getActive() {
+        return new ResponseEntity<>(
+                this.userService.getActive(),
                 HttpStatus.OK
         );
     }
+
+    @GetMapping("/inactive")
+    public ResponseEntity<CustomResponse<List<Users>>> getInactive() {
+        return new ResponseEntity<>(
+                this.userService.getInactive(),
+                HttpStatus.OK
+        );
+    }
+
     @GetMapping("/role/{roleName}")
     public ResponseEntity<CustomResponse<List<Users>>> getByRole(@PathVariable("roleName") String roleName) {
         return new ResponseEntity<>(
@@ -88,7 +102,25 @@ public class UserController {
         );
     }
 
-    @DeleteMapping("/{id}")
+    @PatchMapping("/{id}")
+    public ResponseEntity<CustomResponse<Boolean>> changeUserStatus(
+            @PathVariable("id") UUID id,
+            @RequestBody Map<String, Object> payload
+    ) {
+        try {
+            boolean newStatus = (boolean) payload.get("status");
+            CustomResponse<Boolean> response = this.userService.changeUserStatus(id, newStatus);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(
+                    new CustomResponse<>(null, true, 500, "Error al cambiar estado de usuario"),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    /*@DeleteMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> enableDisable(
             @PathVariable("id") UUID id
     ){
@@ -96,5 +128,6 @@ public class UserController {
                 this.userService.delete(id),
                 HttpStatus.OK
         );
-    }
+    }*/
+
 }
