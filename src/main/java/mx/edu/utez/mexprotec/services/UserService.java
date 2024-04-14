@@ -98,56 +98,58 @@ public class UserService {
 
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Users> insert(Users user) {
-        try{
-            if (this.usersRepository.findByEmailAndActivo(user.getEmail()) == null) {
-                if (user.getRol() != null) {
-                    if (user.getRol().getIdRol() == null) {
-                        user.getRol().setStatus(true);
+        if (this.usersRepository.findByEmailAndActivo(user.getEmail()) == null) {
+            if (user.getRol() != null) {
+                if (user.getRol().getIdRol() == null) {
+                    user.getRol().setStatus(true);
+                    // Verificar si el rol ya existe en la base de datos
+                    Rol existingRol = rolRepository.findByNrol(user.getRol().getNrol());
+                    if (existingRol != null) {
+                        // Si el rol ya existe, usar el rol existente en lugar de guardar uno nuevo
+                        user.setRol(existingRol);
+                    } else {
+                        // Si el rol no existe, guardarlo en la base de datos
                         Rol persistedRol = rolRepository.save(user.getRol());
                         user.setRol(persistedRol);
                     }
-                    String phoneNumber = user.getPhoneNumber();
-                    if (phoneNumber != null && phoneNumber.length() < 12) {
-                        String password = user.getPassword();
-                        if (password != null && password.length() >= 10 && containsUppercase(password) && containsSpecialCharacter(password)) {
-                            user.setPassword(
-                                    this.encoder.encode(user.getPassword())
-                            );
-                            user.setStatus(true);
-                            Users userSave = this.usersRepository.save(user);
-                            try {
-                                this.mailer.sendEmailWelcome(user.getEmail(), user.getName(), "¡Te damos la bienvenida MexPet!");
-                            } catch (Exception e) {
-                                return new CustomResponse<>(
-                                        null, true, 400, "Ocurrió un error al enviar el correo"
-                                );
-                            }
+                }
+                String phoneNumber = user.getPhoneNumber();
+                if (phoneNumber != null && phoneNumber.length() < 12) {
+                    String password = user.getPassword();
+                    if (password != null && password.length() >= 10 && containsUppercase(password) && containsSpecialCharacter(password)) {
+                        user.setPassword(
+                                this.encoder.encode(user.getPassword())
+                        );
+                        user.setStatus(true);
+                        Users userSave = this.usersRepository.save(user);
+                        try {
+                            this.mailer.sendEmailWelcome(user.getEmail(), user.getName(), "¡Te damos la bienvenida MexPet!");
+                        } catch (Exception e) {
                             return new CustomResponse<>(
-                                    userSave, false, 200, "Usuario registrado correctamente"
+                                    null, true, 400, "Ocurrió un error al enviar el correo"
                             );
-                        } else {
-                            return new CustomResponse<>(null, true, 400, "La contraseña no cumple con los requisitos mínimos");
                         }
+                        return new CustomResponse<>(
+                                userSave, false, 200, "Usuario registrado correctamente"
+                        );
                     } else {
-                        return new CustomResponse<>(null, true, 400, "El teléfono no es válido");
+                        return new CustomResponse<>(null, true, 400, "La contraseña no cumple con los requisitos mínimos");
                     }
                 } else {
-                    return new CustomResponse<>(
-                            null, true, 400, "No se encontró el rol"
-                    );
+                    return new CustomResponse<>(null, true, 400, "El teléfono no es válido");
                 }
             } else {
                 return new CustomResponse<>(
-                        null, true, 400, "El correo ya está registrado"
+                        null, true, 400, "No se encontró el rol"
                 );
             }
-        }catch(Exception e){
-            e.printStackTrace();
-            return new CustomResponse<>(null, true, 500, "Error al registrar el usuario");
-
+        } else {
+            return new CustomResponse<>(
+                    null, true, 400, "El correo ya está registrado"
+            );
         }
     }
-
+    
     @Transactional(rollbackFor =  {SQLException.class})
     public CustomResponse<Users> update(Users users){
         if(!this.usersRepository.existsById(users.getId()))
