@@ -1,5 +1,6 @@
 package mx.edu.utez.mexprotec.models.image.adoption;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class AdoptionImage {
 
     @ManyToOne
     @JoinColumn(name = "adoption_id")
+    @JsonBackReference
     private Adoption adoption;
 
     @Column(name = "image_url")

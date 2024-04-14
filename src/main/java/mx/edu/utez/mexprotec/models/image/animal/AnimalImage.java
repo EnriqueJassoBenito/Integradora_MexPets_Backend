@@ -1,5 +1,6 @@
 package mx.edu.utez.mexprotec.models.image.animal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class AnimalImage {
 
     @ManyToOne
     @JoinColumn(name = "animals_id")
+    @JsonBackReference
     private Animals animal;
 
     @Column(name = "image_url")

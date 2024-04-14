@@ -1,6 +1,7 @@
 package mx.edu.utez.mexprotec.models.animals;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -74,7 +75,7 @@ public class Animals {
     private String description;
 
     @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL)
-    @JsonBackReference
+    @JsonManagedReference
     private List<AnimalImage> images;
 
     @Column(name = "approval_status", nullable = false)

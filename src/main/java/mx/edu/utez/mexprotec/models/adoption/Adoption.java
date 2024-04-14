@@ -2,6 +2,7 @@ package mx.edu.utez.mexprotec.models.adoption;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -50,7 +51,7 @@ public class Adoption {
     private LocalDate creationDate = LocalDate.now();
 
     @OneToMany(mappedBy = "adoption", cascade = CascadeType.ALL)
-    @JsonBackReference
+    @JsonManagedReference
     private List<AdoptionImage> images;
 
     @Column(name = "approval_status", nullable = false)
