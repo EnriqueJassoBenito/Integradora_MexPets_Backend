@@ -102,13 +102,10 @@ public class UserService {
             if (user.getRol() != null) {
                 if (user.getRol().getIdRol() == null) {
                     user.getRol().setStatus(true);
-                    // Verificar si el rol ya existe en la base de datos
                     Rol existingRol = rolRepository.findByNrol(user.getRol().getNrol());
                     if (existingRol != null) {
-                        // Si el rol ya existe, usar el rol existente en lugar de guardar uno nuevo
                         user.setRol(existingRol);
                     } else {
-                        // Si el rol no existe, guardarlo en la base de datos
                         Rol persistedRol = rolRepository.save(user.getRol());
                         user.setRol(persistedRol);
                     }
