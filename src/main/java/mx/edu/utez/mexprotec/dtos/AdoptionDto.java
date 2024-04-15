@@ -11,6 +11,7 @@ import mx.edu.utez.mexprotec.models.image.adoption.AdoptionImage;
 import mx.edu.utez.mexprotec.models.users.Users;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,8 +26,8 @@ public class AdoptionDto {
     private Animals animal;
     private Users adopter;
     private String description;
-    private List<String> imageUrls;
-    private LocalDate creationDate;
+    private List<String> imageUrl;
+    private LocalDateTime creationDate;
     private ApprovalStatus approvalStatus;
 
     private String moderatorComment;
@@ -40,8 +41,8 @@ public class AdoptionDto {
         adoption.setDescription(description);
 
         List<AdoptionImage> adoptionImages = new ArrayList<>();
-        if (imageUrls != null) {
-            for (String url : imageUrls) {
+        if (imageUrl != null) {
+            for (String url : imageUrl) {
                 AdoptionImage adoptionImage = new AdoptionImage();
                 adoptionImage.setAdoption(adoption);
                 adoptionImage.setImageUrl(url);

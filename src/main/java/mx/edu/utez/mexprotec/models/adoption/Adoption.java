@@ -1,7 +1,5 @@
 package mx.edu.utez.mexprotec.models.adoption;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,8 +11,7 @@ import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import mx.edu.utez.mexprotec.models.image.adoption.AdoptionImage;
 import mx.edu.utez.mexprotec.models.users.Users;
 import org.hibernate.annotations.GenericGenerator;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,7 +34,6 @@ public class Adoption {
 
     @ManyToOne
     @JoinColumn(name = "id_animals")
-    //@JsonIgnore
     private Animals animal;
 
     @ManyToOne
@@ -48,7 +44,7 @@ public class Adoption {
     private String description;
 
     @Column(name = "creation_date", columnDefinition = "DATE")
-    private LocalDate creationDate = LocalDate.now();
+    private LocalDateTime creationDate;
 
     @OneToMany(mappedBy = "adoption", cascade = CascadeType.ALL)
     @JsonManagedReference
@@ -59,4 +55,9 @@ public class Adoption {
 
     @Column(name = "moderator_comment")
     private String moderatorComment;
+
+    @PrePersist
+    public void prePersist() {
+        this.creationDate = LocalDateTime.now();
+    }
 }

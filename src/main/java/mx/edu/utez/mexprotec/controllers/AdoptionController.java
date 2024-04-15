@@ -93,13 +93,13 @@ public class AdoptionController {
     @PatchMapping("/{id}/approval")
     public ResponseEntity<CustomResponse<String>> approvedOrRejectAdoption(@PathVariable UUID id,
                                                                            @RequestParam ApprovalStatus approvalStatus,
-                                                                           @RequestParam String comment) {
-        CustomResponse<Boolean> response = adoptionService.approveOrRejectAdoption(id, approvalStatus, comment);
+                                                                           @RequestParam String moderatorComment) {
+        CustomResponse<Boolean> response = adoptionService.approveOrRejectAdoption(id, approvalStatus, moderatorComment);
         String message;
         HttpStatus httpStatus;
 
         if (response.getData() != null && response.getData()) {
-            message = "Adopción aprobada correctamente";
+            message = "Adopción cambiada correctamente";
             httpStatus = HttpStatus.OK;
         } else {
             if (ApprovalStatus.REJECTED.equals(approvalStatus)) {

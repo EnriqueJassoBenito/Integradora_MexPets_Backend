@@ -23,9 +23,6 @@ public class HistoryController {
     @Autowired
     private HistoryService historyService;
 
-    @Autowired
-    private LogsService logsService;
-
     @GetMapping("/")
     public ResponseEntity<CustomResponse<List<History>>> getAll() {
         return new ResponseEntity<>(

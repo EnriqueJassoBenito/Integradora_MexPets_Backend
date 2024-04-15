@@ -146,10 +146,10 @@ public class AnimalController {
         HttpStatus httpStatus;
 
         if (response.getData() != null && response.getData()) {
-            message = "Animal aprobado correctamente";
+            message = "Estado cambiado correctamente";
             httpStatus = HttpStatus.OK;
         } else {
-            message = "Animal rechazado o no encontrado";
+            message = "Animal no encontrado";
             httpStatus = HttpStatus.NOT_FOUND;
         }
         return new ResponseEntity<>(new CustomResponse<>(message, false, httpStatus.value(), message), httpStatus);
