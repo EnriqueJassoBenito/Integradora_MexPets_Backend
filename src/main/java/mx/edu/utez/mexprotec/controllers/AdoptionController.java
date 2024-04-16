@@ -4,11 +4,8 @@ import jakarta.validation.Valid;
 import mx.edu.utez.mexprotec.dtos.AdoptionDto;
 
 import mx.edu.utez.mexprotec.models.adoption.Adoption;
-
 import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import mx.edu.utez.mexprotec.services.AdoptionService;
-
-import mx.edu.utez.mexprotec.services.LogsService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

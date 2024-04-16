@@ -1,7 +1,6 @@
 package mx.edu.utez.mexprotec.dtos.category;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

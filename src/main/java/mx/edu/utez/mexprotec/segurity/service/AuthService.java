@@ -1,6 +1,5 @@
 package mx.edu.utez.mexprotec.segurity.service;
 
-
 import mx.edu.utez.mexprotec.models.users.Users;
 import mx.edu.utez.mexprotec.segurity.model.AuthUser;
 import mx.edu.utez.mexprotec.services.UserService;

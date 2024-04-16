@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class CaptchaController {
     private CaptchaService captchaService;
 
-    @PostMapping("/verify captcha")
+    @PostMapping("/verify-captcha")
     public CaptchaResponse verifyCaptcha(@RequestParam("solution") String solution) {
         return captchaService.verifyCaptcha(solution);
     }

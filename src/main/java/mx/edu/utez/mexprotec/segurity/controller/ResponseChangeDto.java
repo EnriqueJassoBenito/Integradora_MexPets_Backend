@@ -15,7 +15,4 @@ public class ResponseChangeDto {
         this.message = message;
         this.error = error;
     }
-
-
-
 }

@@ -182,22 +182,6 @@ public class UserService {
         }
     }
 
-    /*@Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<Boolean> delete(UUID id) {
-        if (this.usersRepository.existsById(id)) {
-            Users user = this.usersRepository.findByIdAndActivo(id);
-            user.setStatus(false);
-            this.usersRepository.saveAndFlush(user);
-            return new CustomResponse<>(
-                    true, false, 200, "user eliminado correctamente"
-            );
-        } else {
-            return new CustomResponse<>(
-                    null, true, 400, "No se encontro el user"
-            );
-        }
-    }*/
-
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Boolean> updatePassword(Users user) {
         Users temp = this.usersRepository.findByRolAndUserAndActivo(user.getId(), user.getRol().getIdRol());

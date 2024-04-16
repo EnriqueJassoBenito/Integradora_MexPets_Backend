@@ -8,7 +8,6 @@ import mx.edu.utez.mexprotec.models.animals.personality.Personality;
 import mx.edu.utez.mexprotec.models.animals.race.Race;
 import mx.edu.utez.mexprotec.models.animals.typePet.TypePet;
 import mx.edu.utez.mexprotec.services.AnimalService;
-import mx.edu.utez.mexprotec.services.LogsService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

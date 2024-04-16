@@ -69,10 +69,10 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password")
-        public ResponseChangeDto requestPasswordReset(@Valid @RequestBody RequestChangeDto datosRequest)
+        public ResponseChangeDto requestPasswordReset(@Valid @RequestBody RequestChangeDto dataRequest)
             throws MessagingException {
-        String host = "http://localhost:5173/auth/changePassword";
-        Users user = service.findByEmail(datosRequest.getEmail());
+        String host = "http://localhost:5173/#/auth/changePassword";
+        Users user = service.findByEmail(dataRequest.getEmail());
 
         if (user == null) {
             ResponseChangeDto response = new ResponseChangeDto();
@@ -106,7 +106,7 @@ public class AuthController {
                     "            \"\n" +
                     "          >\n" +
                     "            <img\n" +
-                    "              src=\"https://demo.stripocdn.email/content/guids/d0dee27c-b951-4be2-9e65-fe5d431243a4/images/booksg5a3638f0519201633971795.jpg\"\n" +
+                    "              src=\"https://assets-global.website-files.com/63634f4a7b868a399577cf37/63ceba1ae7b26aa4ad28478f_adopcion%20de%20razas%20de%20perros%20pequen%CC%83as.jpg\"\n" +
                     "              style=\"width: 100%\"\n" +
                     "              alt=\"mexpet\"\n" +
                     "            />\n" +
@@ -150,9 +150,9 @@ public class AuthController {
             response.setError(true);
             return response;
         } else {
-            Users usuario = service.findByEmail(user);
-            usuario.setPassword(resetPasswordData.getPassword());
-            CustomResponse<Boolean> result = service.updatePassword(usuario);
+            Users users = service.findByEmail(user);
+            users.setPassword(resetPasswordData.getPassword());
+            CustomResponse<Boolean> result = service.updatePassword(users);
             if (!result.getError()) {
                 ResponseChangeDto response = new ResponseChangeDto();
                 response.setMessage("Contraseña actualizada correctamente.");

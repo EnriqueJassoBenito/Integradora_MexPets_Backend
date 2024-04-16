@@ -9,8 +9,6 @@ import mx.edu.utez.mexprotec.models.animals.Animals;
 import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import mx.edu.utez.mexprotec.models.image.adoption.AdoptionImage;
 import mx.edu.utez.mexprotec.models.users.Users;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,6 @@
 package mx.edu.utez.mexprotec.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import mx.edu.utez.mexprotec.models.rol.Rol;

@@ -39,7 +39,7 @@ public class Users {
     @Column(name = "lastname_matern")
     private String lastnameMatern;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "phone_number", nullable = false)
@@ -51,7 +51,7 @@ public class Users {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_rol")
     private Rol rol;
 

@@ -3,7 +3,6 @@ package mx.edu.utez.mexprotec.controllers;
 import jakarta.validation.Valid;
 import mx.edu.utez.mexprotec.dtos.UserDto;
 import mx.edu.utez.mexprotec.models.users.Users;
-import mx.edu.utez.mexprotec.services.LogsService;
 import mx.edu.utez.mexprotec.services.UserService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,15 +118,4 @@ public class UserController {
             );
         }
     }
-
-    /*@DeleteMapping("/{id}")
-    public ResponseEntity<CustomResponse<Boolean>> enableDisable(
-            @PathVariable("id") UUID id
-    ){
-        return new ResponseEntity<>(
-                this.userService.delete(id),
-                HttpStatus.OK
-        );
-    }*/
-
 }
