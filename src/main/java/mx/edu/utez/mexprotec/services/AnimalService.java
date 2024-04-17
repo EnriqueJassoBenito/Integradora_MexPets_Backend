@@ -11,6 +11,7 @@ import mx.edu.utez.mexprotec.models.animals.race.Race;
 import mx.edu.utez.mexprotec.models.animals.typePet.TypePet;
 import mx.edu.utez.mexprotec.models.image.animal.AnimalImage;
 import mx.edu.utez.mexprotec.models.image.animal.AnimalImageRepository;
+import mx.edu.utez.mexprotec.models.users.Users;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import mx.edu.utez.mexprotec.utils.Mailer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,25 @@ public class AnimalService {
                     "No encontrado"
             );
         }
+    }
+
+    @Transactional(readOnly = true)
+    public CustomResponse<List<Animals>> getAnimalsByUser(Users user) {
+        List<Animals> animals = this.animalsRepository.findByRegister(user);
+        if (animals.isEmpty()) {
+            return new CustomResponse<>(
+                    null,
+                    true,
+                    404,
+                    "No se encontraron animales para el usuario especificado"
+            );
+        }
+        return new CustomResponse<>(
+                animals,
+                false,
+                200,
+                "Animales encontrados para el usuario"
+        );
     }
 
     @Transactional(readOnly = true)
