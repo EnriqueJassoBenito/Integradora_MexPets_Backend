@@ -65,6 +65,15 @@ public class AdoptionService {
     }
 
     @Transactional(readOnly = true)
+    public CustomResponse<List<Adoption>> getAdoptionsByUser(UUID userId) {
+        List<Adoption> userAdoptions = adoptionRepository.findByAdopterId(userId);
+        if (!userAdoptions.isEmpty()) {
+            return new CustomResponse<>(userAdoptions, false, 200, "Adopciones encontradas");
+        } else {
+            return new CustomResponse<>(null, true, 404, "No se encontraron adopciones para este usuario");
+        }
+    }
+    @Transactional(readOnly = true)
     public CustomResponse<List<Adoption>> getApprovedAdoptions() {
         List<Adoption> approvedAdoptions = adoptionRepository.findByStatus(true);
         return new CustomResponse<>(approvedAdoptions, false, 200, "Adopciones gestionadas");

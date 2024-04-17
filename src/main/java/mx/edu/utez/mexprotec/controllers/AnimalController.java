@@ -13,6 +13,7 @@ import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -125,16 +126,29 @@ public class AnimalController {
             @ModelAttribute AnimalDto dto,
             @RequestParam("imageFiles") List<MultipartFile> imageFiles,
             @Valid BindingResult result) {
-        if (result.hasErrors()) {
+        try {
+            System.out.println("Nombres de los archivos de imagen recibidos:");
+            for (MultipartFile file : imageFiles) {
+                System.out.println(file.getOriginalFilename());
+            }
+
+            if (result.hasErrors()) {
+                System.out.println("Errores de validación encontrados:");
+                for (FieldError error : result.getFieldErrors()) {
+                    System.out.println(error.getField() + ": " + error.getDefaultMessage());
+                }
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+
             return new ResponseEntity<>(
-                    null,
-                    HttpStatus.BAD_REQUEST
+                    this.animalService.insert(dto.toAnimals(), imageFiles),
+                    HttpStatus.CREATED
             );
+        } catch (Exception e) {
+            System.out.println("Error al procesar la solicitud:");
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(
-                this.animalService.insert(dto.toAnimals(), imageFiles),
-                HttpStatus.CREATED
-        );
     }
 
 

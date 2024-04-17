@@ -30,5 +30,7 @@ public interface AdoptionRepository extends JpaRepository<Adoption, UUID> {
     @Query("SELECT COUNT(a) FROM Adoption a WHERE DATE(a.creationDate) = :date")
     long countByDate(@Param("date") LocalDate date);
 
+    List<Adoption> findByAdopterId(UUID userId);
+
     void deleteById(UUID id);
 }

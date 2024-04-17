@@ -28,7 +28,6 @@ public class AdoptionDto {
     private List<String> imageUrl;
     private Boolean status;
 
-
     public Adoption toAdoption() {
         Adoption adoption = new Adoption();
         adoption.setId(id);

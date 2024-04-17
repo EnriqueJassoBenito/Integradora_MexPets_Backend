@@ -41,6 +41,14 @@ public class AdoptionController {
         );
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<CustomResponse<List<Adoption>>> getAdoptionsByUser(@PathVariable("userId") UUID userId) {
+        return new ResponseEntity<>(
+                adoptionService.getAdoptionsByUser(userId),
+                HttpStatus.OK
+        );
+    }
+
     @GetMapping("/pending")
     public ResponseEntity<CustomResponse<List<Adoption>>> getPendingAdoptions() {
         return new ResponseEntity<>(
