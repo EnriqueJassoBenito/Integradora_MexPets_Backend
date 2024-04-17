@@ -53,7 +53,7 @@ public class RolService {
                 adminUser.setEmail("20213tn011@utez.edu.mx");
                 adminUser.setPhoneNumber("7774857215");
                 adminUser.setLocalitation("Cuernavaca");
-                adminUser.setPassword("OsmichKwon05#");
+                adminUser.setPassword("RafaRt123!");
                 adminUser.setRol(rolAdmin);
                 this.userService.insert(adminUser);
 

@@ -1,10 +1,15 @@
 package mx.edu.utez.mexprotec.controllers;
 
+import jakarta.validation.constraints.NotNull;
 import mx.edu.utez.mexprotec.models.logs.Logs;
 import mx.edu.utez.mexprotec.services.LogsService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -13,19 +18,21 @@ import java.util.List;
 @RequestMapping("/api/logs/")
 @CrossOrigin(origins = "http://localhost:5173")
 public class LogsController {
+    private final LogsService service;
 
-    @Autowired
-    private LogsService service;
-
-    @GetMapping("/")
-    public CustomResponse<List<Logs>> getAll() throws SQLException {
-        return service.getAll();
+    public LogsController(LogsService services) {
+        this.service = services;
     }
 
-    @GetMapping("/{id}")
-    public CustomResponse<Logs> getById(
-            @PathVariable String id) throws SQLException {
-        return service.getById(id);
+    @GetMapping("/")
+    public ResponseEntity<CustomResponse<List<Logs>>> getAll() {
+        return new ResponseEntity<>(this.service.getAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/paginado/{page}/{size}")
+    public ResponseEntity<CustomResponse<Page<Logs>>> getAllPaginado(@PathVariable("page") @NotNull Integer page, @PathVariable("size") @NotNull Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return new ResponseEntity<>(this.service.getAll(pageable), HttpStatus.OK);
     }
 
     @PostMapping

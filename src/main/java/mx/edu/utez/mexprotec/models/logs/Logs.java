@@ -10,6 +10,7 @@ import lombok.Setter;
 import mx.edu.utez.mexprotec.models.users.Users;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
 
@@ -20,30 +21,31 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Logs {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(generator = "uuid")
+    @UuidGenerator
+    @Column(name = "id")
     private String id;
 
     @Column(columnDefinition = "json")
     @Type(JsonType.class)
     private JsonNode data;
 
-    @Column(name = "method")
+    @Column(name = "method", columnDefinition = "TEXT NOT NULL")
     private String method;
 
-    @Column(name = "request_uri")
+    @Column(name = "request_uri", columnDefinition = "TEXT NOT NULL")
     private String requestUri;
 
-    @Column(name = "ip")
+    @Column(name = "ip", columnDefinition = "TEXT NOT NULL")
     private String ip;
 
-    @Column(name = "user_agent")
+    @Column(name = "user_agent",columnDefinition = "TEXT NOT NULL")
     private String userAgent;
 
-    @Column(name = "status")
+    @Column(name = "status", columnDefinition = "SMALLINT NOT NULL")
     private int status;
 
-    @Column(name = "created_at", columnDefinition = "TIMESTAMP")
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private String createdAt;
 }
 

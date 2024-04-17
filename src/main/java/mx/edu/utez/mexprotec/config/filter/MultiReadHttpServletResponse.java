@@ -21,7 +21,6 @@ public class MultiReadHttpServletResponse extends HttpServletResponseWrapper {
             public void write(int b) throws IOException {
                 cachedContent.write(b);
             }
-
             @Override
             public boolean isReady() {
                 return true;
@@ -29,7 +28,6 @@ public class MultiReadHttpServletResponse extends HttpServletResponseWrapper {
 
             @Override
             public void setWriteListener(WriteListener writeListener) {
-
             }
         };
         writer = new PrintWriter(new OutputStreamWriter(cachedContent, this.getCharacterEncoding()));

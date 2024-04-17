@@ -24,8 +24,10 @@ import java.util.UUID;
 @CrossOrigin(origins = {"*"})
 public class AnimalController {
 
-    @Autowired
-    private AnimalService animalService;
+    private final AnimalService animalService;
+    public AnimalController(AnimalService services) {
+    this.animalService = services;
+    }
 
     @GetMapping("/")
     public ResponseEntity<CustomResponse<List<Animals>>> getAll() {

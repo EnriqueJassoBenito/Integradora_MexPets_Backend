@@ -39,7 +39,6 @@ public class MultiReadHttpServletRequest extends HttpServletRequestWrapper {
         public CachedServletInputStream() {
             input = new ByteArrayInputStream(cachedBytes.toByteArray());
         }
-
         @Override
         public int read() throws IOException {
             return input.read();
