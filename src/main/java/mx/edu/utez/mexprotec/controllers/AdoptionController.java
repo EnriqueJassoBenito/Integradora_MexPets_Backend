@@ -41,20 +41,18 @@ public class AdoptionController {
         );
     }
 
-    @GetMapping("/pending-approval")
-    public ResponseEntity<CustomResponse<List<Adoption>>> getPendingApproval() {
-        CustomResponse<List<Adoption>> response = adoptionService.getPendingApprovalAdoption();
+    @GetMapping("/pending")
+    public ResponseEntity<CustomResponse<List<Adoption>>> getPendingAdoptions() {
         return new ResponseEntity<>(
-                response,
+                adoptionService.getPendingAdoptions(),
                 HttpStatus.OK
         );
     }
 
-    @GetMapping("/approved")
-    public ResponseEntity<CustomResponse<List<Adoption>>> getApproved() {
-        CustomResponse<List<Adoption>> response = adoptionService.getApprovedAdoption();
+    @GetMapping("/managed")
+    public ResponseEntity<CustomResponse<List<Adoption>>> getApprovedAdoptions() {
         return new ResponseEntity<>(
-                response,
+                adoptionService.getApprovedAdoptions(),
                 HttpStatus.OK
         );
     }
@@ -87,33 +85,13 @@ public class AdoptionController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{id}/approval")
-    public ResponseEntity<CustomResponse<String>> approvedOrRejectAdoption(@PathVariable UUID id,
-                                                                           @RequestParam ApprovalStatus approvalStatus,
-                                                                           @RequestParam String moderatorComment) {
-        CustomResponse<Boolean> response = adoptionService.approveOrRejectAdoption(id, approvalStatus, moderatorComment);
-        String message;
-        HttpStatus httpStatus;
-
-        if (response.getData() != null && response.getData()) {
-            message = "Adopción cambiada correctamente";
-            httpStatus = HttpStatus.OK;
-        } else {
-            if (ApprovalStatus.REJECTED.equals(approvalStatus)) {
-                message = "Adopción rechazada correctamente";
-            } else {
-                message = "No se pudo procesar la operación de adopción";
-            }
-            httpStatus = HttpStatus.BAD_REQUEST;
-        }
-        return new ResponseEntity<>(new CustomResponse<>(message, false, httpStatus.value(), message), httpStatus);
-    }
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<CustomResponse<Boolean>> delete(@PathVariable("id") UUID id) {
-        return new ResponseEntity<>(
-                this.adoptionService.delete(id),
-                HttpStatus.OK
-        );
+    public ResponseEntity<CustomResponse<Boolean>> cancelAdoption(@PathVariable("id") UUID id) {
+        CustomResponse<Boolean> response = adoptionService.cancelAdoption(id);
+        if (response.isError()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+        return ResponseEntity.ok(response);
     }
+
 }

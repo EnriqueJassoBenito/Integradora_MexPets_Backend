@@ -4,7 +4,6 @@ import mx.edu.utez.mexprotec.config.service.CloudinaryService;
 import mx.edu.utez.mexprotec.dtos.AdoptionDto;
 import mx.edu.utez.mexprotec.models.adoption.Adoption;
 import mx.edu.utez.mexprotec.models.adoption.AdoptionRepository;
-import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import mx.edu.utez.mexprotec.models.image.adoption.AdoptionImage;
 import mx.edu.utez.mexprotec.models.image.adoption.AdoptionImageRepository;
 import mx.edu.utez.mexprotec.services.imageCloudy.AdoptionLimitService;
@@ -45,7 +44,6 @@ public class AdoptionService {
         );
     }
 
-
     @Transactional(readOnly = true)
     public CustomResponse<Adoption> getOne(UUID id){
         Optional<Adoption> optional = this.adoptionRepository.findById(id);
@@ -67,17 +65,17 @@ public class AdoptionService {
     }
 
     @Transactional(readOnly = true)
-    public CustomResponse<List<Adoption>> getPendingApprovalAdoption(){
-        List<Adoption> pendingAdoptions = adoptionRepository.findByApprovalStatus(ApprovalStatus.PENDING);
-        return new CustomResponse<>(pendingAdoptions, false, 200, "Adopciones pendientes de aprobación");
+    public CustomResponse<List<Adoption>> getApprovedAdoptions() {
+        List<Adoption> approvedAdoptions = adoptionRepository.findByStatus(true);
+        return new CustomResponse<>(approvedAdoptions, false, 200, "Adopciones gestionadas");
     }
 
     @Transactional(readOnly = true)
-    public CustomResponse<List<Adoption>> getApprovedAdoption(){
-        List<Adoption> approvedAdoptions = adoptionRepository.findByApprovalStatus(ApprovalStatus.APPROVED);
-        return new CustomResponse<>(approvedAdoptions,
-                false, 200, "Adopciones aprobadas");
+    public CustomResponse<List<Adoption>> getPendingAdoptions() {
+        List<Adoption> pendingAdoptions = adoptionRepository.findByStatus(false);
+        return new CustomResponse<>(pendingAdoptions, false, 200, "Adopciones pendientes de gestionar");
     }
+
 
     @Transactional(rollbackFor = {SQLException.class})
     public CustomResponse<Adoption> insert(Adoption adoption, List<MultipartFile> imageFiles) {
@@ -115,7 +113,7 @@ public class AdoptionService {
             adoption.setAdopter(adoptionDto.getAdopter());
             adoption.setDescription(adoptionDto.getDescription());
             adoption.setCreationDate(adoptionDto.getCreationDate());
-            adoption.setApprovalStatus(adoptionDto.getApprovalStatus());
+            adoption.setStatus(adoptionDto.getStatus());
 
             Adoption savedAdoption = adoptionRepository.save(adoption);
 
@@ -140,45 +138,14 @@ public class AdoptionService {
     }
 
     @Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<Boolean> approveOrRejectAdoption(UUID id, ApprovalStatus approvalStatus, String moderatorComment){
-        Optional<Adoption> optional = this.adoptionRepository.findById(id);
-        if(optional.isPresent()){
-            Adoption adoption = optional.get();
-            adoption.setApprovalStatus(approvalStatus);
-            adoption.setModeratorComment(moderatorComment);
-            this.adoptionRepository.save(adoption);
-            return new CustomResponse<>(
-                    true,
-                    false,
-                    200,
-                    "¡Actualizado correctamente!"
-            );
-        }else {
-            return new CustomResponse<>(
-                    false,
-                    true,
-                    400,
-                    "No encontrado"
-            );
+    public CustomResponse<Boolean> cancelAdoption(UUID id) {
+        Optional<Adoption> optionalAdoption = adoptionRepository.findById(id);
+        if (optionalAdoption.isPresent()) {
+            Adoption adoption = optionalAdoption.get();
+            adoptionRepository.delete(adoption);
+            return new CustomResponse<>(true, false, 200, "Solicitud de adopción cancelada con éxito");
+        } else {
+            return new CustomResponse<>(false, true, 404, "No se encontró la solicitud de adopción con ID " + id);
         }
-    }
-
-    @Transactional(rollbackFor =  {SQLException.class})
-    public CustomResponse<Boolean> delete(UUID id){
-        if(!this.adoptionRepository.existsById(id)){
-            return new CustomResponse<>(
-                    false,
-                    true,
-                    400,
-                    "No encontrado"
-            );
-        }
-        this.adoptionRepository.deleteById(id);
-        return new CustomResponse<>(
-                true,
-                false,
-                200,
-                "¡Eliminado correctamente!"
-        );
     }
 }

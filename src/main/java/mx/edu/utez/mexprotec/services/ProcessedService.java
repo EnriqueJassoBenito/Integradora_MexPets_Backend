@@ -1,13 +1,15 @@
 package mx.edu.utez.mexprotec.services;
 
-import jakarta.mail.MessagingException;
+import mx.edu.utez.mexprotec.config.TwilioService;
+import mx.edu.utez.mexprotec.dtos.ProcessedDto;
 import mx.edu.utez.mexprotec.models.adoption.Adoption;
 import mx.edu.utez.mexprotec.models.adoption.AdoptionRepository;
 import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import mx.edu.utez.mexprotec.models.processed.Processed;
 import mx.edu.utez.mexprotec.models.processed.ProcessedRepository;
+import mx.edu.utez.mexprotec.models.users.Users;
+import mx.edu.utez.mexprotec.models.users.UsersRepository;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
-import mx.edu.utez.mexprotec.utils.Mailer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,10 +26,13 @@ public class ProcessedService {
     private ProcessedRepository processedRepository;
 
     @Autowired
+    private TwilioService twilioService;
+
+    @Autowired
     private AdoptionRepository adoptionRepository;
 
     @Autowired
-    private Mailer mailer;
+    private UsersRepository usersRepository;
 
     @Transactional(readOnly = true)
     public CustomResponse<List<Processed>> getAll(){
@@ -39,25 +44,6 @@ public class ProcessedService {
         );
     }
 
-    @Transactional(readOnly = true)
-    public  CustomResponse<List<Processed>> getAllActive(){
-        return new CustomResponse<>(
-                this.processedRepository.findAllByStatus(true),
-                false,
-                200,
-                "Ok"
-        );
-    }
-
-    @Transactional(readOnly = true)
-    public  CustomResponse<List<Processed>> getAllInactive(){
-        return new CustomResponse<>(
-                this.processedRepository.findAllByStatus(false),
-                false,
-                200,
-                "Ok"
-        );
-    }
 
     @Transactional(readOnly = true)
     public CustomResponse<Processed> getOne(UUID id){
@@ -79,40 +65,38 @@ public class ProcessedService {
         }
     }
 
-    @Transactional(rollbackFor =  {SQLException.class})
-    public CustomResponse<Processed> insert(Processed processed){
-        return new CustomResponse<>(
-                this.processedRepository.saveAndFlush(processed),
-                false,
-                200,
-                "Registrado correctamente"
-        );
-    }
-
+    //post
     @Transactional
-    public CustomResponse<Boolean> approveAdoption(UUID adoptionId) {
-        Optional<Adoption> optionalAdoption = adoptionRepository.findById(adoptionId);
+    public CustomResponse<Processed> processAdoption(ProcessedDto processedDto) {
+        Optional<Adoption> optionalAdoption = adoptionRepository.findById(processedDto.getAdoption().getId());
         if (optionalAdoption.isPresent()) {
             Adoption adoption = optionalAdoption.get();
-            adoption.setApprovalStatus(ApprovalStatus.APPROVED);
-            adoptionRepository.save(adoption);
+            if (!adoption.getStatus()) {
+                // Cambiar el estado de la adopción a true si aún no ha sido gestionada
+                adoption.setStatus(true);
+                adoptionRepository.save(adoption);
 
-            try {
-                mailer.sendAcceptedRequest(adoption.getAdopter().getEmail(), adoption.getAdopter().getName());
-            } catch (MessagingException e) {
-                e.printStackTrace();
-                return new CustomResponse<>(false, true, 500, "Error al enviar el correo de aprobación");
+                // Obtener el moderador por su ID
+                Optional<Users> optionalModerator = usersRepository.findById(processedDto.getModerator().getId());
+                if (optionalModerator.isPresent()) {
+                    Users moderator = optionalModerator.get();
+
+                    // Crear la AdoptionProcesada con los datos del DTO y moderador encontrado
+                    Processed processed = processedDto.getProcessed();
+                    processed.setAdoption(adoption);
+                    processed.setModerator(moderator);
+
+                    // Guardar el procesamiento de adopción
+                    Processed savedProcessed = processedRepository.save(processed);
+                    return new CustomResponse<>(savedProcessed, false, 200, "Adopción procesada correctamente");
+                } else {
+                    return new CustomResponse<>(null, true, 404, "No se encontró al moderador con ID " + processedDto.getModerator().getId());
+                }
+            } else {
+                return new CustomResponse<>(null, true, 400, "La adopción ya ha sido gestionada anteriormente");
             }
-
-            Processed processed = new Processed();
-            processed.setAdoption(adoption);
-            processed.setModerador(adoption.getAdopter());
-            processed.setStatus(true);
-            processedRepository.save(processed);
-
-            return new CustomResponse<>(true, false, 200, "Adopción aprobada y procesada correctamente");
         } else {
-            return new CustomResponse<>(false, true, 404, "No se encontró la adopción con ID " + adoptionId);
+            return new CustomResponse<>(null, true, 404, "No se encontró la adopción con ID " + processedDto.getAdoption().getId());
         }
     }
 
@@ -133,24 +117,30 @@ public class ProcessedService {
         );
     }
 
-    @Transactional(rollbackFor =  {SQLException.class})
-    public CustomResponse<Boolean> changeStatus(Processed processed){
-        if(!this.processedRepository.existsById(processed.getId())){
-            return new CustomResponse<>(
-                    false,
-                    true,
-                    400,
-                    "No encontrado"
-            );
+    @Transactional(rollbackFor = {SQLException.class})
+    public CustomResponse<Processed> updateApprovalStatus(UUID id, ApprovalStatus status) {
+        Optional<Processed> optionalProcessed = processedRepository.findById(id);
+        if (optionalProcessed.isPresent()) {
+            Processed processed = optionalProcessed.get();
+            if (status == ApprovalStatus.APPROVED) {
+                processed.approve();
+                sendApprovalSMS(processed.getAdoption().getAdopter().getPhoneNumber(), "¡Felicidades! Tu adopción ha sido aprobada.");
+
+            } else if (status == ApprovalStatus.REJECTED) {
+                processed.reject();
+            }
+            processedRepository.save(processed);
+            return new CustomResponse<>(processed, false, 200, "Estado de aprobación actualizado correctamente");
+        } else {
+            return new CustomResponse<>(null, true, 404, "No se encontró la adopción procesada con ID " + id);
         }
-        return new CustomResponse<>(
-                this.processedRepository.updateStatusById(
-                        processed.getStatus(), processed.getId()
-                ) == 1,
-                false,
-                200,
-                "¡Se ha cambiado el status correctamente!"
-        );
+    }
+
+
+    @Transactional(readOnly = true)
+    public CustomResponse<List<Processed>> getByApprovalStatus(ApprovalStatus status) {
+        List<Processed> processedList = processedRepository.findByApprovalStatus(status);
+        return new CustomResponse<>(processedList, false, 200, "Adopciones procesadas con estado " + status);
     }
 
     @Transactional(rollbackFor = {SQLException.class})
@@ -172,5 +162,9 @@ public class ProcessedService {
                 200,
                 "Eliminado correctamente"
         );
+    }
+
+    private void sendApprovalSMS(String phoneNumber, String message) {
+        twilioService.sendSMS(phoneNumber, message);
     }
 }

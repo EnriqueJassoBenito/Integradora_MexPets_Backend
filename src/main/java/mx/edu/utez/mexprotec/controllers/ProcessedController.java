@@ -2,7 +2,11 @@ package mx.edu.utez.mexprotec.controllers;
 
 import jakarta.validation.Valid;
 import mx.edu.utez.mexprotec.dtos.ProcessedDto;
+import mx.edu.utez.mexprotec.models.adoption.Adoption;
+import mx.edu.utez.mexprotec.models.adoption.AdoptionRepository;
+import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import mx.edu.utez.mexprotec.models.processed.Processed;
+import mx.edu.utez.mexprotec.models.processed.ProcessedRepository;
 import mx.edu.utez.mexprotec.services.ProcessedService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -22,28 +28,16 @@ public class ProcessedController {
     @Autowired
     private ProcessedService processedService;
 
+    @Autowired
+    private AdoptionRepository adoptionRepository;
+
+    @Autowired
+    private ProcessedRepository processedRepository;
+
     @GetMapping("/")
     public ResponseEntity<CustomResponse<List<Processed>>> getAll() {
         return new ResponseEntity<>(
                 this.processedService.getAll(),
-                HttpStatus.OK
-        );
-    }
-
-    @GetMapping("/getActive")
-    public ResponseEntity<CustomResponse<List<Processed>>>
-    getAllActive(){
-        return new ResponseEntity<>(
-                this.processedService.getAllActive(),
-                HttpStatus.OK
-        );
-    }
-
-    @GetMapping("/getAllInactive")
-    public ResponseEntity<CustomResponse<List<Processed>>>
-    getAllInactive(){
-        return new ResponseEntity<>(
-                this.processedService.getAllInactive(),
                 HttpStatus.OK
         );
     }
@@ -56,11 +50,15 @@ public class ProcessedController {
         );
     }
 
-    @PostMapping("/acceptAdoption")
-    public ResponseEntity<CustomResponse<Boolean>> acceptAdoption(@RequestParam UUID adoptionId) {
-        CustomResponse<Boolean> response = processedService.approveAdoption(adoptionId);
-        HttpStatus status = response.getError() ? HttpStatus.BAD_REQUEST : HttpStatus.OK;
-        return new ResponseEntity<>(response, status);
+    ///post
+    @PostMapping("/process")
+    public ResponseEntity<CustomResponse<Processed>> processAdoption(
+            @RequestBody ProcessedDto processedDto) {
+        CustomResponse<Processed> response = processedService.processAdoption(processedDto);
+        if (response.isError()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
@@ -78,14 +76,17 @@ public class ProcessedController {
         );
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<CustomResponse<Boolean>> enableOrDisable(
-            @RequestBody ProcessedDto dto) {
-        return new ResponseEntity<>(
-                this.processedService.changeStatus(dto.getProcessed()),
-                HttpStatus.OK
-        );
+    @PatchMapping("/{id}/updateApprovalStatus")
+    public ResponseEntity<CustomResponse<Processed>> updateApprovalStatus(
+            @PathVariable UUID id,
+            @RequestParam ApprovalStatus status) {
+        CustomResponse<Processed> response = processedService.updateApprovalStatus(id, status);
+        if (response.isError()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+        return ResponseEntity.ok(response);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> deleteById(@PathVariable("id") UUID id) {

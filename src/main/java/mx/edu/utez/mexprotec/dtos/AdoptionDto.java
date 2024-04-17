@@ -24,11 +24,9 @@ public class AdoptionDto {
     private Animals animal;
     private Users adopter;
     private String description;
-    private List<String> imageUrl;
     private LocalDateTime creationDate;
-    private ApprovalStatus approvalStatus;
-
-    private String moderatorComment;
+    private List<String> imageUrl;
+    private Boolean status;
 
 
     public Adoption toAdoption() {
@@ -37,6 +35,7 @@ public class AdoptionDto {
         adoption.setAnimal(animal);
         adoption.setAdopter(adopter);
         adoption.setDescription(description);
+        adoption.setCreationDate(creationDate);
 
         List<AdoptionImage> adoptionImages = new ArrayList<>();
         if (imageUrl != null) {
@@ -48,9 +47,7 @@ public class AdoptionDto {
             }
         }
         adoption.setImages(adoptionImages);
-        adoption.setCreationDate(creationDate);
-        adoption.setApprovalStatus(approvalStatus);
-        adoption.setModeratorComment(moderatorComment);
+        adoption.setStatus(status);
         return adoption;
     }
 

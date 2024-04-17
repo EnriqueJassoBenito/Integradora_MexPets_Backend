@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mx.edu.utez.mexprotec.models.adoption.Adoption;
+import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import mx.edu.utez.mexprotec.models.processed.Processed;
 import mx.edu.utez.mexprotec.models.users.Users;
 
@@ -18,15 +19,17 @@ public class ProcessedDto {
 
     private UUID id;
     private Adoption adoption;
-    private Users moderador;
-    private Boolean status;
+    private Users moderator;
+    private ApprovalStatus approvalStatus;
+    private String moderatorComment;
 
     public Processed getProcessed(){
         return new Processed(
                 getId(),
                 getAdoption(),
-                getModerador(),
-                getStatus()
+                getModerator(),
+                getApprovalStatus(),
+                getModeratorComment()
         );
     }
 }

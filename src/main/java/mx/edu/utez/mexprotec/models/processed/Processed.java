@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mx.edu.utez.mexprotec.models.adoption.Adoption;
+import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import mx.edu.utez.mexprotec.models.users.Users;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -34,8 +35,19 @@ public class Processed {
 
     @ManyToOne
     @JoinColumn(name = "id_users")
-    private Users moderador;
+    private Users moderator;
 
-    @Column(columnDefinition = "boolean default true")
-    private Boolean status;
+    @Column(name = "approval_status", nullable = false)
+    private ApprovalStatus approvalStatus;
+
+    @Column(name = "moderator_comment")
+    private String moderatorComment;
+
+    public void approve() {
+        this.approvalStatus = ApprovalStatus.APPROVED;
+    }
+
+    public void reject() {
+        this.approvalStatus = ApprovalStatus.REJECTED;
+    }
 }

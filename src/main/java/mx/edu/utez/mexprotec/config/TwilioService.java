@@ -16,6 +16,7 @@ public class TwilioService {
     String token;
     @Value("${TWILIO_NUMBER}")
     String phoneNumber;
+
     public Boolean sendSMS(String number, String message) {
         try {
             Twilio.init(sid, token);

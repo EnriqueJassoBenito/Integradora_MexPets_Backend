@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mx.edu.utez.mexprotec.models.animals.Animals;
-import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import mx.edu.utez.mexprotec.models.image.adoption.AdoptionImage;
 import mx.edu.utez.mexprotec.models.users.Users;
 import org.hibernate.annotations.GenericGenerator;
@@ -33,11 +32,11 @@ public class Adoption {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "id_animals")
+    @JoinColumn(name = "id_animals", nullable = false)
     private Animals animal;
 
     @ManyToOne
-    @JoinColumn(name = "id_users")
+    @JoinColumn(name = "id_users", nullable = false )
     private Users adopter;
 
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
@@ -50,11 +49,14 @@ public class Adoption {
     @JsonManagedReference
     private List<AdoptionImage> images;
 
-    @Column(name = "approval_status", nullable = false)
+    @Column(name = "status", columnDefinition = "boolean default false")
+    private Boolean status;
+
+    /*@Column(name = "approval_status", nullable = false)
     private ApprovalStatus approvalStatus;
 
     @Column(name = "moderator_comment")
-    private String moderatorComment;
+    private String moderatorComment;*/
 
     @PrePersist
     public void prePersist() {

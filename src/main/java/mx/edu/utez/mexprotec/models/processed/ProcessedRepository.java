@@ -1,5 +1,6 @@
 package mx.edu.utez.mexprotec.models.processed;
 
+import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,18 +14,10 @@ import java.util.UUID;
 @Repository
 public interface ProcessedRepository extends JpaRepository<Processed, UUID>{
 
-    @Modifying
-    @Query(
-            value = "UPDATE adoption_processed SET status = :status WHERE id = :id",
-            nativeQuery = true
-    )
-    int updateStatusById(
-            @Param("status") Boolean status,
-            @Param("id") UUID id
-    );
-
     Optional<Processed> findById(UUID id);
-    List<Processed> findAllByStatus(Boolean status);
     Processed getById(UUID id);
+
+    List<Processed> findByApprovalStatus(ApprovalStatus status);
+
 
 }
