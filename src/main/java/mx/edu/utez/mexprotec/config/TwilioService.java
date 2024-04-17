@@ -16,12 +16,11 @@ public class TwilioService {
     String token;
     @Value("${TWILIO_NUMBER}")
     String phoneNumber;
-
     public Boolean sendSMS(String number, String message) {
         try {
             Twilio.init(sid, token);
             Message.creator(
-                    new PhoneNumber("+52" + number),
+                    new PhoneNumber("" + number),
                     new PhoneNumber(phoneNumber),
                     message
             ).create();
