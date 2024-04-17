@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+/*@Service
 @Transactional
 public class TwilioService {
     @Value("${TWILIO_ACCOUNT_SID}")
@@ -29,4 +29,4 @@ public class TwilioService {
             return false;
         }
     }
-}
+}*/
