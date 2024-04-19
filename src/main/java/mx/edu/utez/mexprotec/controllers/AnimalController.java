@@ -7,15 +7,17 @@ import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import mx.edu.utez.mexprotec.models.animals.personality.Personality;
 import mx.edu.utez.mexprotec.models.animals.race.Race;
 import mx.edu.utez.mexprotec.models.animals.typePet.TypePet;
-import mx.edu.utez.mexprotec.models.users.Users;
 import mx.edu.utez.mexprotec.services.AnimalService;
+import mx.edu.utez.mexprotec.services.LogsService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.validation.FieldError;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,10 +27,8 @@ import java.util.UUID;
 @CrossOrigin(origins = {"*"})
 public class AnimalController {
 
-    private final AnimalService animalService;
-    public AnimalController(AnimalService services) {
-    this.animalService = services;
-    }
+    @Autowired
+    private AnimalService animalService;
 
     @GetMapping("/")
     public ResponseEntity<CustomResponse<List<Animals>>> getAll() {
@@ -45,17 +45,6 @@ public class AnimalController {
                 HttpStatus.OK
         );
     }
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<CustomResponse<List<Animals>>> getAnimalsByUser(@PathVariable UUID userId) {
-        Users user = new Users();
-        user.setId(userId);
-
-        CustomResponse<List<Animals>> response = this.animalService.getAnimalsByUser(user);
-        if (response.getError()) {
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
 
     /**/
     @GetMapping("/type/{typePetId}")
@@ -69,7 +58,6 @@ public class AnimalController {
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
     @GetMapping("/race/{raceId}")
     public ResponseEntity<CustomResponse<List<Animals>>> getAnimalsByRace(@PathVariable UUID raceId) {
         Race race = new Race();
@@ -121,6 +109,7 @@ public class AnimalController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('CLIENTE')")
     @PostMapping("/")
     public ResponseEntity<CustomResponse<Animals>> insert(
             @ModelAttribute AnimalDto dto,
@@ -131,7 +120,7 @@ public class AnimalController {
             for (MultipartFile file : imageFiles) {
                 System.out.println(file.getOriginalFilename());
             }
-
+    
             if (result.hasErrors()) {
                 System.out.println("Errores de validación encontrados:");
                 for (FieldError error : result.getFieldErrors()) {
@@ -139,7 +128,7 @@ public class AnimalController {
                 }
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
-
+    
             return new ResponseEntity<>(
                     this.animalService.insert(dto.toAnimals(), imageFiles),
                     HttpStatus.CREATED
@@ -150,6 +139,7 @@ public class AnimalController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
 
 
     @PutMapping("/{id}")
