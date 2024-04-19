@@ -70,14 +70,15 @@ public class MainSecurity {
                                 .requestMatchers(HttpMethod.POST, "/api/auth/reset-password/confirm").permitAll()
                                 .requestMatchers("/api/test/**").permitAll()
                                 // .requestMatchers("/api/**").permitAll()
-                                .requestMatchers("/api/usuario/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/usuario/**").permitAll()
+                                .requestMatchers("/api/user/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/user/**").permitAll()
                                 .requestMatchers("/doc/**").permitAll() // Allow access to Swagger
                                 .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()
-                                .requestMatchers("/api/libro/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/libro/loadfile/**").permitAll()
-                                .requestMatchers("/api/libro/changeImage/**").permitAll()
+                                .requestMatchers("/api/rol/**").permitAll()
+                                .requestMatchers("/api/animals/**").permitAll()
+
+
                                 .anyRequest().authenticated()
                 );
 

@@ -10,6 +10,7 @@ import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,7 +49,7 @@ public class AdoptionController {
                 HttpStatus.OK
         );
     }
-
+    @PreAuthorize("hasAuthority('MODERADOR') OR hasAuthority('CLIENTE')")
     @GetMapping("/pending")
     public ResponseEntity<CustomResponse<List<Adoption>>> getPendingAdoptions() {
         return new ResponseEntity<>(
