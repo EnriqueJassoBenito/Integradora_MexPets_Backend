@@ -75,7 +75,7 @@ public class RolService {
                 clientUser.setLastname("García");
                 clientUser.setLastnameMatern("Araujo");
                 clientUser.setEmail("20213tn015@utez.edu.mx");
-                clientUser.setPhoneNumber("7771234567");
+                clientUser.setPhoneNumber("7772690459");
                 clientUser.setLocalitation("Cuernavaca");
                 clientUser.setPassword("Natty.Araujo#");
                 clientUser.setRol(rolCliente);
