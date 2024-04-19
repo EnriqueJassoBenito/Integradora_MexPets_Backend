@@ -5,28 +5,30 @@ import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class TwilioService {
     @Value("${TWILIO_ACCOUNT_SID}")
-    String sid;
-    @Value("${TWILIO_AUTH_TOKEN}")
-    String token;
-    @Value("${TWILIO_NUMBER}")
-    String phoneNumber;
+    private String accountSid;
 
-    public Boolean sendSMS(String number, String message) {
+    @Value("${TWILIO_AUTH_TOKEN}")
+    private String authToken;
+
+    @Value("${TWILIO_NUMBER}")
+    private String twilioNumber;
+
+    public boolean sendSMS(String recipientNumber, String messageBody) {
         try {
-            Twilio.init(sid, token);
-            Message.creator(
-                    new PhoneNumber("+52" + number),
-                    new PhoneNumber(phoneNumber),
-                    message
+            Twilio.init(accountSid, authToken);
+            Message message = Message.creator(
+                    new PhoneNumber("+52" + recipientNumber),
+                    new PhoneNumber(twilioNumber),
+                    messageBody
             ).create();
+            System.out.println("Message mexpet: " + message.getSid());
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }

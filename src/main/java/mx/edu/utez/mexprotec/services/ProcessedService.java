@@ -1,5 +1,6 @@
 package mx.edu.utez.mexprotec.services;
 
+import jakarta.mail.MessagingException;
 import mx.edu.utez.mexprotec.config.TwilioService;
 import mx.edu.utez.mexprotec.dtos.ProcessedDto;
 import mx.edu.utez.mexprotec.models.adoption.Adoption;
@@ -10,6 +11,7 @@ import mx.edu.utez.mexprotec.models.processed.ProcessedRepository;
 import mx.edu.utez.mexprotec.models.users.Users;
 import mx.edu.utez.mexprotec.models.users.UsersRepository;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
+import mx.edu.utez.mexprotec.utils.Mailer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,13 +28,16 @@ public class ProcessedService {
     private ProcessedRepository processedRepository;
 
     @Autowired
-    private TwilioService twilioService;
+    private Mailer mailer;
 
     @Autowired
     private AdoptionRepository adoptionRepository;
 
     @Autowired
     private UsersRepository usersRepository;
+
+    @Autowired
+    private TwilioService twilioService;
 
     @Transactional(readOnly = true)
     public CustomResponse<List<Processed>> getAll(){
@@ -123,8 +128,13 @@ public class ProcessedService {
             Processed processed = optionalProcessed.get();
             if (approvalStatus == ApprovalStatus.APPROVED) {
                 processed.approve();
-                sendApprovalSMS(processed.getAdoption().getAdopter().getPhoneNumber(), "¡Felicidades! Tu adopción ha sido aprobada.");
-
+                String email = processed.getAdoption().getAdopter().getEmail();
+                String name = processed.getAdoption().getAdopter().getNameUser();
+                try {
+                    mailer.sendAcceptedRequest(email, name);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
             } else if (approvalStatus == ApprovalStatus.REJECTED) {
                 processed.reject();
             }
@@ -134,7 +144,6 @@ public class ProcessedService {
             return new CustomResponse<>(null, true, 404, "No se encontró la adopción procesada con ID " + id);
         }
     }
-
 
     @Transactional(readOnly = true)
     public CustomResponse<List<Processed>> getByApprovalStatus(ApprovalStatus status) {
@@ -163,7 +172,4 @@ public class ProcessedService {
         );
     }
 
-    private void sendApprovalSMS(String phoneNumber, String message) {
-        twilioService.sendSMS(phoneNumber, message);
-    }
 }

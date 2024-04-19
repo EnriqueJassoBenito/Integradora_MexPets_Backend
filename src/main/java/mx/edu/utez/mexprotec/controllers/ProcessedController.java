@@ -28,12 +28,6 @@ public class ProcessedController {
     @Autowired
     private ProcessedService processedService;
 
-    @Autowired
-    private AdoptionRepository adoptionRepository;
-
-    @Autowired
-    private ProcessedRepository processedRepository;
-
     @GetMapping("/")
     public ResponseEntity<CustomResponse<List<Processed>>> getAll() {
         return new ResponseEntity<>(
@@ -94,7 +88,6 @@ public class ProcessedController {
         }
         return ResponseEntity.ok(response);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CustomResponse<Boolean>> deleteById(@PathVariable("id") UUID id) {
