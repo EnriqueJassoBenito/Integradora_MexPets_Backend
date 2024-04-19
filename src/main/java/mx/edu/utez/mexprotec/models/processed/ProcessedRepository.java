@@ -18,6 +18,7 @@ public interface ProcessedRepository extends JpaRepository<Processed, UUID>{
     Processed getById(UUID id);
 
     List<Processed> findByApprovalStatus(ApprovalStatus status);
+    List<Processed> findByModeratorId(UUID userId);
 
 
 }

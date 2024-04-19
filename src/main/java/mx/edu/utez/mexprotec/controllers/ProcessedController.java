@@ -50,7 +50,14 @@ public class ProcessedController {
         );
     }
 
-    ///post
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<CustomResponse<List<Processed>>> getProcessedAdoptionsByUser(@PathVariable("userId") UUID userId) {
+        return new ResponseEntity<>(
+                this.processedService.getProcessedAdoptionsByUser(userId),
+                HttpStatus.OK
+        );
+    }
+
     @PostMapping("/process")
     public ResponseEntity<CustomResponse<Processed>> processAdoption(
             @RequestBody ProcessedDto processedDto) {
@@ -79,8 +86,9 @@ public class ProcessedController {
     @PatchMapping("/{id}/updateApprovalStatus")
     public ResponseEntity<CustomResponse<Processed>> updateApprovalStatus(
             @PathVariable UUID id,
-            @RequestParam ApprovalStatus status) {
-        CustomResponse<Processed> response = processedService.updateApprovalStatus(id, status);
+            @RequestParam ApprovalStatus approvalStatus,
+            @RequestParam String moderatorComment) {
+        CustomResponse<Processed> response = processedService.updateApprovalStatus(id, approvalStatus, moderatorComment);
         if (response.isError()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }

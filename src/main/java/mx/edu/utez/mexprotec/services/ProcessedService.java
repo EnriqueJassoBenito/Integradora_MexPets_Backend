@@ -44,7 +44,6 @@ public class ProcessedService {
         );
     }
 
-
     @Transactional(readOnly = true)
     public CustomResponse<Processed> getOne(UUID id){
         Optional<Processed> optional = this.processedRepository.findById(id);
@@ -65,28 +64,28 @@ public class ProcessedService {
         }
     }
 
-    //post
+    @Transactional(readOnly = true)
+    public CustomResponse<List<Processed>> getProcessedAdoptionsByUser(UUID userId) {
+        List<Processed> processedAdoptions = processedRepository.findByModeratorId(userId);
+        return new CustomResponse<>(processedAdoptions, false, 200, "Adopciones procesadas del usuario obtenidas correctamente");
+    }
+
     @Transactional
     public CustomResponse<Processed> processAdoption(ProcessedDto processedDto) {
         Optional<Adoption> optionalAdoption = adoptionRepository.findById(processedDto.getAdoption().getId());
         if (optionalAdoption.isPresent()) {
             Adoption adoption = optionalAdoption.get();
             if (!adoption.getStatus()) {
-                // Cambiar el estado de la adopción a true si aún no ha sido gestionada
                 adoption.setStatus(true);
                 adoptionRepository.save(adoption);
 
-                // Obtener el moderador por su ID
                 Optional<Users> optionalModerator = usersRepository.findById(processedDto.getModerator().getId());
                 if (optionalModerator.isPresent()) {
                     Users moderator = optionalModerator.get();
 
-                    // Crear la AdoptionProcesada con los datos del DTO y moderador encontrado
                     Processed processed = processedDto.getProcessed();
                     processed.setAdoption(adoption);
                     processed.setModerator(moderator);
-
-                    // Guardar el procesamiento de adopción
                     Processed savedProcessed = processedRepository.save(processed);
                     return new CustomResponse<>(savedProcessed, false, 200, "Adopción procesada correctamente");
                 } else {
@@ -118,15 +117,15 @@ public class ProcessedService {
     }
 
     @Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<Processed> updateApprovalStatus(UUID id, ApprovalStatus status) {
+    public CustomResponse<Processed> updateApprovalStatus(UUID id, ApprovalStatus approvalStatus, String moderatorComment) {
         Optional<Processed> optionalProcessed = processedRepository.findById(id);
         if (optionalProcessed.isPresent()) {
             Processed processed = optionalProcessed.get();
-            if (status == ApprovalStatus.APPROVED) {
+            if (approvalStatus == ApprovalStatus.APPROVED) {
                 processed.approve();
                 sendApprovalSMS(processed.getAdoption().getAdopter().getPhoneNumber(), "¡Felicidades! Tu adopción ha sido aprobada.");
 
-            } else if (status == ApprovalStatus.REJECTED) {
+            } else if (approvalStatus == ApprovalStatus.REJECTED) {
                 processed.reject();
             }
             processedRepository.save(processed);
