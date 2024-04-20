@@ -68,7 +68,7 @@ public class MainSecurity {
                         auth.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/auth/reset-password").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/auth/reset-password/confirm").permitAll()
-                                .requestMatchers("/api/test/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/animals/**").permitAll()
                                 // .requestMatchers("/api/**").permitAll()
                                 .requestMatchers("/api/user/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/user/**").permitAll()

@@ -62,7 +62,7 @@ public class Animals {
     @Column(name = "weight", nullable = false)
     private Double weight;
 
-    @Column(name = "age", nullable = false)
+    @Column(name = "age")
     private Integer age;
 
     @Column(name = "color", nullable = false)

@@ -249,7 +249,6 @@ public class AnimalService {
     public CustomResponse<Animals> update(UUID id, AnimalDto animalDto, List<MultipartFile> imageFiles) {
         try {
             Animals animal = animalsRepository.findById(id).orElseThrow(() -> new RuntimeException("Animal no encontrado"));
-
             animal.setNamePet(animalDto.getNamePet());
             animal.setLocation(animalDto.getLocation());
             animal.setTypePet(animalDto.getTypePet());
@@ -264,7 +263,6 @@ public class AnimalService {
             animal.setDescription(animalDto.getDescription());
             animal.setApprovalStatus(animalDto.getApprovalStatus());
             animal.setModeratorComment(animalDto.getModeratorComment());
-
             Animals savedAnimal = animalsRepository.saveAndFlush(animal);
 
             if (imageFiles != null && !imageFiles.isEmpty()) {

@@ -8,7 +8,6 @@ import mx.edu.utez.mexprotec.models.animals.personality.Personality;
 import mx.edu.utez.mexprotec.models.animals.race.Race;
 import mx.edu.utez.mexprotec.models.animals.typePet.TypePet;
 import mx.edu.utez.mexprotec.services.AnimalService;
-import mx.edu.utez.mexprotec.services.LogsService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -139,9 +138,8 @@ public class AnimalController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
 
-
+    @PreAuthorize("hasAuthority('CLIENTE')")
     @PutMapping("/{id}")
     public ResponseEntity<CustomResponse<Animals>> updateAnimal(@PathVariable UUID id,
                                                                 @ModelAttribute AnimalDto animalDto,
