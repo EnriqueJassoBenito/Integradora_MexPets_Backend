@@ -7,6 +7,7 @@ import mx.edu.utez.mexprotec.models.animals.ApprovalStatus;
 import mx.edu.utez.mexprotec.models.animals.personality.Personality;
 import mx.edu.utez.mexprotec.models.animals.race.Race;
 import mx.edu.utez.mexprotec.models.animals.typePet.TypePet;
+import mx.edu.utez.mexprotec.models.users.Users;
 import mx.edu.utez.mexprotec.services.AnimalService;
 import mx.edu.utez.mexprotec.utils.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,18 @@ public class AnimalController {
                 this.animalService.getOne(id),
                 HttpStatus.OK
         );
+    }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<CustomResponse<List<Animals>>> getAnimalsByUser(@PathVariable UUID userId) {
+        Users user = new Users();
+        user.setId(userId);
+
+        CustomResponse<List<Animals>> response = this.animalService.getAnimalsByUser(user);
+        if (response.getError()) {
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /**/

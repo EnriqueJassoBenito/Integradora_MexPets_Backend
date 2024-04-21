@@ -69,15 +69,16 @@ public class MainSecurity {
                                 .requestMatchers(HttpMethod.POST, "/api/auth/reset-password").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/auth/reset-password/confirm").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/animals/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/captcha/verify-captcha").permitAll()
+                                .requestMatchers("/api/race/**").permitAll()
+                                .requestMatchers("/api/personality/**").permitAll()
+                                .requestMatchers("/api/type-pet/**").permitAll()
                                 // .requestMatchers("/api/**").permitAll()
                                 .requestMatchers("/api/user/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/user/**").permitAll()
-                                .requestMatchers("/doc/**").permitAll() // Allow access to Swagger
-                                .requestMatchers("/swagger-ui/**").permitAll()
-                                .requestMatchers("/v3/api-docs/**").permitAll()
+                                .requestMatchers("/doc/**").permitAll()
                                 .requestMatchers("/api/rol/**").permitAll()
                                 .requestMatchers("/api/animals/**").permitAll()
-
 
                                 .anyRequest().authenticated()
                 );
